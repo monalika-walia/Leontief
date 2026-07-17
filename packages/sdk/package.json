@@ -1,11 +1,19 @@
 {
   "name": "@leontief/sdk",
-  "version": "0.0.0",
-  "description": "Ergonomic TypeScript SDK for the Leontief protocol (Phase A1)",
+  "version": "0.1.0",
+  "description": "Typed client for the Leontief protocol on Stellar — wrap RWAs into ld-shares, borrow, liquidate.",
   "license": "MIT",
   "type": "module",
   "main": "src/index.ts",
+  "types": "src/index.ts",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:live": "LEONTIEF_LIVE=1 vitest run"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1"
   }
 }

@@ -61,7 +61,15 @@ importers:
         specifier: ^6.0.0
         version: 6.4.3(@types/node@26.1.1)(tsx@4.23.1)
 
-  packages/sdk: {}
+  packages/sdk:
+    dependencies:
+      '@stellar/stellar-sdk':
+        specifier: ^13.1.0
+        version: 13.3.0
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.1
+        version: 26.1.1
 
   services/api:
     dependencies:
@@ -4936,7 +4944,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 26.1.1
 
   '@types/deep-eql@4.0.2': {}
 
@@ -4971,7 +4979,7 @@ snapshots:
 
   '@types/ws@7.4.7':
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 26.1.1
 
   '@types/ws@8.18.1':
     dependencies:
