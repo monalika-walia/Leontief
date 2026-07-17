@@ -3,6 +3,19 @@
 The pre-SCF testnet app. A non-developer can run the entire 5-beat thesis from a
 browser against live testnet contracts; every figure is a chain read.
 
+## Live (testnet)
+
+| Surface | URL |
+|---|---|
+| dApp | https://leontief-app.vercel.app |
+| Guided 5-beat demo | https://leontief-app.vercel.app/demo |
+| Landing | https://leontief-landing.vercel.app |
+| Litepaper | https://leontief-landing.vercel.app/Litepaper.dc.html |
+
+Deployed on Vercel (team `29projectslab`). The dApp bundle bakes in the live
+testnet contract IDs; `/demo` signs with throwaway testnet keys, so all five
+beats run with no wallet. Deploy how-to: `docs/DEPLOY.md`.
+
 ## Routes
 
 | Route | What |
