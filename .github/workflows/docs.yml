@@ -36,7 +36,9 @@ jobs:
       - name: Link check (internal links of the built site)
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --offline --no-progress --include-fragments "docs-site/book/**/*.html"
+          # 404.html is mdBook boilerplate whose home link is root-relative
+          # (/Leontief/) and unresolvable offline — everything else is checked.
+          args: --offline --no-progress --include-fragments --exclude-path docs-site/book/404.html "docs-site/book/**/*.html"
           fail: true
       - uses: actions/upload-pages-artifact@v3
         with:
