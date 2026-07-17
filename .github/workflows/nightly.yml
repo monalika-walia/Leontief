@@ -63,3 +63,21 @@ jobs:
           else
             echo "services/indexer/Dockerfile not present yet — A3 adds it"
           fi
+
+  monitor-heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: corepack enable && pnpm install --frozen-lockfile
+      - name: Read contract IDs from the committed testnet registry, run monitor
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+        run: |
+          VAULT=$(python3 -c "import json;print(json.load(open('deployments/testnet.json'))['contracts']['vault'])")
+          ADAPTER=$(python3 -c "import json;print(json.load(open('deployments/testnet.json'))['contracts']['oracle_adapter'])")
+          RPC_URL=https://soroban-testnet.stellar.org VAULT="$VAULT" ORACLE_ADAPTER="$ADAPTER" ASSET_ID=LEOD \
+            pnpm --filter @leontief/monitor once

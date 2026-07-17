@@ -27,6 +27,25 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Test impact:** `override_rearms_after_deviation_halt`, `override_rejects_nonpositive_and_unconfigured`.
 - *AI-assisted session; entry reviewed by the human author of record.*
 
+## #5 · 2026-07-17 · monalika walia · Hosting: Vercel (front-ends) + Render (API/Postgres); MVP skips multisig
+
+- **Decision:** landing + litepaper + dApp are static on **Vercel** (team
+  `29projectslab`, live at leontief-app / leontief-landing `.vercel.app`). The
+  backend API + its Postgres go on **Render** via the committed `render.yaml`
+  Blueprint (free plan, managed Postgres, migration as pre-deploy). Monitoring is
+  a standalone `services/monitor` (reads contracts directly, Discord + Healthchecks
+  sinks) — no indexer dependency for the readable conditions. **D3 multisig admin
+  handover is deliberately deferred for the MVP** (per team direction 2026-07-17);
+  admin stays a single ephemeral testnet key. Re-instate before mainnet
+  (docs/MULTISIG.md, docs/MAINNET.md).
+- **Alternatives:** Railway/Fly for the API (Render chosen — first-class Postgres,
+  no cold starts, IaC Blueprints, and a Claude Code + MCP integration path);
+  Vercel serverless for the API (rejected — Fastify + long-lived Postgres pool fits
+  a Render web service better).
+- **Spec sections affected:** docs-hub §05 (ops/hosting); D3 (skipped for MVP), D4.
+- **Test impact:** monitor smoke-verified against live testnet (0 alerts, healthy).
+- *AI-assisted session; entry reviewed by the human author of record.*
+
 ## #3 · 2026-07-16 · monalika walia · Vault mint/redeem legs are value-consistent (spec §3 ambiguity resolution) — ✅ APPROVED 2026-07-17
 
 - **Decision:** spec §3 defines `V` in quote units (`balance·nav/SCALE`) but writes the mint leg

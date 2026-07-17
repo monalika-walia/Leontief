@@ -44,15 +44,31 @@ curl -X PATCH -H "Authorization: Bearer $VERCEL_TOKEN" \
 ```
 or Dashboard → Project → Settings → Deployment Protection → Vercel Authentication → Disabled.
 
+## Backend API + Postgres (Render)
+
+The API and its Postgres deploy from the committed **`render.yaml`** Blueprint
+(free plan, managed Postgres 16, migration as pre-deploy). Two paths:
+
+- **Render Dashboard** → New → Blueprint → select this repo → apply. Render reads
+  `render.yaml`, provisions `leontief-db`, injects `DATABASE_URL`, and runs the
+  migration before the first deploy.
+- **Claude Code + Render MCP** (interactive session, not this one):
+  `claude mcp add --transport http render https://mcp.render.com/mcp --header "Authorization: Bearer $RENDER_API_KEY"`,
+  then ask it to apply the Blueprint.
+
+The service exposes `/health`, `/early-access`, `/early-access/count`.
+`config.js` already points the deployed landing form at
+`https://leontief-api.onrender.com` for non-Codespace hosts — update that one line
+if Render assigns a different URL, and confirm the landing origin is in the API's
+`CORS_ORIGINS` (set in `render.yaml`).
+
+> Until the API is deployed, the deployed landing form falls back to
+> `localStorage` (no lost signups, no dead button).
+
 ## Known follow-ups
 
-- **Early-access form**: on the deployed landing, `config.js` finds no Codespaces
-  host, so it falls back to `localhost:8787` and the form saves to `localStorage`
-  only. To persist to the backend, host `services/api` (Vercel serverless or
-  Railway + Postgres) and set `window.LEONTIEF.API_BASE` to that origin (and add
-  the landing origin to the API's `CORS_ORIGINS`). Tracked under D4 hosting.
-- **Env-based redeploys**: for CI-driven deploys, wire the contract IDs as Vercel
-  project env vars instead of baking `app/.env.local` locally.
+- **Env-based redeploys**: for CI-driven Vercel deploys, wire the contract IDs as
+  Vercel project env vars instead of baking `app/.env.local` locally.
 
 ## Secrets
 
