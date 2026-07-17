@@ -65,10 +65,28 @@ if Render assigns a different URL, and confirm the landing origin is in the API'
 > Until the API is deployed, the deployed landing form falls back to
 > `localStorage` (no lost signups, no dead button).
 
+## Indexer (`services/indexer`)
+
+Polls `getEvents` for the vault/pool/adapter into the same Postgres and serves
+`/metrics`, `/vaults/:id/history`, `/positions/at-risk`, `/health`. Deploy it as a
+second Render web service (reuse the DB from `render.yaml`) with:
+
+```
+build: npx --yes pnpm@10.32.1 install --frozen-lockfile
+start: npx --yes tsx services/indexer/src/index.ts
+env:   DATABASE_URL (same DB), RPC_URL, VAULT, MINI_POOL, ORACLE_ADAPTER
+```
+
+`/stats` in the dApp reads current state directly from chain today; point it at
+the indexer's `/metrics` + `/vaults/:id/history` for suppliers/borrow-volume/
+share-price history once the indexer is hosted.
+
 ## Known follow-ups
 
 - **Env-based redeploys**: for CI-driven Vercel deploys, wire the contract IDs as
   Vercel project env vars instead of baking `app/.env.local` locally.
+- **Render build**: Render's global `node_modules` is read-only — use `npx pnpm`
+  (never `corepack enable` or `npm i -g pnpm`, both EROFS).
 
 ## Secrets
 
