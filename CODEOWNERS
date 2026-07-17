@@ -1,0 +1,15 @@
+# Ownership tracks per leontief-build-prompts.md phase header.
+# Track A = Monalika (C3, C4, C7, C8) · Track B = Aditya (C1, C2, C5, C6, X1–X3)
+# Track C = Vyom (E1–E2, D1–D4, A1–A6, S1–S3). C7 pairs A+B.
+# TODO: add Aditya's and Vyom's GitHub handles when they join the repo.
+
+* @monalika-walia
+
+/contracts/vault/           @monalika-walia
+/contracts/vault-factory/   @monalika-walia
+/tests/                     @monalika-walia
+# /contracts/mock-oracle/     @aditya-handle
+# /contracts/oracle-adapter/  @aditya-handle
+# /contracts/mini-pool/       @aditya-handle
+# /INTEGRATIONS/              @aditya-handle
+# /scripts/ /app/ /packages/ /services/ /docs/ /.github/  @vyom-handle

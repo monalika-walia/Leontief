@@ -1,0 +1,12 @@
+Leontief
+Copyright 2026 the Leontief protocol team (Monalika, Aditya, Vyom) · incubated by 29Projects Lab
+
+Licensed under the Apache License, Version 2.0 (contracts and Rust workspace).
+The TypeScript SDK (packages/sdk) and indexer (services/indexer) are licensed MIT.
+Documentation is licensed CC-BY-4.0. Landing/brand assets are proprietary to 29Projects Lab.
+
+This product depends on third-party open-source software, including:
+- soroban-sdk and stellar tooling — Copyright Stellar Development Foundation, Apache-2.0
+  https://github.com/stellar/rs-soroban-sdk
+- proptest — MIT OR Apache-2.0 · https://github.com/proptest-rs/proptest
+- Full transitive inventories: `cargo license` (Rust) and `pnpm licenses list` (JS).

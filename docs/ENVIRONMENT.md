@@ -26,6 +26,11 @@ One command bootstraps a fresh machine:
 **Never bump `rust-toolchain.toml` or soroban-sdk unasked** (CLAUDE.md non-negotiable). A bump is a
 DECISIONS.md entry.
 
+**Known transitive pin (Cargo.lock):** `ed25519-dalek` is held at **2.2.0** — `soroban-env-host
+27.0.0` has a loose bound that resolves to 3.0.0, which breaks its build (rand_core trait change).
+A blanket `cargo update` will reintroduce the breakage; re-pin with
+`cargo update -p ed25519-dalek@3.0.0 --precise 2.2.0` if it ever reappears.
+
 ## Network facts (verified live 2026-07-16, testnet protocol 27)
 
 - RPC `https://soroban-testnet.stellar.org` · Horizon `https://horizon-testnet.stellar.org` · Friendbot `https://friendbot.stellar.org`

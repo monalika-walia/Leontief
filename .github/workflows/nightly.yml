@@ -1,0 +1,52 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip until fuzz harness lands (C8)
+        id: gate
+        run: |
+          if [ -d fuzz ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "fuzz/ not present yet — C8 adds it"; fi
+      - if: steps.gate.outputs.present == 'true'
+        uses: Swatinem/rust-cache@v2
+      - if: steps.gate.outputs.present == 'true'
+        name: Install nightly + cargo-fuzz
+        run: |
+          rustup toolchain install nightly --profile minimal
+          cargo install --locked cargo-fuzz
+      - if: steps.gate.outputs.present == 'true'
+        name: Run each fuzz target for 1h
+        run: |
+          cd fuzz
+          for t in $(cargo +nightly fuzz list); do
+            cargo +nightly fuzz run "$t" -- -max_total_time=3600
+          done
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-artifacts
+          path: fuzz/artifacts
+          if-no-files-found: ignore
+
+  indexer-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build indexer image (skips until A3 adds a Dockerfile)
+        run: |
+          if [ -f services/indexer/Dockerfile ]; then
+            docker build -t leontief-indexer:nightly services/indexer
+          else
+            echo "services/indexer/Dockerfile not present yet — A3 adds it"
+          fi

@@ -1,0 +1,22 @@
+[package]
+name = "leontief-integration"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
+vault = { path = "../contracts/vault" }
+vault-factory = { path = "../contracts/vault-factory" }
+oracle-adapter = { path = "../contracts/oracle-adapter" }
+mock-oracle = { path = "../contracts/mock-oracle" }
+mini-pool = { path = "../contracts/mini-pool" }
+
+[dev-dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }

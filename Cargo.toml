@@ -1,0 +1,36 @@
+[workspace]
+resolver = "2"
+members = [
+  "contracts/*",
+  "tests",
+]
+exclude = ["fuzz"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/monalika-walia/Leontief"
+publish = false
+
+[workspace.dependencies]
+# Pinned baseline — DECISIONS.md #1. Never bump unasked (CLAUDE.md).
+soroban-sdk = "=27.0.0"
+proptest = "1.7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true
+
+# For more information about this profile see https://developers.stellar.org/docs/build/smart-contracts/example-contracts/logging#cargotoml-profile
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true

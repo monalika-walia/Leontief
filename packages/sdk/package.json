@@ -1,0 +1,11 @@
+{
+  "name": "@leontief/sdk",
+  "version": "0.0.0",
+  "description": "Ergonomic TypeScript SDK for the Leontief protocol (Phase A1)",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run"
+  }
+}

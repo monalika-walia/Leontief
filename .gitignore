@@ -1,0 +1,24 @@
+# Rust
+target/
+# JS
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+# Generated bindings (regenerate with `just bindings`)
+packages/bindings/*/
+!packages/bindings/README.md
+# Env & secrets — never commit keys
+.env
+.env.*
+!.env.example
+deploy.env
+# Editor/OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+# Fuzz corpora/artifacts
+fuzz/corpus/
+fuzz/artifacts/
+fuzz/coverage/
