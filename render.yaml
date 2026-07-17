@@ -8,10 +8,11 @@ services:
     runtime: node
     plan: free
     rootDir: .
-    # pnpm monorepo — install the api and its workspace deps from the repo root.
-    buildCommand: corepack enable && pnpm install --frozen-lockfile
-    preDeployCommand: pnpm --filter @leontief/api migrate
-    startCommand: pnpm --filter @leontief/api start
+    # pnpm monorepo — Render's global node_modules is read-only, so both
+    # `corepack enable` and `npm i -g pnpm` fail (EROFS). Use npx (writable
+    # cache). The API self-migrates on startup, so no separate pre-deploy step.
+    buildCommand: npx --yes pnpm@10.32.1 install --frozen-lockfile
+    startCommand: npx --yes tsx services/api/src/server.ts
     healthCheckPath: /health
     autoDeploy: true
     envVars:
