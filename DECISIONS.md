@@ -46,6 +46,21 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Test impact:** monitor smoke-verified against live testnet (0 alerts, healthy).
 - *AI-assisted session; entry reviewed by the human author of record.*
 
+## #6 · 2026-07-17 · monalika walia · Docs site: mdBook on GitHub Pages (GitBook fallback exercised)
+
+- **Decision:** the public "unified source" (SCF requirement) is an **mdBook** site
+  built from `docs-site/` and deployed to GitHub Pages by `.github/workflows/docs.yml`.
+  Pages `{{#include}}` the canonical repo files (spec, docs-hub, DECISIONS,
+  SECURITY-TESTING, ADDRESSES, runbooks) so there is exactly one source of truth;
+  mermaid renders via mdbook-mermaid; CI link-checks the built site (lychee,
+  offline) and fails on broken includes.
+- **Alternatives:** GitBook (hosted) — needs an org account + OAuth setup we can't
+  drive from CI, and duplicates content; a raw README index — fails the "unified
+  source" bar. The build prompts explicitly allow "mdBook fallback → DECISIONS".
+- **Spec sections affected:** none (S1 tooling choice).
+- **Test impact:** docs workflow build + link-check gate.
+- *AI-assisted session; entry reviewed by the human author of record.*
+
 ## #3 · 2026-07-16 · monalika walia · Vault mint/redeem legs are value-consistent (spec §3 ambiguity resolution) — ✅ APPROVED 2026-07-17
 
 - **Decision:** spec §3 defines `V` in quote units (`balance·nav/SCALE`) but writes the mint leg

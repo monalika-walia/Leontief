@@ -28,3 +28,5 @@ tests/test_snapshots/
 # Vercel
 .vercel/
 app/dist/
+# mdBook build output
+docs-site/book/

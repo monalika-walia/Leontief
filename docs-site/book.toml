@@ -1,0 +1,19 @@
+[book]
+title = "Leontief — Documentation"
+description = "The RWA utility layer on Stellar: wrap restricted assets into composable, yield-passing ld-shares."
+authors = ["Leontief protocol team"]
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
+[output.html]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+git-repository-url = "https://github.com/monalika-walia/Leontief"
+site-url = "/Leontief/"
+default-theme = "light"
+preferred-dark-theme = "ayu"

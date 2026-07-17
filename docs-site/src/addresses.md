@@ -1,0 +1,1 @@
+{{#include ../../docs/ADDRESSES.md}}
