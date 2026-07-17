@@ -93,3 +93,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm -r test
+
+  deployments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate address registries + ADDRESSES.md is up to date
+        run: |
+          python3 scripts/validate_deployments.py
+          ./scripts/gen_addresses.sh
+          git diff --exit-code docs/ADDRESSES.md \
+            || { echo "docs/ADDRESSES.md is stale — run 'just docs' and commit"; exit 1; }

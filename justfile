@@ -93,6 +93,7 @@ indexer:
 golden:
     python3 tests/fixtures/golden_gen.py
 
-# Regenerate docs/ADDRESSES.md from deployments/*.json (Phase D2)
+# Validate registries + regenerate docs/ADDRESSES.md from deployments/*.json (D2)
 docs:
+    python3 scripts/validate_deployments.py
     ./scripts/gen_addresses.sh

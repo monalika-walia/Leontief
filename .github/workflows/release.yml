@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  STELLAR_CLI_VERSION: 27.0.0
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Install stellar-cli
+        run: |
+          curl -fsSL "https://github.com/stellar/stellar-cli/releases/download/v${STELLAR_CLI_VERSION}/stellar-cli-${STELLAR_CLI_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar xz -C /usr/local/bin
+          stellar --version
+
+      - name: Build + optimize every contract → deterministic wasm
+        run: |
+          mkdir -p dist
+          for c in vault vault-factory oracle-adapter mock-oracle mini-pool; do
+            stellar contract build --package "$c"
+          done
+          for f in target/wasm32v1-none/release/*.wasm; do
+            stellar contract optimize --wasm "$f" --wasm-out "dist/$(basename "$f")"
+          done
+
+      - name: SHA256SUMS + per-file wasm hash (matches `stellar contract fetch`)
+        run: |
+          cd dist
+          sha256sum *.wasm | tee SHA256SUMS
+          # stellar's on-chain wasm_hash is sha256 of the optimized wasm bytes.
+          for f in *.wasm; do
+            printf '%s  %s\n' "$(sha256sum "$f" | cut -d' ' -f1)" "$f"
+          done > WASM_HASHES.txt
+
+      - name: Validate deployment registries (schema + no-orphan)
+        run: python3 scripts/validate_deployments.py
+
+      - name: Create GitHub Release with wasm assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Leontief ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            dist/*.wasm
+            dist/SHA256SUMS
+            dist/WASM_HASHES.txt
+          body: |
+            Optimized contract wasm for `${{ github.ref_name }}`.
+
+            Verify against a deployed contract:
+            `stellar contract fetch --id <CID> --network <net> | sha256sum`
+            must equal the entry in `WASM_HASHES.txt`. The address registries live
+            in `deployments/{testnet,mainnet}.json` (`docs/ADDRESSES.md`).
