@@ -27,7 +27,7 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Test impact:** `override_rearms_after_deviation_halt`, `override_rejects_nonpositive_and_unconfigured`.
 - *AI-assisted session; entry reviewed by the human author of record.*
 
-## #3 · 2026-07-16 · monalika walia · Vault mint/redeem legs are value-consistent (spec §3 ambiguity resolution) — ⚠ TEAM REVIEW
+## #3 · 2026-07-16 · monalika walia · Vault mint/redeem legs are value-consistent (spec §3 ambiguity resolution) — ✅ APPROVED 2026-07-17
 
 - **Decision:** spec §3 defines `V` in quote units (`balance·nav/SCALE`) but writes the mint leg
   as `shares = received·(S+VIRT)/(V+VIRT)` with `received` in underlying units. Taken literally,
@@ -69,4 +69,4 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
   is now computed from the borrow (`crash_for_hf`) so every generated case is liquidatable, instead
   of filtering healthy cases with `prop_assume!` until the global-reject cap trips.
 - *AI-assisted session; entry reviewed by the human author of record.*
-- *AI-assisted analysis; this entry REQUIRES review by Monalika/Aditya before mainnet spec freeze v1.1.*
+- *AI-assisted analysis; **approved by the team on 2026-07-17** — this is the canonical §3 reading for spec freeze v1.1.*
