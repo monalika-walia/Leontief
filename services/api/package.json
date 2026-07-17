@@ -1,0 +1,21 @@
+{
+  "name": "@leontief/api",
+  "version": "0.0.0",
+  "description": "Leontief backend API — early-access signups + landing form intake",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "migrate": "tsx src/migrate.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.0",
+    "@fastify/rate-limit": "^10.2.0",
+    "fastify": "^5.2.0",
+    "postgres": "^3.4.5",
+    "zod": "^3.24.0"
+  }
+}
