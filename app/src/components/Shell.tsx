@@ -18,6 +18,9 @@ export function Shell({ children, demoEnabled }: { children: ReactNode; demoEnab
             <NavLink to="/vaults">Markets</NavLink>
             <NavLink to="/borrow">Borrow</NavLink>
             <NavLink to="/positions">Positions</NavLink>
+            <NavLink to="/stats">Stats</NavLink>
+            <NavLink to="/liquidate">Liquidate</NavLink>
+            <NavLink to="/issuer">Issuer</NavLink>
             {demoEnabled && <NavLink to="/demo">Demo</NavLink>}
           </nav>
           <div className="row center" style={{ gap: 12 }}>

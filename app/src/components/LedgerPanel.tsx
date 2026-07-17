@@ -14,7 +14,7 @@ export function LedgerPanel({
   empty: boolean;
   emptyCopy: string;
   title?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   if (empty) {
     return (

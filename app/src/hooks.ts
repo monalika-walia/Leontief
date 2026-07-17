@@ -105,6 +105,57 @@ export function useHealthFactor(user: string | null) {
   });
 }
 
+/** Shares supplied to the pool = vault.balance(pool). The utility-ratio numerator. */
+export function usePoolCollateral() {
+  const { env, chain } = useApp();
+  return useQuery({
+    queryKey: ["poolCollateral", env.MINI_POOL],
+    queryFn: () => chain.tryRead<bigint>(env.VAULT_LEOD, "balance", addr(env.MINI_POOL)),
+  });
+}
+
+/** Pool's remaining USDC liquidity (borrow capacity). */
+export function usePoolLiquidity() {
+  const { env, chain } = useApp();
+  return useQuery({
+    queryKey: ["poolLiquidity", env.MINI_POOL],
+    queryFn: () => chain.tryRead<bigint>(env.USDC_SAC, "balance", addr(env.MINI_POOL)),
+  });
+}
+
+export function useIsWhitelisted(user: string | null) {
+  const { env, chain } = useApp();
+  return useQuery({
+    queryKey: ["whitelist", user],
+    enabled: !!user,
+    queryFn: () => chain.tryRead<boolean>(env.MINI_POOL, "is_whitelisted", addr(user!)),
+  });
+}
+
+export type FeedConfig = {
+  source: string;
+  source_decimals: number;
+  max_age_secs: bigint;
+  max_dev_bps: number;
+};
+
+export function useFeedConfig() {
+  const { env, chain } = useApp();
+  return useQuery({
+    queryKey: ["feedConfig", env.LEOD_ASSET_ID],
+    queryFn: () =>
+      chain.tryRead<FeedConfig>(env.ORACLE_ADAPTER, "feed_config", sym(env.LEOD_ASSET_ID)),
+  });
+}
+
+export function useVaultAdmin() {
+  const { env, chain } = useApp();
+  return useQuery({
+    queryKey: ["vaultAdmin", env.VAULT_LEOD],
+    queryFn: () => chain.tryRead<string>(env.VAULT_LEOD, "admin"),
+  });
+}
+
 /** Convenience: the whole chain object, for one-off simulations in components. */
 export function useChain(): Chain {
   return useApp().chain;
