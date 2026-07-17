@@ -71,9 +71,10 @@ demo-local:
 bindings:
     ./scripts/gen_bindings.sh
 
-# Frontend dev server (Phase A2)
+# Frontend dev server (Phase A2): inject the live deployment, then run Vite
 app:
-    pnpm --filter app dev
+    ./scripts/gen_app_env.sh
+    pnpm --filter @leontief/app dev
 
 # Serve the static landing site (landing.html + litepaper) on :8080
 landing:

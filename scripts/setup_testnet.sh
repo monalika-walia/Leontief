@@ -151,6 +151,13 @@ export VAULT=$VAULT
 export MINI_POOL=$POOL
 export VAULT_WASM_HASH=$VAULT_HASH
 export ALIAS_SUFFIX=$SFX
+# Throwaway TESTNET demo secret keys — consumed by the dApp /demo stepper (A2-P).
+# deploy.env is gitignored; these never touch mainnet or CI.
+export DEMO_ISSUER_SK=$(stellar keys show "$A_ISSUER")
+export DEMO_ADMIN_SK=$(stellar keys show "$A_ADMIN")
+export DEMO_USER_SK=$(stellar keys show "$A_ALICE")
+export DEMO_LIQUIDATOR_SK=$(stellar keys show "$A_LIQ")
+export DEMO_RANDO_SK=$(stellar keys show "$A_RANDO")
 EOF
 
 python3 - "$OUT_JSON" "$STAMP" <<PY

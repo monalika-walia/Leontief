@@ -9,5 +9,17 @@
     "lineWidth": 100
   },
   "linter": { "enabled": true, "rules": { "preset": "recommended" } },
-  "javascript": { "formatter": { "quoteStyle": "double" } }
+  "javascript": { "formatter": { "quoteStyle": "double" } },
+  "overrides": [
+    {
+      "includes": ["app/**"],
+      "linter": {
+        "rules": {
+          "style": { "noNonNullAssertion": "off", "useTemplate": "off" },
+          "complexity": { "noImportantStyles": "off" },
+          "a11y": { "useSemanticElements": "off", "useAriaPropsSupportedByRole": "off" }
+        }
+      }
+    }
+  ]
 }

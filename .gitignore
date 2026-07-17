@@ -25,3 +25,6 @@ fuzz/coverage/
 # Soroban testutils write per-test-case snapshots; regenerated on every run
 contracts/*/test_snapshots/
 tests/test_snapshots/
+# Vercel
+.vercel/
+app/dist/
