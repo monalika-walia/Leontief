@@ -1,0 +1,37 @@
+[package]
+name = "leontief-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+arbitrary = { version = "1", features = ["derive"] }
+soroban-sdk = { version = "=27.0.0", features = ["testutils"] }
+vault = { path = "../contracts/vault", features = ["testutils"] }
+mock-oracle = { path = "../contracts/mock-oracle", features = ["testutils"] }
+oracle-adapter = { path = "../contracts/oracle-adapter", features = ["testutils"] }
+mini-pool = { path = "../contracts/mini-pool", features = ["testutils"] }
+
+[[bin]]
+name = "fuzz_vault_sequences"
+path = "fuzz_targets/fuzz_vault_sequences.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_pool_sequences"
+path = "fuzz_targets/fuzz_pool_sequences.rs"
+test = false
+doc = false
+bench = false
+
+# Fuzz builds are their own release-ish profile; keep overflow checks ON so a
+# wrapping bug is caught as a panic, not silently swallowed.
+[profile.release]
+overflow-checks = true
+debug-assertions = true
