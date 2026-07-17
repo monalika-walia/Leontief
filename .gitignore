@@ -22,3 +22,6 @@ deploy.env
 fuzz/corpus/
 fuzz/artifacts/
 fuzz/coverage/
+# Soroban testutils write per-test-case snapshots; regenerated on every run
+contracts/*/test_snapshots/
+tests/test_snapshots/

@@ -25,8 +25,9 @@ build:
     done
     (cd target/wasm && sha256sum *.wasm | tee SHA256SUMS)
 
-# Full Rust test suite
+# Full Rust test suite (vault wasm built first — factory tests deploy it)
 test:
+    cargo build --package vault --target wasm32v1-none --release
     cargo test --workspace --all-targets
 
 # Coverage with the ≥90% gate on the core contracts (vault + mini-pool)
@@ -40,9 +41,10 @@ fuzz seconds="60":
         cargo +nightly fuzz run "$t" -- -max_total_time={{seconds}}; \
     done
 
-# Format + lint, no changes
+# Format + lint, no changes (vault wasm needed by the factory test target)
 lint:
     cargo fmt --all -- --check
+    cargo build --package vault --target wasm32v1-none --release
     cargo clippy --workspace --all-targets -- -D warnings
     if [ -f pnpm-workspace.yaml ]; then pnpm biome ci .; fi
 
@@ -72,6 +74,15 @@ bindings:
 # Frontend dev server (Phase A2)
 app:
     pnpm --filter app dev
+
+# Serve the static landing site (landing.html + litepaper) on :8080
+landing:
+    cd landing && python3 -m http.server 8080
+
+# Backend API (early-access intake); needs `docker compose up -d postgres`
+api:
+    pnpm --filter @leontief/api migrate
+    pnpm --filter @leontief/api dev
 
 # Indexer worker (Phase A3); needs `docker compose up -d postgres`
 indexer:

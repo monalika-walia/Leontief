@@ -1031,7 +1031,12 @@ checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 name = "mini-pool"
 version = "0.1.0"
 dependencies = [
+ "mini-pool",
+ "mock-oracle",
+ "oracle-adapter",
+ "proptest",
  "soroban-sdk",
+ "vault",
 ]
 
 [[package]]
@@ -1931,13 +1936,19 @@ checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
 name = "vault"
 version = "0.1.0"
 dependencies = [
+ "mock-oracle",
+ "oracle-adapter",
+ "proptest",
  "soroban-sdk",
+ "vault",
 ]
 
 [[package]]
 name = "vault-factory"
 version = "0.1.0"
 dependencies = [
+ "mock-oracle",
+ "oracle-adapter",
  "soroban-sdk",
 ]
 

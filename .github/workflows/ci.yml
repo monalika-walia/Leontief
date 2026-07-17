@@ -25,6 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
+      - name: Build vault wasm (factory test target imports it)
+        run: cargo build --package vault --target wasm32v1-none --release
       - run: cargo clippy --workspace --all-targets -- -D warnings
 
   test:
@@ -32,6 +34,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
+      - name: Build vault wasm (factory tests deploy it)
+        run: cargo build --package vault --target wasm32v1-none --release
       - run: cargo test --workspace --all-targets
 
   coverage:

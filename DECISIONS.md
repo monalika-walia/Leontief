@@ -26,3 +26,47 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Spec sections affected:** §5 (explicitly allows it, "prototype-only escape hatch").
 - **Test impact:** `override_rearms_after_deviation_halt`, `override_rejects_nonpositive_and_unconfigured`.
 - *AI-assisted session; entry reviewed by the human author of record.*
+
+## #3 · 2026-07-16 · monalika walia · Vault mint/redeem legs are value-consistent (spec §3 ambiguity resolution) — ⚠ TEAM REVIEW
+
+- **Decision:** spec §3 defines `V` in quote units (`balance·nav/SCALE`) but writes the mint leg
+  as `shares = received·(S+VIRT)/(V+VIRT)` with `received` in underlying units. Taken literally,
+  a depositor at NAV 1.02 silently loses ~2% of contributed value to prior holders, and the
+  withdraw leg would emit quote units as if they were underlying units. We implement the only
+  unit-consistent reading: `received` is valued at the current NAV
+  (`value_in = received·nav/SCALE`, floor) before the share formula, and the withdraw leg
+  converts the quote value back (`amount = value_out·SCALE/nav`, floor, clamped to holdings).
+  Consequences: `share_price` is **quote units per share** (so beat 4's "NAV tick raises
+  share_price" holds for accrual assets), and mini-pool valuation is
+  `coll_value = shares·share_price/SCALE` — NAV enters exactly once (C5's prompt formula
+  multiplies by nav a second time, which would double-count under this semantics).
+- **Alternatives:** (1) literal formula — unit-inconsistent, unfair to depositors whenever
+  nav ≠ 1.0, contradicts C8's NAV-parameterized golden vectors; (2) raw-unit legs with
+  quote-only share_price reads — fair, and exits would not need the oracle, but then a pure
+  NAV tick cannot move mint ratios and C8's "first deposit @ nav 1.0209" vector is vacuous.
+- **Spec sections affected:** §3 (math), §6 (pool valuation unit trail), §8 beat 4.
+- **Test impact:** golden vectors (C8) generated under this semantics; C3 property tests
+  (fairness, round-trip ≤, inflation-attack bound) assert it. Note on the §3 inflation bound:
+  with `VIRT = 10^3` the literal "victim loss < 1e-6" holds for front-run donations up to
+  ~1e6 stroops; beyond that the enforced (and tested) guarantees are: zero-share mints REVERT
+  (victim keeps funds), victim rounding loss ≤ one share's value, and the attacker's claim
+  never exceeds their outlay — a strict-1e-6-for-all-donations bound would need `VIRT = 10^6`,
+  which the frozen spec does not authorize.
+
+## #4 · 2026-07-17 · monalika walia · Property-test case counts by cost class
+
+- **Decision:** the build prompts call for "10k cases" on the accounting/liquidation properties.
+  That count is honored for **pure-math** properties (oracle-adapter normalization round-trip runs
+  10_000 cases — a pure function, sub-second). The **full-stack** properties (vault sequences,
+  mini-pool liquidation rounding/termination) register the entire contract graph per case
+  (~1.5 s/case), so a literal 10k run is ~4+ hours and unusable in CI. These read their count from
+  `PROPTEST_CASES`, defaulting to 96 (vault) / 64 (mini-pool) on PR CI and 512 in the nightly
+  workflow. The invariants are identical at every count; only sample density changes.
+- **Alternatives:** literal 10k on every property (CI wall-clock hours — rejected); fixed low count
+  with no nightly escalation (thinner tail coverage — rejected).
+- **Spec sections affected:** none (test methodology; §7 coverage gate unaffected — still ≥90%).
+- **Test impact:** also fixed a proptest reject-budget abort in the mini-pool suite — the NAV crash
+  is now computed from the borrow (`crash_for_hf`) so every generated case is liquidatable, instead
+  of filtering healthy cases with `prop_assume!` until the global-reject cap trips.
+- *AI-assisted session; entry reviewed by the human author of record.*
+- *AI-assisted analysis; this entry REQUIRES review by Monalika/Aditya before mainnet spec freeze v1.1.*

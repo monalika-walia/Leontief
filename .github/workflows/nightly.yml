@@ -9,6 +9,19 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  properties-10k:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Swatinem/rust-cache@v2
+      - name: Build vault wasm (factory tests deploy it)
+        run: cargo build --package vault --target wasm32v1-none --release
+      - name: Deep property suite (full-stack props scaled up; see DECISIONS.md #4)
+        run: PROPTEST_CASES=512 cargo test --workspace --all-targets
+        env:
+          CARGO_TERM_COLOR: always
+
   fuzz:
     runs-on: ubuntu-latest
     timeout-minutes: 150

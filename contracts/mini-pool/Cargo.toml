@@ -18,3 +18,22 @@ soroban-sdk = { workspace = true, features = ["testutils"] }
 
 [features]
 testutils = ["soroban-sdk/testutils"]
+
+[dev-dependencies.vault]
+path = "../vault"
+features = ["testutils"]
+
+[dev-dependencies.mock-oracle]
+path = "../mock-oracle"
+features = ["testutils"]
+
+[dev-dependencies.oracle-adapter]
+path = "../oracle-adapter"
+features = ["testutils"]
+
+[dev-dependencies.proptest]
+workspace = true
+
+[dev-dependencies.mini-pool]
+path = "."
+features = ["testutils"]
