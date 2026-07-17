@@ -62,7 +62,8 @@
   @keyframes drip{to{top:110%}}
 
   /* cover */
-  .cover{min-height:94svh;position:relative;display:grid;place-items:center;padding:120px 24px 90px;text-align:center}
+  .cover{min-height:100vh;box-sizing:border-box;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 90px;text-align:center}
+  .cover > div{max-width:900px}
   .cover .k{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.3em;
     text-transform:uppercase;color:var(--dim);animation:lpIn .9s var(--ease) .1s both}
   .cover h1{margin:28px 0 0;font-size:clamp(60px,11vw,140px);line-height:.95;letter-spacing:-0.02em;font-weight:400;animation:lpIn 1s var(--ease) .25s both}
