@@ -44,8 +44,9 @@
   .progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:70}
   .progress span{display:block;height:100%;width:100%;background:var(--fg);transform-origin:0 50%;transform:scaleX(0)}
 
-  /* nav */
-  nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  /* nav — scoped to the site header only; the Contents list is also a <nav>
+     (class .toc) and must NOT inherit this fixed, full-width positioning */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
     padding:22px clamp(20px,4vw,44px);mix-blend-mode:difference;color:#F2F1ED}
   .wordmark{font-size:20px;letter-spacing:.01em;text-decoration:none;font-family:'Instrument Serif',serif}
   .navlinks{display:flex;gap:26px}
@@ -150,7 +151,7 @@
 <div class="grain" aria-hidden="true"></div>
 <div class="progress" aria-hidden="true"><span id="bar"></span></div>
 
-<nav>
+<nav class="topbar">
   <a class="wordmark" href="landing.html">Leontief</a>
   <div class="navlinks">
     <a href="landing.html">Home</a>

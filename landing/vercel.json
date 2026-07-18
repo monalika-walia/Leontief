@@ -1,1 +1,6 @@
-{ "cleanUrls": false }
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/litepaper", "destination": "/Litepaper.dc.html" }
+  ]
+}
