@@ -89,7 +89,7 @@ export function Stats() {
       </div>
 
       <div className="panel">
-        <h3>90-day targets (SCF)</h3>
+        <h3>90-day targets</h3>
         <div className="row between" style={{ marginTop: 10, flexWrap: "wrap", gap: 16 }}>
           <Target label="Wrapped AUM" now={`$${amt(tvl.data, 0)}`} goal="$15–40M" />
           <Target label="Utility ratio" now={`${utilityPct.toFixed(0)}%`} goal="≥ 30%" />
