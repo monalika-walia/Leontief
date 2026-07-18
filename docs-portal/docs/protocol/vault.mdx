@@ -1,0 +1,102 @@
+---
+id: vault
+title: The vault
+description: ld-share accounting, NAV math, value-consistent legs, and the inflation-attack defense.
+---
+
+# The vault
+
+The vault is an ERC-4626-style wrapper with one job: turn a restricted RWA into a
+freely-composable `ld-share` and back, priced honestly and fairly at every step.
+It exposes a full **SEP-41** token surface (`transfer`, `approve`, `balance`, …)
+so the share moves like any other Soroban token.
+
+## What an ld-share is
+
+An `ld-share` (e.g. `ldLEOD`) is a claim on a slice of the vault's holdings of the
+underlying. Its value is tracked in **quote units per share** by `share_price`:
+
+```
+share_price = total_assets_value / total_shares      (SCALE-scaled, virtual offset applied)
+total_assets_value = vault_balance · NAV / SCALE      (quote units)
+```
+
+Because `share_price` embeds the live NAV, a share is always worth its
+proportional real-world value — and a NAV increase lifts every share, including
+shares pledged as collateral elsewhere ([beat 4](/architecture#flow-3--accrue-yield-while-pledged)).
+
+## Deposit and withdraw math
+
+`SCALE = 10¹²`, `VIRT = 10³`. All arithmetic is checked `i128`. Rounding always
+favors the protocol: **floor to the user**.
+
+**Deposit** (`from`, `amount`) — measured, not claimed:
+
+```
+received  = balance_after − balance_before          // balance-diff around transfer_in
+value_in  = received · nav / SCALE                   // floor — value the deposit at NAV
+shares    = value_in · (S + VIRT) / (V + VIRT)        // floor
+```
+
+**Withdraw** (`from`, `shares`):
+
+```
+value_out = shares · (V + VIRT) / (S + VIRT)         // floor
+amount    = value_out · SCALE / nav                  // floor, clamped to holdings
+```
+
+where `S = total_shares` and `V = total_assets_value` **before** the operation.
+
+### Value-consistent legs {#value-consistent-legs}
+
+The frozen spec §3 defines `V` in quote units but wrote the mint leg with
+`received` in underlying units. Taken literally, a depositor at NAV 1.02 would
+silently lose ~2% of contributed value to prior holders. Leontief implements the
+only unit-consistent reading: **`received` is valued at the current NAV before the
+share formula**, and withdraw converts the quote value back. Consequences:
+
+- `share_price` is **quote units per share** (so a NAV tick raises it — beat 4 holds).
+- Pool collateral value is `shares · share_price / SCALE` — NAV enters **exactly once**.
+
+This resolution is recorded and human-approved as **Decision #3** in the repo's
+`DECISIONS.md`, and the [golden vectors](/security#golden-vectors) are generated
+under this semantics.
+
+## The inflation-attack defense
+
+The classic ERC-4626 first-depositor attack: donate assets to an empty vault to
+inflate `share_price`, then let a victim's deposit round down to zero shares. Two
+mechanisms close it:
+
+1. **Virtual offset.** `VIRT = 10³` is added to both shares and value in every
+   ratio, so an empty vault prices the first share sanely and a donation can't
+   move the ratio far.
+2. **Zero-share mints revert.** A deposit that would mint 0 shares reverts, so a
+   victim never loses funds to a rounding wipe.
+
+Together these bound the victim's worst-case rounding loss to **one share's
+value**, and guarantee the attacker's claim never exceeds their outlay. The
+property tests assert all three (fairness, round-trip ≤ deposited, inflation
+bound) — see [Security](/security).
+
+:::note Why `VIRT = 10³` and not `10⁶`
+A strict "victim loss &lt; 1e-6 for any donation" bound would need `VIRT = 10⁶`,
+which the frozen spec does not authorize. At `10³` the enforced-and-tested
+guarantees are: zero-share mints revert, victim rounding loss ≤ one share, and
+the attacker never profits. This tradeoff is documented in Decision #3.
+:::
+
+## Key entry points
+
+| Method | Auth | Returns | Notes |
+|---|---|---|---|
+| `deposit(from, amount)` | `from` | minted shares (`i128`) | balance-diff; pausable |
+| `withdraw(from, shares)` | `from` | underlying paid (`i128`) | **never pausable** (exit) |
+| `share_price()` | — | quote units / share (`i128`) | reverts if oracle halts |
+| `total_assets_value()` | — | quote units (`i128`) | `balance · NAV / SCALE` |
+| `total_shares()` | — | shares (`i128`) | |
+| `balance(id)` / `transfer(...)` | SEP-41 | — | standard token surface |
+| `set_cap(cap)` / `set_oracle(addr)` | admin | — | instance-storage config |
+
+Deposits can be paused for an incident; **withdrawals cannot**. That asymmetry is
+a protocol invariant.

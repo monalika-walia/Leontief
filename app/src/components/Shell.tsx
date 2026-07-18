@@ -49,7 +49,18 @@ export function Shell({ children, demoEnabled }: { children: ReactNode; demoEnab
 
       <footer className="wrap" style={{ borderTop: "1px solid var(--hair)", padding: "24px" }}>
         <div className="row between" style={{ flexWrap: "wrap", gap: 12 }}>
-          <span className="label">a 29Projects Lab protocol</span>
+          <span className="row" style={{ gap: 16, flexWrap: "wrap" }}>
+            <span className="label">a 29Projects Lab protocol</span>
+            <a
+              className="label mono"
+              href="https://docs.leontief.tech"
+              target="_blank"
+              rel="noreferrer"
+              style={{ textDecoration: "underline" }}
+            >
+              docs ↗
+            </a>
+          </span>
           <span className="row" style={{ gap: 16, flexWrap: "wrap" }}>
             {[
               ["vault", env.VAULT_LEOD],

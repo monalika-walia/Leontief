@@ -1,0 +1,95 @@
+---
+id: blend
+title: Blend (X2)
+description: A real Blend testnet pool that accepts ld-shares as collateral — factory/backstop addresses, the oracle interface, and the SDK call shape.
+---
+
+# Blend — ld-shares as pool collateral (X2)
+
+**Goal:** stand up a real [Blend](https://docs.blend.capital) testnet lending pool
+that accepts `ld-shares` (ldUSDY) as collateral, so users borrow USDC against
+wrapped RWAs in a production money-market — relegating the [mini-pool](/protocol/mini-pool)
+to demo/liquidation-drill status. Facts below are dated **2026-07-17**, cited, and
+adversarially re-verified; canonical copy in `INTEGRATIONS/blend.md`.
+
+## Testnet addresses (verified, Blend V2)
+
+| Component | Contract ID |
+|---|---|
+| Pool Factory V2 | `CDV6RX4CGPCOKGTBFS52V3LMWQGZN3LCQTXF5RVPOOCG4XVMHXQ4NTF6` |
+| Backstop V2 | `CBDVWXT433PRVTUNM56C3JREF3HIZHRBA64NB2C3B2UNCKIS65ZYCLZA` |
+| BLND token | `CB22KRA3YZVCNCQI64JQ5WE7UY2VAV7WFLK6A2JN3HEX56T2EDAFO7QF` |
+| USDC token | `CAQCFVLOBK5GIULPNZRGATJJMIZL5BSP7X5YJVMGCPTUEPFM4AVSRCJU` |
+| Comet BLND:USDC LP (backstop token) | `CA5UTUUPHYL5K22UBRUVC37EARZUGYOSGK3IKIXG2JLCC5ZZLI4BDWDM` |
+| Comet factory | `CDX2TKELFKHP2MWISDCXWWZ73CL7F57GHYRJAWJWNOTLNJNNM7XLT4JY` |
+| Emitter | `CC3WJVJINN4E3LPMNTWKK7LQZLYDQMZHZA7EZGXATPHHBPKNZRIO3KZ6` |
+
+A ready-made `TestnetV2` reference pool
+(`CCEBVDYM32YNYCVNRXQKDFFPISJJCV557CDZEIRBEE4NCV4KHPQ44HGF`) exists in `blend-utils`
+as a concrete `ReserveConfig` example.
+
+## The oracle interface Blend consumes
+
+This is the key to the whole integration. A Blend pool calls its oracle with a
+**SEP-40** surface, invoking assets as `Asset::Stellar(address)`:
+
+```rust
+fn lastprice(asset: Asset) -> Option<PriceData>;   // Asset::Stellar(addr)
+fn decimals() -> u32;
+struct PriceData { price: i128, timestamp: u64 }
+```
+
+Leontief's plan: a thin **`blend-price-adapter`** that exposes exactly this
+interface and sources `vault.share_price × oracle-adapter.get_nav` — i.e. the
+composable price of one ld-share — under the **same fail-closed policy**. If
+Leontief halts, Blend sees a stale price and its own protections engage.
+
+:::warning A pool's oracle is immutable
+Blend states an oracle **cannot be changed after a pool is created**. Leontief's
+SEP-40 adapter choice is therefore irreversible per pool — a deliberate risk to
+call out in the launch runbook.
+:::
+
+## Reserve config & rates
+
+`ReserveConfig` fields `c_factor` (≈collateral factor / LTV), `l_factor` (liability
+factor), `util`, and `max_util` are all **7-decimal** fixed point. The interest-rate
+parameters `r_base / r_one / r_two / r_three` are `R0/R1/R2/R3`, also 7-decimal.
+Leontief's ldUSDY reserve launches with a **conservative `c_factor` of 7000** (70%).
+
+:::note
+The precise slope semantics of `r_one/r_two/r_three` and the tier utilization
+breakpoints are defined in the Blend whitepaper, not the tutorial pages, and are
+**not asserted here** — they'll be pinned from the whitepaper before mainnet.
+:::
+
+## Backstop activation
+
+A pool moves Setup → Active only once its backstop is funded past a threshold. The
+backstop token is the **BLND:USDC 80:20 Comet LP**; activation requires a **product
+constant of 200,000** (≈ 50,000 LP tokens sufficient in practice). On testnet the
+BLND/USDC are obtained from the faucet, the LP is minted via the Comet factory, and
+the backstop funded to cross the threshold.
+
+## SDK call shape
+
+`@blend-capital/blend-sdk` (**v3.3.0** at time of writing — pin exactly and
+re-verify at build). Actions are submitted as a `requests` array:
+
+```ts
+// RequestType: Supply=0, Withdraw=1, SupplyCollateral=2, WithdrawCollateral=3,
+//              Borrow=4, Repay=5, … DeleteLiquidationAuction=9
+type Request = { request_type: RequestType; address: string; amount: bigint };
+// pool.submit({ from, spender, to, requests })   (or submit_with_allowance)
+```
+
+## Steps
+
+1. Deploy a pool via the factory with an **ldUSDY reserve** (`c_factor` 7000) and
+   the `blend-price-adapter` as oracle.
+2. Meet the backstop threshold via the testnet faucet + Comet LP.
+3. Activate, then run **supply-collateral → borrow-USDC** through the SDK; extend
+   the dApp with a "Borrow on Blend" path behind a flag.
+
+**Accept when:** an end-to-end borrow against ld-share lands in a real Blend
+testnet pool, tx hashes recorded in `INTEGRATIONS/blend.md`.

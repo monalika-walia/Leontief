@@ -1,0 +1,175 @@
+---
+id: architecture
+title: Architecture
+description: The Leontief contract graph and its four core flows — wrap, borrow, accrue, liquidate — in diagrams.
+---
+
+# Architecture
+
+Leontief is five small Soroban contracts with sharp responsibilities. Nothing
+trusts a caller-supplied amount; every transfer-in is measured by balance
+difference; every price is checked before use and the system **fails closed**
+when it can't be.
+
+## Contract graph
+
+```mermaid
+flowchart TD
+  subgraph issuer["Issuer (SEP-8)"]
+    LEOD["Restricted asset — LEOD\nauth_required · auth_revocable"]
+  end
+
+  subgraph oracle["Pricing"]
+    REF["Reflector / mock feed\n(SEP-40)"]
+    OA["oracle-adapter\nfail-closed: staleness + deviation"]
+    REF --> OA
+  end
+
+  subgraph core["Leontief core"]
+    VF["vault-factory\ndeploys + registers vaults"]
+    V["vault\nERC-4626-style · mints ld-shares"]
+    MP["mini-pool\nisolated borrow · permissioned liq."]
+    VF -->|deploys| V
+    V -->|share_price uses NAV| OA
+    MP -->|values collateral via| V
+    MP -->|reads NAV| OA
+  end
+
+  USER(["User"])
+  USER -->|deposit LEOD| V
+  V -->|mint ldLEOD| USER
+  USER -->|pledge ldLEOD, borrow USDC| MP
+  LEOD -.->|held by| V
+
+  classDef box fill:#eceae2,stroke:#16150f,color:#16150f;
+  class LEOD,REF,OA,VF,V,MP box;
+```
+
+| Contract | Storage it owns | Responsibility |
+|---|---|---|
+| `vault-factory` | registry (persistent) | Deploy vaults from a pinned wasm hash; keep the canonical registry. |
+| `vault` | balances, positions (persistent); config/admin (instance) | Wrap/unwrap the RWA into `ld-shares`; SEP-41 token surface; `share_price` in quote units. |
+| `mini-pool` | positions, whitelist (persistent) | Isolated USDC borrow against pledged shares; health factor; permissioned liquidation. |
+| `oracle-adapter` | feed config, last-accepted (persistent) | Normalize a SEP-40 feed to a SCALE-scaled NAV; enforce staleness + deviation; **fail closed**. |
+| `mock-oracle` | price (instance) | Testnet-only SEP-40 stand-in so drills don't depend on external infra. |
+
+Storage discipline is a hard rule: **instance** storage holds only config/admin,
+**persistent** holds balances/positions/registry, **temporary** holds nothing
+user-owned. Every persistent write path calls `extend_ttl`.
+
+## Flow 1 · Wrap (deposit → mint)
+
+The vault never trusts the amount a caller claims to have sent. It measures its
+own balance before and after the transfer-in and mints against the **measured**
+delta, valued at the current fail-closed NAV.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as User
+  participant V as vault
+  participant T as LEOD (SAC)
+  participant O as oracle-adapter
+  U->>V: deposit(from, amount)
+  V->>O: get_nav(asset)  ·  reverts if stale/deviating
+  O-->>V: nav (SCALE-scaled)
+  V->>T: balance(vault)  — before
+  V->>T: transfer_from(user → vault, amount)
+  V->>T: balance(vault)  — after
+  Note over V: received = after − before  (balance-diff, never the claim)
+  Note over V: value_in = received · nav / SCALE  (floor)
+  Note over V: shares = value_in · (S+VIRT) / (V+VIRT)
+  V-->>U: mint ldLEOD (shares)
+```
+
+Rounding always favors the protocol over the user (floor on mint), and a
+**virtual offset** (`VIRT = 10³` on both legs) neutralizes the classic
+first-depositor inflation attack. See [The vault](/protocol/vault) for the full
+derivation and [Decision #3](/protocol/vault#value-consistent-legs) on why the
+legs are value-consistent.
+
+## Flow 2 · Borrow (pledge → draw)
+
+`mini-pool` runs isolated positions. Collateral is valued through the vault's
+`share_price` (which already embeds NAV once — never twice), and a draw is only
+allowed while it keeps `debt ≤ LTV · collateral_value`.
+
+```mermaid
+flowchart LR
+  A["supply_collateral(shares)"] --> B{"coll_value =\nshares · share_price / SCALE"}
+  B --> C["borrow(amount)"]
+  C --> D{"debt ≤ LTV(80%) · coll_value ?"}
+  D -->|yes| E["transfer USDC → user\ndebt += amount"]
+  D -->|no| F["revert: InsufficientCollateral"]
+  classDef box fill:#eceae2,stroke:#16150f,color:#16150f;
+  class A,B,C,D,E,F box;
+```
+
+## Flow 3 · Accrue (yield while pledged)
+
+Because `share_price` is **quote units per share** and reads live NAV, a pure NAV
+tick lifts the value of *locked collateral* exactly as it lifts idle shares —
+beat 4. Nothing needs to be re-pledged; the position's health factor simply
+improves.
+
+```mermaid
+flowchart LR
+  N0["NAV = 1.0000"] -->|feed tick| N1["NAV = 1.0200"]
+  N1 --> SP["share_price rises\n(quote units / share)"]
+  SP --> HF["health_factor rises\nfor the SAME position"]
+  classDef box fill:#eceae2,stroke:#16150f,color:#16150f;
+  class N0,N1,SP,HF box;
+```
+
+## Flow 4 · Liquidate (permissioned)
+
+Liquidation is **gated to a whitelist** — the trait that makes Leontief safe for
+regulated collateral. Only a whitelisted liquidator, and only when a position's
+health factor is below 1, can repay debt and seize shares at a bonus.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant L as Liquidator
+  participant MP as mini-pool
+  participant V as vault
+  L->>MP: liquidate(user, repay)
+  MP->>MP: require is_whitelisted(L)   ·  else revert (beat 5b)
+  MP->>MP: require health_factor(user) < 1  ·  else revert
+  MP->>MP: pull USDC (balance-diff) → reduce user.debt
+  Note over MP: seize = ceil(repay · (1+bonus) · SCALE / share_price)
+  MP->>V: transfer seized ldLEOD → liquidator
+  MP-->>L: seized shares
+```
+
+Exits — **withdraw and repay — are never pausable**. Even if deposits are halted
+for an incident, a user can always get out. This is a protocol invariant, not a
+feature toggle.
+
+## Fail-closed pricing, in one picture
+
+```mermaid
+flowchart TD
+  Q["get_nav(asset)"] --> S{"age ≤ max_age ?"}
+  S -->|no| H1["revert: StalePrice"]
+  S -->|yes| D{"|Δ| ≤ max_dev_bps\nvs last accepted ?"}
+  D -->|no| H2["revert: PriceDeviation"]
+  D -->|yes| P{"price > 0 ?"}
+  P -->|no| H3["revert: NonPositivePrice"]
+  P -->|yes| OK["accept · advance last_accepted · return NAV"]
+  classDef box fill:#eceae2,stroke:#16150f,color:#16150f;
+  classDef halt fill:#16150f,stroke:#16150f,color:#f4f2ec;
+  class Q,S,D,P,OK box;
+  class H1,H2,H3 halt;
+```
+
+There is no fallback price and no silent staleness. If the feed can't be trusted,
+pricing-dependent operations stop — and exits stay open. Read the policy in full
+on the [Oracle](/protocol/oracle) page.
+
+## Toolchain & invariants
+
+- Rust + `soroban-sdk 27.0.0` (pinned); `rustc 1.97.1`; wasm target `wasm32v1-none`.
+- `i128` checked math only; `SCALE = 10¹²`, `VIRT = 10³`; floor → user, ceil → protocol.
+- `require_auth` on every state-changing entry point; typed errors, no reachable panics.
+- Coverage gate ≥ 90% lines on the funds-holding contracts (vault + mini-pool).

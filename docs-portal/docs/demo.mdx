@@ -1,0 +1,38 @@
+---
+id: demo
+title: The five-beat demo
+description: The whole thesis, live on-chain — each beat is also an integration test.
+---
+
+# The five-beat demo
+
+Every beat below is a real testnet transaction *and* an integration test in the
+repo. Run it yourself at **[app.leontief.tech/demo](https://app.leontief.tech/demo)**
+(no wallet needed) or from the CLI with `./scripts/demo.sh`.
+
+```mermaid
+flowchart TD
+  B1["Beat 1 — restricted transfer fails\nauthorize vault → door opens"] --> B2["Beat 2 — wrap mints ldLEOD at NAV\nbalance-diff · virtual offset"]
+  B2 --> B3["Beat 3 — share moves & borrows\nSEP-41 transfer → 80% LTV USDC"]
+  B3 --> B4["Beat 4 — yield while pledged\nNAV tick lifts locked collateral"]
+  B4 --> B5a["Beat 5a — permissioned liquidation\nwhitelisted repays, seizes +5%"]
+  B5a --> B5b["Beat 5b — the gate holds\nun-whitelisted caller refused"]
+  classDef box fill:#eceae2,stroke:#16150f,color:#16150f;
+  class B1,B2,B3,B4,B5a,B5b box;
+```
+
+1. **Restricted transfer fails.** LEOD is a genuine SEP-8 asset; sending it to a
+   stranger reverts. Authorizing the vault opens the door.
+2. **Wrap mints ldLEOD at NAV.** The vault measures the deposit by balance
+   difference and mints a composable share at the live, fail-closed NAV.
+3. **The share moves freely and borrows.** Transfer ldLEOD (SEP-41), pledge it,
+   and draw USDC at 80% LTV.
+4. **Yield while pledged.** A NAV tick raises `share_price` — and the health factor
+   of the *locked* collateral — exactly as for idle shares.
+5. **Permissioned liquidation.** A whitelisted liquidator repays and seizes shares
+   at a 5% bonus (**5a**); an un-whitelisted wallet is refused the identical call
+   (**5b**).
+
+Each beat prints its transaction hash; open any of them on
+[stellar.expert](https://stellar.expert/explorer/testnet). Nothing here is staged —
+every number is a live chain read. The recording kit is `scripts/record_demo.md`.

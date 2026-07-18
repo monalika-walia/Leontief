@@ -1,0 +1,29 @@
+---
+id: addresses
+title: Addresses
+description: Leontief testnet contract IDs — generated from the committed deployment registry.
+---
+
+# Addresses
+
+Stellar **testnet** (passphrase `Test SDF Network ; September 2015`). These are
+generated from `deployments/testnet.json` and validated in CI; the repo's
+`docs/ADDRESSES.md` is the canonical source.
+
+| Contract | ID |
+|---|---|
+| `vault` | [`CBRS5IY6NKO4CF74NO556ZDRZBZ47O7QNWTPNLD63JQZHSSE4Q7VJDQ6`](https://stellar.expert/explorer/testnet/contract/CBRS5IY6NKO4CF74NO556ZDRZBZ47O7QNWTPNLD63JQZHSSE4Q7VJDQ6) |
+| `mini-pool` | [`CA3WZQH45ZLZJ2JLR2YIZDS6YVF7GS5YBWIY6E6J7OXRMWAQBVAO2ZLR`](https://stellar.expert/explorer/testnet/contract/CA3WZQH45ZLZJ2JLR2YIZDS6YVF7GS5YBWIY6E6J7OXRMWAQBVAO2ZLR) |
+| `oracle-adapter` | [`CAAQBQBPJ6I4JMVLQULXKEVC7XLIV72SXHSJEV7UVQALNOS7HGYTI6FT`](https://stellar.expert/explorer/testnet/contract/CAAQBQBPJ6I4JMVLQULXKEVC7XLIV72SXHSJEV7UVQALNOS7HGYTI6FT) |
+| `vault-factory` | [`CDH4E4ZBS32DVEHFDBGAYX5RY2377Z2VDCMGQKKVJMJ2RUXZJEWYHVTK`](https://stellar.expert/explorer/testnet/contract/CDH4E4ZBS32DVEHFDBGAYX5RY2377Z2VDCMGQKKVJMJ2RUXZJEWYHVTK) |
+| `mock-oracle` | [`CDV2HC6BAUE36RNXHKTNSIV65JTTZNZRSPMPXED3HP2L2BMWQ6WRMJUH`](https://stellar.expert/explorer/testnet/contract/CDV2HC6BAUE36RNXHKTNSIV65JTTZNZRSPMPXED3HP2L2BMWQ6WRMJUH) |
+| `LEOD` (restricted asset SAC) | [`CDJMMMNZYLXOHAPJGEMP26UMT2EMBBPFJOICQTHS4WPANWNP27KGP226`](https://stellar.expert/explorer/testnet/contract/CDJMMMNZYLXOHAPJGEMP26UMT2EMBBPFJOICQTHS4WPANWNP27KGP226) |
+| `USDC` (SAC) | [`CC6G5GR4JA6DWX6LYPXD5BMFL3OGWUAY56UAXANCU3DPIWTZC4LGUSKP`](https://stellar.expert/explorer/testnet/contract/CC6G5GR4JA6DWX6LYPXD5BMFL3OGWUAY56UAXANCU3DPIWTZC4LGUSKP) |
+
+:::note
+`LEOD` is a purpose-built restricted demo asset, issued with real SEP-8
+`auth_required | auth_revocable` flags so the compliance path is proven end-to-end
+before any real asset is touched. Mainnet Reflector feed IDs and Blend pool
+addresses are tracked, dated and cited, on the
+[integrations](/integrations/reflector) pages.
+:::

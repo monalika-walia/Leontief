@@ -1,0 +1,80 @@
+---
+id: aquarius
+title: Aquarius (X3)
+description: An Aquarius AMM pool pairing ld-shares with USDC — router addresses, pool families, fees, and the permissionless-creation status.
+---
+
+# Aquarius — LP for ld-shares (X3)
+
+**Goal:** an [Aquarius](https://aqua.network) AMM pool pairing `ld-shares` (ldUSDY)
+with USDC on Soroban testnet, with an add/remove-liquidity flow in the dApp. Facts
+dated **2026-07-17**, cited, adversarially re-verified; canonical copy in
+`INTEGRATIONS/aquarius.md`.
+
+## Router addresses
+
+Aquarius routes all swaps, deposits, and withdrawals through a single **router**
+contract:
+
+| Network | Router contract ID |
+|---|---|
+| testnet | `CBCFTQSPDBAIZ6R6PJQKSQWKNKWH2QIV3I4J72SHWBIK3ADRRAM5A6GD` |
+| mainnet | `CBQDHNBFBZYE4MKPWBSJOPIYLW4SFSXAXUTSXJN76GNKYVYPCKWC6QUK` |
+
+:::warning Confirm the testnet router on-chain before committing to an audit doc
+The testnet router above is **docs-current** (the docs label it "updated
+February 2026, valid across testnet resets") but was **not blockchain-confirmed**
+in research. Stellar testnet is wiped 2–4×/year. Run an on-chain smoke test
+(resolve the contract / execute a testnet swap) and record the confirmed address +
+date in `deployments/*.json` before treating it as fact.
+:::
+
+## Pool families & fees
+
+| Family | Curve | Fees |
+|---|---|---|
+| Volatile | constant-product (Uniswap-v2 style) | 0.1% / 0.3% / 1% |
+| Stable Swap | stableswap, up to 3 assets | customizable, set at creation |
+| Concentrated | concentrated liquidity | — |
+
+For an ldUSDY/USDC pair (both ≈ $1 assets), **Stable Swap** is the natural choice.
+
+## Permissionless creation
+
+Anyone can create a pool from any Stellar/Soroban asset pair — **no allow-list**.
+Pool creation costs **300,000 AQUA**. AQUA reward eligibility is driven by on-chain
+AQUA/ICE voting (a pool must reach the reward zone: voted above threshold + all
+assets whitelisted); rewards are a mainnet concern.
+
+## SDK
+
+Official TS SDK **`@aquariusdefi/sdk` v0.2.0** (published 2026-07-13), depending on
+`@stellar/stellar-sdk ^15.0.0`; it runs on testnet (verified full on-chain swap +
+friendbot funding). A Python SDK (`pip install aquarius-sdk`) also exists.
+
+```ts
+// Router is the single entry point. Verified param names:
+// deposit(user, tokens, pool_index, desired_amounts, min_shares)
+// swap_chained(...) for multi-hop
+```
+
+:::note
+`pool_index` is a `u32`. The exact `init_standard_pool` / `init_stableswap_pool`
+signatures are **not asserted here** — the `AquaToken/soroban-amm` repo is not
+public, so pool-creation signatures will be taken from the SDK's helper at
+implementation time rather than guessed.
+:::
+
+## Steps & fallback
+
+1. `scripts/create_aqua_pool.sh` — create an ldUSDY/USDC Stable Swap pool via the
+   router and seed minimal liquidity.
+2. SDK helpers `addLiquidity` / `removeLiquidity`; a "Provide liquidity" flow in
+   the dApp behind a flag.
+
+**Fallback** if the Soroban AMM path is blocked on testnet: a classic **SDEX
+orderbook** demo for the share, documented explicitly as a fallback — not the
+product.
+
+**Accept when:** an LP position is opened and closed on testnet via the UI, with
+tx hashes recorded in `INTEGRATIONS/aquarius.md`.

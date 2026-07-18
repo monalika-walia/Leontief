@@ -1,0 +1,89 @@
+---
+id: overview
+title: Leontief
+slug: /
+description: The RWA utility layer on Stellar — wrap restricted assets into composable, yield-passing ld-shares.
+---
+
+<div className="ledger-hero">
+  <div className="k">Litepaper · The awake state</div>
+  <h1>Leontief</h1>
+  <p>An adapter layer that turns restricted, tokenized real-world assets on Stellar into composable, yield-passing <strong>ld-shares</strong> — with a fail-closed NAV oracle and permissioned liquidation built for regulated assets.</p>
+</div>
+
+Roughly **$3B of tokenized real-world assets** now live on Stellar — US and Mexican
+treasuries, money-market funds, short credit — growing about 3× year over year.
+Almost all of it is idle: holders earn the base coupon and nothing else, because
+the very rules that make these assets safe in the real world (transfer
+restrictions, off-chain NAV, non-standard yield accrual) make them incompatible
+with on-chain DeFi.
+
+**Leontief is an adapter, not another lending protocol.** It wraps a restricted
+RWA into a normalized, freely-composable share token — an `ld-share` — that keeps
+accruing the underlying's native yield, then routes that share into existing
+venues: [Blend](/integrations/blend) for credit, [Aquarius](/integrations/aquarius)
+for liquidity. One asset, two jobs at once: still earning, now working.
+
+```
+deposit → mint ld-share at fail-closed NAV → move / borrow / LP → underlying keeps accruing → redeem ≤ deposited + growth
+```
+
+## Live on testnet
+
+<div className="ld-grid">
+  <div className="ld-card">
+    <div className="n">dApp</div>
+    <h3>Wrap · Borrow · Liquidate</h3>
+    <p><a href="https://app.leontief.tech">app.leontief.tech</a> — the full protocol UI, wallet-connected.</p>
+  </div>
+  <div className="ld-card">
+    <div className="n">Guided demo</div>
+    <h3>The five beats</h3>
+    <p><a href="https://app.leontief.tech/demo">app.leontief.tech/demo</a> — the whole thesis on-chain, no wallet needed.</p>
+  </div>
+  <div className="ld-card">
+    <div className="n">Litepaper</div>
+    <h3>The awake state</h3>
+    <p><a href="https://leontief.tech/litepaper">leontief.tech/litepaper</a> — the full narrative + business model.</p>
+  </div>
+  <div className="ld-card">
+    <div className="n">Source</div>
+    <h3>Monorepo</h3>
+    <p><a href="https://github.com/monalika-walia/Leontief">github.com/monalika-walia/Leontief</a> — contracts, SDK, indexer, tests.</p>
+  </div>
+</div>
+
+Contract IDs are on the [Addresses](/addresses) page, generated from the committed
+deployment registry and verified in CI.
+
+## The five beats
+
+The whole thesis, live on-chain — each is also an integration test and a step in
+[/demo](https://app.leontief.tech/demo):
+
+1. **Restricted transfer fails.** LEOD is a genuine SEP-8 asset
+   (`auth_required | auth_revocable`); sending it to a stranger reverts.
+   Authorizing the vault opens the door.
+2. **Wrap mints ldLEOD at NAV.** Balance-diff measured; virtual-offset math
+   defends the first depositor.
+3. **The share moves freely and borrows.** SEP-41 transfer, then USDC drawn at
+   80% LTV against pledged shares.
+4. **Yield while pledged.** A NAV tick raises `share_price` for locked collateral
+   identically to idle shares.
+5. **Permissioned liquidation.** A whitelisted liquidator repays and seizes at a
+   5% bonus (5a); an un-whitelisted caller is refused (5b).
+
+## Where to go next
+
+- **[Architecture](/architecture)** — the contract graph and the four core flows, in diagrams.
+- **[The vault](/protocol/vault)** — ld-share accounting, NAV math, the inflation defense.
+- **[Oracle](/protocol/oracle)** — the fail-closed pricing policy.
+- **[Security](/security)** — the threat model and its test tie-out.
+- **[SDK](/sdk)** / **[Indexer API](/api)** — build on Leontief.
+
+:::note Prototype status
+This is a testnet prototype built for a Stellar Community Fund grant. Numbers,
+addresses, and integration facts here are dated and cited; version-volatile
+ecosystem facts live under [Integrations](/integrations/reflector). Nothing here
+is investment advice or an offer of a security.
+:::

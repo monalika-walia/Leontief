@@ -1,0 +1,79 @@
+---
+id: reflector
+title: Reflector (X1)
+description: Live SEP-40 oracle feeds — testnet/mainnet contract IDs, the Asset enum, decimals, cadence, and the RWA-feed gap.
+---
+
+# Reflector — live oracle feeds (X1)
+
+**Goal:** replace the testnet mock feed with a live [Reflector](https://reflector.network)
+SEP-40 oracle in the [oracle-adapter](/protocol/oracle). Everything below was
+researched from official sources and **adversarially re-verified**; each contract
+ID was confirmed live via `stellar-cli` against `soroban-testnet.stellar.org`.
+
+:::info Sourcing discipline
+Version-volatile facts here are dated (**2026-07-17**) and cited, per the repo's
+`INTEGRATIONS/` rule. The canonical copy is `INTEGRATIONS/reflector.md`.
+:::
+
+## Contract IDs (verified)
+
+Feeds published in Stellar's [oracle providers](https://developers.stellar.org/docs/data/oracles/oracle-providers)
+list and confirmed on-chain:
+
+| Feed | Network | Contract ID |
+|---|---|---|
+| Stellar DEX | testnet | `CAVLP5DH2GJPZMVO7IJY4CVOD5MWEFTJFVPD2YY2FQXOQHRGHK4D6HLP` |
+| External CEX/DEX | testnet | `CCYOZJCOPG34LLQQ7N24YXBM7LL62R7ONMZ3G6WZAAYPB5OYKOMJRN63` |
+| Fiat / FX | testnet | `CCSSOHTBL3LEWUCBBEB5NJFC2OKFRC74OWEIJIZLRJBGAAU4VMU5NV4W` |
+| Stellar DEX | mainnet | `CALI2BYU2JE6WVRUFYTS6MSBNEHGJ35P4AVCZYF3B6QOE3QKOB2PLE6M` |
+| External CEX/DEX | mainnet | `CAFJZQWSED6YAWZU3GWRTOCNPPCGBN32L7QV43XX5LZLFTK6JLN34DLN` |
+| Fiat / FX | mainnet | `CBKGPWGKSKZF52CFHMTRR23TBWTPMRDIYZ4O2P5VS65BMHYH4DXMCJZC` |
+
+## Interface
+
+Reflector implements **SEP-40**. The asset selector is an enum:
+
+```rust
+enum Asset { Stellar(Address), Other(Symbol) }   // Stellar assets vs external symbols
+struct PriceData { price: i128, timestamp: u64 }
+
+fn lastprice(asset: Asset) -> Option<PriceData>;
+fn price(asset: Asset, timestamp: u64) -> Option<PriceData>;
+fn decimals() -> u32;      // = 14 on all three testnet feeds (live-queried)
+fn resolution() -> u32;    // = 300 (5-min heartbeat) on all three
+fn base() -> Asset;        // Other("USD") on CEX/DEX + FX; a Stellar-asset SAC on the DEX feed
+```
+
+- **Decimals = 14**, **resolution = 300 s** — confirmed live on all three testnet feeds.
+- Pulse feeds are **free**, 5-minute cadence; history retention 24 h.
+
+### Adapter mapping
+
+Leontief's adapter takes `asset: Symbol`; Reflector takes `asset: Asset`. The
+integration maps our `Symbol` asset-id to `Asset::Other(Symbol)` (for symbol-priced
+assets) or `Asset::Stellar(Address)` (for Stellar-asset-priced ones), reads the
+`i128` price + `u64` timestamp, and normalizes from **14 decimals → SCALE (10¹²)**.
+Recalibrate `max_age_secs` to cadence ×2.5 = **750 s**.
+
+## The RWA-feed gap (the decisive finding)
+
+:::warning No RWA feeds on testnet — keep the mock
+The testnet CEX/DEX feed carries **16 crypto majors + EURC**; the FX feed carries
+**23 fiat currencies plus XAU (gold)**. **None of USDY / CETES / USTRY (or other
+Etherfuse/Ondo RWAs) have a Reflector feed on testnet — nor were any identifiable
+on mainnet.** The FX feed's `TRY` is the Turkish Lira, *not* USTRY.
+
+**Consequence:** Leontief wires the adapter to a live Reflector feed for a
+supported asset (e.g. XLM/USD, which is readable on the testnet CEX/DEX feed) to
+prove the live-oracle path end-to-end, and **keeps the mock for the RWA demo
+asset (LEOD)**. The mainnet plan is to onboard a dedicated RWA price source
+(issuer NAV feed or a Reflector subscription feed) before any real asset is wrapped.
+:::
+
+## Drill
+
+With a live feed configured, the deviation breaker is exercised by tightening
+`max_dev_bps`, observing the `PriceDeviation` halt, and re-arming via the
+prototype `accept_override` (which emits the loud `override_accepted` event). This
+proves [fail-closed](/protocol/oracle) behavior against real feed movement.
