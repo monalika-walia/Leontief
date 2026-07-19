@@ -1,6 +1,7 @@
 {
   "cleanUrls": false,
   "rewrites": [
-    { "source": "/litepaper", "destination": "/Litepaper.dc.html" }
+    { "source": "/litepaper", "destination": "/Litepaper.dc.html" },
+    { "source": "/performance", "destination": "/performance.html" }
   ]
 }

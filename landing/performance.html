@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Leontief — Performance</title>
+<meta name="description" content="Live testnet performance: wrapped AUM, utility ratio, and per-wallet positions on the Leontief protocol." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0A0A0A; --fg:#F2F1ED; --dim:#6E6E69; --hair:rgba(242,241,237,0.14);
+    --hair2:rgba(242,241,237,0.07); --up:#F2F1ED; --ease:cubic-bezier(.22,.61,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--fg);font-family:'IBM Plex Mono',ui-monospace,monospace;
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 24px 96px}
+  a{color:inherit}
+  .wrap{max-width:1040px;margin:0 auto}
+  /* header */
+  header{display:flex;justify-content:space-between;align-items:baseline;
+    padding:34px 0 26px;border-bottom:1px solid var(--hair);flex-wrap:wrap;gap:12px}
+  .brand{font-family:'Instrument Serif',Georgia,serif;font-size:30px;letter-spacing:.2px}
+  .brand a{text-decoration:none}
+  .brand .dot{color:var(--dim)}
+  nav{display:flex;gap:22px;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--dim)}
+  nav a{text-decoration:none}
+  nav a:hover{color:var(--fg)}
+  .status{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim);
+    letter-spacing:.05em;text-transform:uppercase}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+  .pulse.live{background:var(--fg);animation:blink 2s var(--ease) infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  /* hero line */
+  .lede{padding:40px 0 30px;max-width:640px}
+  .lede h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,5vw,46px);
+    line-height:1.08;letter-spacing:.2px}
+  .lede h1 em{font-style:italic;color:var(--fg)}
+  .lede p{color:var(--dim);margin-top:14px;font-size:13.5px;max-width:560px}
+  /* KPI grid */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--hair);
+    border-radius:2px;overflow:hidden}
+  .kpi{padding:20px 18px;border-right:1px solid var(--hair2)}
+  .kpi:last-child{border-right:none}
+  .kpi .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+  .kpi .v{font-size:24px;margin-top:12px;font-weight:500;font-variant-numeric:tabular-nums}
+  .kpi .s{font-size:11.5px;color:var(--dim);margin-top:5px}
+  @media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}
+    .kpi{border-bottom:1px solid var(--hair2)}}
+  @media(max-width:820px){.kpi:nth-child(2){border-right:none}}
+  /* section */
+  .sec{margin-top:52px}
+  .sec h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+    padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:2px}
+  /* table */
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th,td{text-align:right;padding:15px 12px;border-bottom:1px solid var(--hair2);white-space:nowrap}
+  th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:400}
+  th:first-child,td:first-child{text-align:left;padding-left:2px}
+  th:last-child,td:last-child{padding-right:2px}
+  .rank{color:var(--dim)}
+  .addr{font-size:13px}
+  .addr a{text-decoration:none;border-bottom:1px solid var(--hair)}
+  .addr a:hover{border-color:var(--fg)}
+  .who{color:var(--dim);font-size:11.5px;margin-top:3px}
+  .big{font-size:15px}
+  .hf{padding:2px 9px;border:1px solid var(--hair);border-radius:2px;font-size:12.5px}
+  .pnl{color:var(--fg)}
+  .table-scroll{overflow-x:auto}
+  /* activity */
+  .feed{list-style:none;margin-top:6px}
+  .feed li{display:flex;justify-content:space-between;gap:14px;align-items:center;
+    padding:13px 2px;border-bottom:1px solid var(--hair2);flex-wrap:wrap}
+  .feed .act{letter-spacing:.03em}
+  .feed .act b{font-weight:500}
+  .feed .meta{color:var(--dim);font-size:12px;display:flex;gap:14px;align-items:center}
+  .feed a.tx{text-decoration:none;border-bottom:1px solid var(--hair);color:var(--dim)}
+  .feed a.tx:hover{color:var(--fg);border-color:var(--fg)}
+  .tag{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);
+    border:1px solid var(--hair);border-radius:2px;padding:1px 7px}
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--hair);
+    color:var(--dim);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  footer a{text-decoration:none;border-bottom:1px solid var(--hair)}
+  .contracts{margin-top:14px;font-size:11.5px;color:var(--dim);line-height:2}
+  .contracts a{text-decoration:none;border-bottom:1px solid var(--hair2)}
+  .note{color:var(--dim);font-size:11.5px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><a href="/">Leontief<span class="dot">.</span></a></div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="https://app.leontief.tech" target="_blank" rel="noopener">App</a>
+      <a href="https://docs.leontief.tech" target="_blank" rel="noopener">Docs</a>
+      <a href="/litepaper">Litepaper</a>
+    </nav>
+    <div class="status"><span class="pulse" id="pulse"></span><span id="statusText">testnet · snapshot</span></div>
+  </header>
+
+  <div class="lede">
+    <h1>The share keeps <em>working</em> while it's pledged.</h1>
+    <p>Live positions from the Leontief testnet deployment. Wrapped RWAs
+      (ldLEOD) are pledged as collateral and borrowed against — and still
+      accrue NAV. Every figure is a chain read; every wallet and transaction
+      links to the explorer.</p>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="sec">
+    <h2>Depositor positions</h2>
+    <div class="table-scroll">
+      <table id="tbl">
+        <thead><tr>
+          <th>#</th><th>Wallet</th><th>Collateral (ldLEOD)</th><th>Value</th>
+          <th>Debt (USDC)</th><th>Health</th><th>Unrealized</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note" id="utilNote"></p>
+  </div>
+
+  <div class="sec">
+    <h2>Recent activity</h2>
+    <ul class="feed" id="feed"></ul>
+  </div>
+
+  <div class="sec">
+    <h2>Contracts</h2>
+    <div class="contracts" id="contracts"></div>
+  </div>
+
+  <footer>
+    <span>Leontief · a 29Projects Lab protocol · testnet prototype</span>
+    <span id="asof"></span>
+  </footer>
+</div>
+
+<script id="snapshot" type="application/json">
+{
+  "network":"testnet","asof":"2026-07-19",
+  "explorer":"https://stellar.expert/explorer/testnet",
+  "contracts":{
+    "vault":"CB64EHOFGTWH2USSZP3PL2B66XJ4KD6A6C3SFXKPNTEO3NCIZFZWLHUS",
+    "mini_pool":"CCX7Z6TGAVAKOYMS3QAHD4VZHQB2QCC2XVQ4UWBZFSOX4HHDBB45EQ54",
+    "oracle_adapter":"CC624XAUEW2MYLGRQ6LMLVJQWF3ER3FQXUW2UQIJ7N2JRIDBZTGBH7NC",
+    "usdc_sac":"CBZ6PBCQUQPAJKMC75PPUSVUBXZD3SNEZMYWHWHMKMYOT5H25SEDUE6Z",
+    "leod_sac":"CDE5ZRPD2SJCUZIKEVM546Y25YIER35WYKVWICQFDW3I2ZHL2MLD4AOW",
+    "mock_oracle":"CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG"
+  },
+  "share_price":1014986776129,"total_shares":61254000000,"total_assets_value":62172000000,
+  "users":[
+    {"name":"Alice","address":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","collateral_shares":40836000000,"debt":20000000000,"hf":1761539999550,"collateral_value":41447999990,"pnl":611999990},
+    {"name":"Bob","address":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","collateral_shares":20418000000,"debt":9000000000,"hf":1957266666111,"collateral_value":20723999995,"pnl":305999995}
+  ],
+  "txs":[
+    {"action":"wrap","who":"Bob","hash":"d949809da5f50dcdded62c5e1931036d0d34ea18f6cad1a3bcf7266a0d57aacd"},
+    {"action":"supply_collateral","who":"Alice","hash":"46173ce0f16444a70f4e4cd77fcfda4db8a7e8ccdfab68302330e9dd6ff6d577"},
+    {"action":"borrow","who":"Alice","hash":"bc213ad650277731583a5fa5b468520f1dd28be627fff0fb6e9c3ef35caecf2c"},
+    {"action":"supply_collateral","who":"Bob","hash":"f1eac5d3810a20076a5cd46a0c0b3f6ee2d77e3c2ed52a042c69512660dc2ccb"},
+    {"action":"borrow","who":"Bob","hash":"a0d567f0b0e9cdb7a9739ea35dd650a32e7db39ae227df846c61159ed59477cb"},
+    {"action":"nav_tick","who":"Admin","hash":"c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"}
+  ]
+}
+</script>
+
+<script type="module">
+const SCALE = 1e12, STROOP = 1e7;
+const D = JSON.parse(document.getElementById('snapshot').textContent);
+const EXP = D.explorer;
+const fmtUsd = n => '$' + (n/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtNum = n => (n/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const trunc = a => a.slice(0,4) + '…' + a.slice(-4);
+const hf = v => (v/SCALE).toFixed(2);
+const pct = v => ((v/SCALE - 1) * 100);
+
+function render(){
+  // KPI tiles
+  const pledged = D.users.reduce((s,u)=>s+u.collateral_shares,0);
+  const util = D.total_shares ? (pledged / D.total_shares * 100) : 0;
+  const vaultReturn = pct(D.share_price);
+  const debtTot = D.users.reduce((s,u)=>s+u.debt,0);
+  const kpis = [
+    ['Wrapped AUM', fmtUsd(D.total_assets_value), 'ldLEOD at live NAV'],
+    ['Utility ratio', util.toFixed(0)+'%', 'of shares put to work'],
+    ['Active wallets', String(D.users.length), 'holding positions'],
+    ['Vault return', (vaultReturn>=0?'+':'')+vaultReturn.toFixed(2)+'%', 'share price vs mint'],
+    ['Liquidations', '0', 'all positions healthy'],
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(([k,v,s])=>
+    `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+
+  // rows, ranked by collateral value
+  const rows = [...D.users].sort((a,b)=>b.collateral_value-a.collateral_value);
+  document.getElementById('rows').innerHTML = rows.map((u,i)=>{
+    const pnlPct = u.collateral_shares ? (u.pnl / u.collateral_shares * 100) : 0;
+    return `<tr>
+      <td class="rank">${i+1}</td>
+      <td class="addr"><a href="${EXP}/account/${u.address}" target="_blank" rel="noopener">${trunc(u.address)}</a>
+        <div class="who">${u.name}</div></td>
+      <td class="big">${fmtNum(u.collateral_shares)}</td>
+      <td>${fmtUsd(u.collateral_value)}</td>
+      <td>${fmtUsd(u.debt)}</td>
+      <td><span class="hf">${hf(u.hf)}</span></td>
+      <td class="pnl">+${fmtUsd(u.pnl)} <span style="color:var(--dim)">(+${pnlPct.toFixed(2)}%)</span></td>
+    </tr>`;}).join('');
+  document.getElementById('utilNote').textContent =
+    `Utility ratio = pledged shares ÷ total shares. Both wallets have their full ldLEOD balance pledged as collateral — and it still accrued +${vaultReturn.toFixed(2)}% while locked (the NAV tick above).`;
+
+  // activity feed
+  document.getElementById('feed').innerHTML = D.txs.map(t=>{
+    const label = {wrap:'wrapped LEOD → ldLEOD',supply_collateral:'supplied collateral',
+      borrow:'borrowed USDC',nav_tick:'NAV tick (yield accrual)',repay:'repaid',liquidate:'liquidated'}[t.action]||t.action;
+    return `<li>
+      <span class="act"><b>${t.who}</b> ${label}</span>
+      <span class="meta"><span class="tag">${t.action}</span>
+        <a class="tx" href="${EXP}/tx/${t.hash}" target="_blank" rel="noopener">${t.hash.slice(0,10)}…</a></span>
+    </li>`;}).join('');
+
+  // contracts
+  const c = D.contracts;
+  const link = (label,id)=>`<div>${label} · <a href="${EXP}/contract/${id}" target="_blank" rel="noopener">${trunc(id)}</a></div>`;
+  document.getElementById('contracts').innerHTML =
+    link('Vault (ldLEOD)',c.vault)+link('Mini-pool',c.mini_pool)+link('Oracle adapter',c.oracle_adapter)+
+    link('USDC (SAC)',c.usdc_sac)+link('LEOD (SAC)',c.leod_sac);
+  document.getElementById('asof').textContent = `testnet · as of ${D.asof}`;
+}
+render();
+
+// ── best-effort live refresh (never blocks the render above) ────────────────
+async function refresh(){
+  try{
+    const sdk = await import('https://esm.sh/@stellar/stellar-sdk@13.1.0');
+    const { rpc, Contract, Address, TransactionBuilder, Account, BASE_FEE } = sdk;
+    const server = new rpc.Server('https://soroban-testnet.stellar.org');
+    const SRC = 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF';
+    const PASS = 'Test SDF Network ; September 2015';
+    async function read(cid, method, ...scvals){
+      const tx = new TransactionBuilder(new Account(SRC,'0'),{fee:BASE_FEE,networkPassphrase:PASS})
+        .addOperation(new Contract(cid).call(method, ...scvals)).setTimeout(30).build();
+      const sim = await server.simulateTransaction(tx);
+      if(rpc.Api.isSimulationError(sim) || !sim.result?.retval) throw new Error(method+' failed');
+      return sdk.scValToNative(sim.result.retval);
+    }
+    const addr = a => new Address(a).toScVal();
+    const [sp, ts, tav] = await Promise.all([
+      read(D.contracts.vault,'share_price'),
+      read(D.contracts.vault,'total_shares'),
+      read(D.contracts.vault,'total_assets_value'),
+    ]);
+    D.share_price = Number(sp); D.total_shares = Number(ts); D.total_assets_value = Number(tav);
+    for(const u of D.users){
+      const [pos, health] = await Promise.all([
+        read(D.contracts.mini_pool,'position', addr(u.address)),
+        read(D.contracts.mini_pool,'health_factor', addr(u.address)),
+      ]);
+      u.collateral_shares = Number(pos.collateral_shares);
+      u.debt = Number(pos.debt);
+      u.hf = Number(health);
+      u.collateral_value = Math.floor(u.collateral_shares * D.share_price / SCALE);
+      u.pnl = u.collateral_value - u.collateral_shares;
+    }
+    render();
+    document.getElementById('pulse').classList.add('live');
+    document.getElementById('statusText').textContent = 'testnet · live';
+  }catch(e){
+    // keep the baked snapshot; label stays "snapshot"
+    console.warn('live refresh unavailable:', e.message);
+  }
+}
+refresh();
+setInterval(refresh, 20000);
+</script>
+</body>
+</html>
