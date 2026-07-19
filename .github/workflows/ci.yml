@@ -67,7 +67,7 @@ jobs:
       - name: Build + optimize every contract
         run: |
           mkdir -p target/wasm
-          for c in vault vault-factory oracle-adapter mock-oracle mini-pool; do
+          for c in vault vault-factory oracle-adapter mock-oracle mini-pool blend-price-adapter reflector-feed; do
             stellar contract build --package "$c"
           done
           for f in target/wasm32v1-none/release/*.wasm; do

@@ -25,7 +25,7 @@ jobs:
       - name: Build + optimize every contract → deterministic wasm
         run: |
           mkdir -p dist
-          for c in vault vault-factory oracle-adapter mock-oracle mini-pool; do
+          for c in vault vault-factory oracle-adapter mock-oracle mini-pool blend-price-adapter reflector-feed; do
             stellar contract build --package "$c"
           done
           for f in target/wasm32v1-none/release/*.wasm; do

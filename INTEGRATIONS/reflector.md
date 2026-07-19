@@ -53,13 +53,24 @@ FX feed carries **23 fiat currencies + XAU** (gold). Its `TRY` is Turkish Lira,
 **not** USTRY. **No USDY / CETES / USTRY feed exists on testnet, and none was
 identifiable on mainnet.** → keep the mock for RWAs; record the mainnet feed plan.
 
-## Implementation plan
+## Implementation
 
-1. Map the adapter's `asset: Symbol` → Reflector `Asset::Other(Symbol)` /
-   `Asset::Stellar(Address)`; normalize **14 dp → SCALE (10¹²)**.
-2. Set `max_age_secs` = cadence ×2.5 = **750 s**; `max_dev_bps` per calibration.
+The Symbol→`Asset` gap is bridged by the **[`reflector-feed`](../contracts/reflector-feed)**
+shim (not a change to the fail-closed core): the adapter calls its usual
+`lastprice(Symbol)`, the shim maps the symbol to the registered Reflector `Asset`
+(e.g. `Other("XLM")`), forwards to the live feed, and passes the XDR-identical
+`PriceData` through un-rescaled. Wiring is one script:
+
+```sh
+source deploy.env && ./scripts/wire_reflector.sh   # deploy shim → map XLM → adapter.get_nav (live)
+```
+
+1. Shim maps `Symbol → Asset::Other(Symbol)`; adapter normalizes **14 dp → SCALE (10¹²)**
+   (configured `source_decimals = 14`).
+2. `max_age_secs` = cadence ×2.5 = **750 s**; `max_dev_bps` per calibration.
 3. Deviation-breaker drill against the live feed (tighten bound → observe
-   `PriceDeviation` halt → re-arm via `accept_override`) — record tx hashes here.
+   `DeviationExceeded` halt → re-arm via `accept_override`) — the script prints the
+   exact commands; record tx hashes here.
 
 ## Open items / caveats (from adversarial review)
 

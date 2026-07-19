@@ -2,7 +2,7 @@
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
-contracts := "vault vault-factory oracle-adapter mock-oracle mini-pool"
+contracts := "vault vault-factory oracle-adapter mock-oracle mini-pool blend-price-adapter reflector-feed"
 core_cov_packages := "--package vault --package mini-pool"
 
 default:

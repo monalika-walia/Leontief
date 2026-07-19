@@ -36,10 +36,14 @@ fn lastprice(asset: Asset) -> Option<PriceData>;   // PriceData { price: i128, t
 fn decimals() -> u32;
 ```
 
-→ Build a thin **`blend-price-adapter`** exposing exactly this, sourcing
-`vault.share_price × oracle-adapter.get_nav` (the composable price of one ld-share)
-under the **same fail-closed policy**. If Leontief halts, Blend sees stale → its
-protections engage.
+→ Build a thin **[`blend-price-adapter`](../contracts/blend-price-adapter)** exposing
+exactly this. The composable USD price of one ld-share **is** `vault.share_price()` —
+it is already quote-per-share with NAV entering **exactly once** (DECISIONS #3), so
+the adapter passes it through and reports `decimals() = 12` (SCALE). It does **not**
+re-multiply by `get_nav` — that would double-count NAV. Same **fail-closed policy**:
+if `share_price()` reverts (the vault's oracle halted) or is non-positive, the
+adapter returns `None`, Blend cannot value the collateral, and its protections
+engage. USDC (the debt asset) is priced by a pinned `Fixed(1e12)` source.
 
 > ⚠️ **A pool's oracle cannot be changed after creation** (docs.blend.capital,
 > selecting-an-oracle). The adapter choice is irreversible per pool — call out in
