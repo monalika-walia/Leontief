@@ -39,10 +39,14 @@ fn decimals() -> u32;
 struct PriceData { price: i128, timestamp: u64 }
 ```
 
-Leontief's plan: a thin **`blend-price-adapter`** that exposes exactly this
-interface and sources `vault.share_price × oracle-adapter.get_nav` — i.e. the
-composable price of one ld-share — under the **same fail-closed policy**. If
-Leontief halts, Blend sees a stale price and its own protections engage.
+Leontief ships a thin **`blend-price-adapter`** that exposes exactly this
+interface. The composable USD price of one ld-share **is** `vault.share_price()` —
+it is already quote-per-share with NAV entering **exactly once** (Decision #3), so
+the adapter passes it through and reports `decimals() = 12`; it does **not**
+re-multiply by `get_nav`, which would double-count NAV. USDC (the debt asset) is
+priced by a pinned `Fixed(1e12)` source. Same **fail-closed policy**: if
+`share_price()` reverts or is non-positive, `lastprice` returns `None`, Blend
+cannot value the collateral, and its own protections engage.
 
 :::warning A pool's oracle is immutable
 Blend states an oracle **cannot be changed after a pool is created**. Leontief's

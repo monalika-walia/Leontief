@@ -56,6 +56,12 @@ assets) or `Asset::Stellar(Address)` (for Stellar-asset-priced ones), reads the
 `i128` price + `u64` timestamp, and normalizes from **14 decimals → SCALE (10¹²)**.
 Recalibrate `max_age_secs` to cadence ×2.5 = **750 s**.
 
+This mapping is implemented by the **`reflector-feed`** shim contract — it exposes
+the adapter's `lastprice(Symbol)` surface, forwards to the live Reflector
+`lastprice(Asset)`, and passes the XDR-identical `PriceData` through untouched, so
+the fail-closed core is unchanged. One command wires it end-to-end:
+`source deploy.env && ./scripts/wire_reflector.sh`.
+
 ## The RWA-feed gap (the decisive finding)
 
 :::warning No RWA feeds on testnet — keep the mock
