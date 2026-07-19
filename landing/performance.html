@@ -155,16 +155,16 @@
   },
   "share_price":1014986776129,"total_shares":61254000000,"total_assets_value":62172000000,
   "users":[
-    {"name":"Alice","address":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","collateral_shares":40836000000,"debt":20000000000,"hf":1761539999550,"collateral_value":41447999990,"pnl":611999990},
-    {"name":"Bob","address":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","collateral_shares":20418000000,"debt":9000000000,"hf":1957266666111,"collateral_value":20723999995,"pnl":305999995}
+    {"address":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","collateral_shares":40836000000,"debt":20000000000,"hf":1761539999550,"collateral_value":41447999990,"pnl":611999990},
+    {"address":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","collateral_shares":20418000000,"debt":9000000000,"hf":1957266666111,"collateral_value":20723999995,"pnl":305999995}
   ],
   "txs":[
-    {"action":"wrap","who":"Bob","hash":"d949809da5f50dcdded62c5e1931036d0d34ea18f6cad1a3bcf7266a0d57aacd"},
-    {"action":"supply_collateral","who":"Alice","hash":"46173ce0f16444a70f4e4cd77fcfda4db8a7e8ccdfab68302330e9dd6ff6d577"},
-    {"action":"borrow","who":"Alice","hash":"bc213ad650277731583a5fa5b468520f1dd28be627fff0fb6e9c3ef35caecf2c"},
-    {"action":"supply_collateral","who":"Bob","hash":"f1eac5d3810a20076a5cd46a0c0b3f6ee2d77e3c2ed52a042c69512660dc2ccb"},
-    {"action":"borrow","who":"Bob","hash":"a0d567f0b0e9cdb7a9739ea35dd650a32e7db39ae227df846c61159ed59477cb"},
-    {"action":"nav_tick","who":"Admin","hash":"c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"}
+    {"action":"wrap","who":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","hash":"d949809da5f50dcdded62c5e1931036d0d34ea18f6cad1a3bcf7266a0d57aacd"},
+    {"action":"supply_collateral","who":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","hash":"46173ce0f16444a70f4e4cd77fcfda4db8a7e8ccdfab68302330e9dd6ff6d577"},
+    {"action":"borrow","who":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","hash":"bc213ad650277731583a5fa5b468520f1dd28be627fff0fb6e9c3ef35caecf2c"},
+    {"action":"supply_collateral","who":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","hash":"f1eac5d3810a20076a5cd46a0c0b3f6ee2d77e3c2ed52a042c69512660dc2ccb"},
+    {"action":"borrow","who":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","hash":"a0d567f0b0e9cdb7a9739ea35dd650a32e7db39ae227df846c61159ed59477cb"},
+    {"action":"nav_tick","who":"oracle","hash":"c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"}
   ]
 }
 </script>
@@ -199,15 +199,15 @@ function render(){
   const rows = [...D.users].sort((a,b)=>b.collateral_value-a.collateral_value);
   document.getElementById('rows').innerHTML = rows.map((u,i)=>{
     const pnlPct = u.collateral_shares ? (u.pnl / u.collateral_shares * 100) : 0;
+    const gain = u.pnl >= 0 ? '+' : '';
     return `<tr>
       <td class="rank">${i+1}</td>
-      <td class="addr"><a href="${EXP}/account/${u.address}" target="_blank" rel="noopener">${trunc(u.address)}</a>
-        <div class="who">${u.name}</div></td>
+      <td class="addr"><a href="${EXP}/account/${u.address}" target="_blank" rel="noopener">${trunc(u.address)}</a></td>
       <td class="big">${fmtNum(u.collateral_shares)}</td>
       <td>${fmtUsd(u.collateral_value)}</td>
       <td>${fmtUsd(u.debt)}</td>
       <td><span class="hf">${hf(u.hf)}</span></td>
-      <td class="pnl">+${fmtUsd(u.pnl)} <span style="color:var(--dim)">(+${pnlPct.toFixed(2)}%)</span></td>
+      <td class="pnl">${gain}${fmtUsd(u.pnl)} <span style="color:var(--dim)">(${gain}${pnlPct.toFixed(2)}%)</span></td>
     </tr>`;}).join('');
   document.getElementById('utilNote').textContent =
     `Utility ratio = pledged shares ÷ total shares. Both wallets have their full ldLEOD balance pledged as collateral — and it still accrued +${vaultReturn.toFixed(2)}% while locked (the NAV tick above).`;
@@ -216,8 +216,12 @@ function render(){
   document.getElementById('feed').innerHTML = D.txs.map(t=>{
     const label = {wrap:'wrapped LEOD → ldLEOD',supply_collateral:'supplied collateral',
       borrow:'borrowed USDC',nav_tick:'NAV tick (yield accrual)',repay:'repaid',liquidate:'liquidated'}[t.action]||t.action;
+    const isAddr = /^G[A-Z2-7]{55}$/.test(t.who);
+    const who = isAddr
+      ? `<a class="tx" href="${EXP}/account/${t.who}" target="_blank" rel="noopener">${trunc(t.who)}</a>`
+      : `<span style="color:var(--dim)">${t.who}</span>`;
     return `<li>
-      <span class="act"><b>${t.who}</b> ${label}</span>
+      <span class="act">${who} ${label}</span>
       <span class="meta"><span class="tag">${t.action}</span>
         <a class="tx" href="${EXP}/tx/${t.hash}" target="_blank" rel="noopener">${t.hash.slice(0,10)}…</a></span>
     </li>`;}).join('');
@@ -232,10 +236,27 @@ function render(){
 }
 render();
 
-// ── best-effort live refresh (never blocks the render above) ────────────────
+// ── live refresh from on-chain (never blocks the baked render above) ─────────
+// Loads the official stellar-sdk browser bundle once, then reads share_price +
+// each wallet's position/health_factor straight from the Soroban RPC via
+// simulateTransaction — the same read path verified end-to-end against these
+// contracts. If the CDN/RPC is unreachable it silently keeps the baked snapshot.
+let _sdk = null;
+function loadSdk(){
+  if(_sdk) return _sdk;
+  _sdk = new Promise((resolve,reject)=>{
+    if(window.StellarSdk) return resolve(window.StellarSdk);
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@stellar/stellar-sdk@13.1.0/dist/stellar-sdk.min.js';
+    s.onload=()=>window.StellarSdk?resolve(window.StellarSdk):reject(new Error('StellarSdk global missing'));
+    s.onerror=()=>reject(new Error('stellar-sdk failed to load'));
+    document.head.appendChild(s);
+  });
+  return _sdk;
+}
 async function refresh(){
   try{
-    const sdk = await import('https://esm.sh/@stellar/stellar-sdk@13.1.0');
+    const sdk = await loadSdk();
     const { rpc, Contract, Address, TransactionBuilder, Account, BASE_FEE } = sdk;
     const server = new rpc.Server('https://soroban-testnet.stellar.org');
     const SRC = 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF';
