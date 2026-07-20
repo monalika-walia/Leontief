@@ -22,6 +22,10 @@ export function Shell({ children, demoEnabled }: { children: ReactNode; demoEnab
             <NavLink to="/liquidate">Liquidate</NavLink>
             <NavLink to="/issuer">Issuer</NavLink>
             {demoEnabled && <NavLink to="/demo">Demo</NavLink>}
+            {/* Public per-wallet leaderboard — lives on the marketing domain. */}
+            <a href="https://leontief.tech/performance" target="_blank" rel="noopener noreferrer">
+              Performance
+            </a>
           </nav>
           <div className="row center" style={{ gap: 12 }}>
             <span className="chip inv">Testnet</span>

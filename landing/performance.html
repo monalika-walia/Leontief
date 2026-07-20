@@ -143,28 +143,130 @@
 
 <script id="snapshot" type="application/json">
 {
-  "network":"testnet","asof":"2026-07-19",
-  "explorer":"https://stellar.expert/explorer/testnet",
-  "contracts":{
-    "vault":"CB64EHOFGTWH2USSZP3PL2B66XJ4KD6A6C3SFXKPNTEO3NCIZFZWLHUS",
-    "mini_pool":"CCX7Z6TGAVAKOYMS3QAHD4VZHQB2QCC2XVQ4UWBZFSOX4HHDBB45EQ54",
-    "oracle_adapter":"CC624XAUEW2MYLGRQ6LMLVJQWF3ER3FQXUW2UQIJ7N2JRIDBZTGBH7NC",
-    "usdc_sac":"CBZ6PBCQUQPAJKMC75PPUSVUBXZD3SNEZMYWHWHMKMYOT5H25SEDUE6Z",
-    "leod_sac":"CDE5ZRPD2SJCUZIKEVM546Y25YIER35WYKVWICQFDW3I2ZHL2MLD4AOW",
-    "mock_oracle":"CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG"
+  "network": "testnet",
+  "asof": "2026-07-19",
+  "explorer": "https://stellar.expert/explorer/testnet",
+  "contracts": {
+    "vault": "CB64EHOFGTWH2USSZP3PL2B66XJ4KD6A6C3SFXKPNTEO3NCIZFZWLHUS",
+    "mini_pool": "CCX7Z6TGAVAKOYMS3QAHD4VZHQB2QCC2XVQ4UWBZFSOX4HHDBB45EQ54",
+    "oracle_adapter": "CC624XAUEW2MYLGRQ6LMLVJQWF3ER3FQXUW2UQIJ7N2JRIDBZTGBH7NC",
+    "usdc_sac": "CBZ6PBCQUQPAJKMC75PPUSVUBXZD3SNEZMYWHWHMKMYOT5H25SEDUE6Z",
+    "leod_sac": "CDE5ZRPD2SJCUZIKEVM546Y25YIER35WYKVWICQFDW3I2ZHL2MLD4AOW",
+    "mock_oracle": "CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG"
   },
-  "share_price":1014986776129,"total_shares":61254000000,"total_assets_value":62172000000,
-  "users":[
-    {"address":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","collateral_shares":40836000000,"debt":20000000000,"hf":1761539999550,"collateral_value":41447999990,"pnl":611999990},
-    {"address":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","collateral_shares":20418000000,"debt":9000000000,"hf":1957266666111,"collateral_value":20723999995,"pnl":305999995}
+  "share_price": 1030169457951,
+  "total_shares": 112299000011,
+  "total_assets_value": 115687000000,
+  "users": [
+    {
+      "address": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "collateral_shares": 51045000002,
+      "debt": 15000000000,
+      "hf": 2979816665666,
+      "collateral_value": 52584999983,
+      "basis": 51198000000,
+      "pnl": 1386999983
+    },
+    {
+      "address": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "collateral_shares": 30627000002,
+      "debt": 12000000000,
+      "hf": 2234862499250,
+      "collateral_value": 31550999990,
+      "basis": 30780000000,
+      "pnl": 770999990
+    },
+    {
+      "address": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
+      "collateral_shares": 30627000007,
+      "debt": 22000000000,
+      "hf": 1219015908863,
+      "collateral_value": 31550999995,
+      "basis": 31086000000,
+      "pnl": 464999995
+    }
   ],
-  "txs":[
-    {"action":"wrap","who":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","hash":"d949809da5f50dcdded62c5e1931036d0d34ea18f6cad1a3bcf7266a0d57aacd"},
-    {"action":"supply_collateral","who":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","hash":"46173ce0f16444a70f4e4cd77fcfda4db8a7e8ccdfab68302330e9dd6ff6d577"},
-    {"action":"borrow","who":"GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD","hash":"bc213ad650277731583a5fa5b468520f1dd28be627fff0fb6e9c3ef35caecf2c"},
-    {"action":"supply_collateral","who":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","hash":"f1eac5d3810a20076a5cd46a0c0b3f6ee2d77e3c2ed52a042c69512660dc2ccb"},
-    {"action":"borrow","who":"GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB","hash":"a0d567f0b0e9cdb7a9739ea35dd650a32e7db39ae227df846c61159ed59477cb"},
-    {"action":"nav_tick","who":"oracle","hash":"c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"}
+  "txs": [
+    {
+      "action": "nav_tick",
+      "who": "oracle",
+      "hash": "4882503ef91708cdd3c8a819ab342a772290846d21b5fe499d8688f1bbeeb17a"
+    },
+    {
+      "action": "borrow",
+      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "hash": "f6f0e8ae649d34600d80a12034fdcf1dd5833bbb0d348351d4ad4dc78a2f24a7"
+    },
+    {
+      "action": "supply_collateral",
+      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "hash": "a3cc24b782c9cdb6deabf952dc20d6f01e1ac7fed72ad1726a49b7aea44eaed4"
+    },
+    {
+      "action": "wrap",
+      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "hash": "ea457df762672f8b4e831347deb7b278740ae33fa5c598b55e9958d7f4de14c7"
+    },
+    {
+      "action": "repay",
+      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "hash": "9f825d05948999bd073364077212fee9816f82a5e7901ab7020d2a1629eac5b1"
+    },
+    {
+      "action": "supply_collateral",
+      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "hash": "a28fab15acfecdfd69fe4775665124ee5c4bd865995ff51e1f58d95e8644e2b7"
+    },
+    {
+      "action": "wrap",
+      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "hash": "4a1b223b0e1afb202c6dc3a1dfba53fbe414ace0311b0c4780ee259836172d8a"
+    },
+    {
+      "action": "borrow",
+      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
+      "hash": "0911cf04491856e43f058c66adc36275d37e30590c19e2ed6421555591f4f11e"
+    },
+    {
+      "action": "supply_collateral",
+      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
+      "hash": "57fc693fb96802a45567bd6b2207aa3ffef8e57edf096749d39648fcb2b3df22"
+    },
+    {
+      "action": "wrap",
+      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
+      "hash": "213d31dcf9566ed094b381930a12438ee1c9a7be447ccbaca6ea89c069f8355d"
+    },
+    {
+      "action": "wrap",
+      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "hash": "d949809da5f50dcdded62c5e1931036d0d34ea18f6cad1a3bcf7266a0d57aacd"
+    },
+    {
+      "action": "supply_collateral",
+      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "hash": "46173ce0f16444a70f4e4cd77fcfda4db8a7e8ccdfab68302330e9dd6ff6d577"
+    },
+    {
+      "action": "borrow",
+      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "hash": "bc213ad650277731583a5fa5b468520f1dd28be627fff0fb6e9c3ef35caecf2c"
+    },
+    {
+      "action": "supply_collateral",
+      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "hash": "f1eac5d3810a20076a5cd46a0c0b3f6ee2d77e3c2ed52a042c69512660dc2ccb"
+    },
+    {
+      "action": "borrow",
+      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "hash": "a0d567f0b0e9cdb7a9739ea35dd650a32e7db39ae227df846c61159ed59477cb"
+    },
+    {
+      "action": "nav_tick",
+      "who": "oracle",
+      "hash": "c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"
+    }
   ]
 }
 </script>
@@ -198,7 +300,7 @@ function render(){
   // rows, ranked by collateral value
   const rows = [...D.users].sort((a,b)=>b.collateral_value-a.collateral_value);
   document.getElementById('rows').innerHTML = rows.map((u,i)=>{
-    const pnlPct = u.collateral_shares ? (u.pnl / u.collateral_shares * 100) : 0;
+    const pnlPct = u.basis ? (u.pnl / u.basis * 100) : 0;
     const gain = u.pnl >= 0 ? '+' : '';
     return `<tr>
       <td class="rank">${i+1}</td>
@@ -284,7 +386,7 @@ async function refresh(){
       u.debt = Number(pos.debt);
       u.hf = Number(health);
       u.collateral_value = Math.floor(u.collateral_shares * D.share_price / SCALE);
-      u.pnl = u.collateral_value - u.collateral_shares;
+      u.pnl = u.collateral_value - (u.basis ?? u.collateral_shares);
     }
     render();
     document.getElementById('pulse').classList.add('live');
