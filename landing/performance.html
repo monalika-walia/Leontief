@@ -144,7 +144,8 @@
 <script id="snapshot" type="application/json">
 {
   "network": "testnet",
-  "asof": "2026-07-19",
+  "asof": "2026-07-20",
+  "live": false,
   "explorer": "https://stellar.expert/explorer/testnet",
   "contracts": {
     "vault": "CB64EHOFGTWH2USSZP3PL2B66XJ4KD6A6C3SFXKPNTEO3NCIZFZWLHUS",
@@ -154,39 +155,78 @@
     "leod_sac": "CDE5ZRPD2SJCUZIKEVM546Y25YIER35WYKVWICQFDW3I2ZHL2MLD4AOW",
     "mock_oracle": "CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG"
   },
-  "share_price": 1030169457951,
-  "total_shares": 112299000011,
-  "total_assets_value": 115687000000,
+  "share_price": 1038299539185,
+  "total_shares": 137821500021,
+  "total_assets_value": 143100000000,
   "users": [
     {
       "address": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "collateral_shares": 51045000002,
-      "debt": 15000000000,
-      "hf": 2979816665666,
-      "collateral_value": 52584999983,
       "basis": 51198000000,
-      "pnl": 1386999983
+      "collateral_shares": 51045000002,
+      "debt": 25000000000,
+      "hf": 1801999999280,
+      "collateral_value": 52999999979,
+      "pnl": 1801999979
     },
     {
       "address": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
+      "basis": 30780000000,
       "collateral_shares": 30627000002,
       "debt": 12000000000,
-      "hf": 2234862499250,
-      "collateral_value": 31550999990,
-      "basis": 30780000000,
-      "pnl": 770999990
+      "hf": 2252499999083,
+      "collateral_value": 31799999988,
+      "pnl": 1019999988
     },
     {
       "address": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "collateral_shares": 30627000007,
-      "debt": 22000000000,
-      "hf": 1219015908863,
-      "collateral_value": 31550999995,
       "basis": 31086000000,
-      "pnl": 464999995
+      "collateral_shares": 30627000007,
+      "debt": 15000000000,
+      "hf": 1801999999600,
+      "collateral_value": 31799999993,
+      "pnl": 713999993
+    },
+    {
+      "address": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
+      "basis": 26500000000,
+      "collateral_shares": 25522500010,
+      "debt": 10000000000,
+      "hf": 2252499999900,
+      "collateral_value": 26499999999,
+      "pnl": -1
     }
   ],
   "txs": [
+    {
+      "action": "borrow",
+      "who": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
+      "hash": "c45eb92bc5420bf7e1c7056b6e38f1e5f6047c5997f0098c57cd152c61e3ed6c"
+    },
+    {
+      "action": "supply_collateral",
+      "who": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
+      "hash": "894338cca6b7e05742932486427d7ede14599655d72113c718e3721023e5ec76"
+    },
+    {
+      "action": "wrap",
+      "who": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
+      "hash": "419a916391a1c9758fc06d8bf8b084335f1bd90a505c700758e1822d714d0989"
+    },
+    {
+      "action": "borrow",
+      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
+      "hash": "4948cea71ed20d560ae8bac050e8308ec585e29ebd59bb87750a02fe68609990"
+    },
+    {
+      "action": "nav_tick",
+      "who": "oracle",
+      "hash": "74fa50f84dfaa7924028aa49d0c892283f62da023066cae818fa4a78443c5e0e"
+    },
+    {
+      "action": "repay",
+      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
+      "hash": "f9653767146dd9273ef0d728dbe6aa5ed818249dbe25ceaaf6c8abc44195f7e2"
+    },
     {
       "action": "nav_tick",
       "who": "oracle",
@@ -273,131 +313,94 @@
 
 <script type="module">
 const SCALE = 1e12, STROOP = 1e7;
-const D = JSON.parse(document.getElementById('snapshot').textContent);
-const EXP = D.explorer;
-const fmtUsd = n => '$' + (n/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtNum = n => (n/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+// Baked snapshot renders instantly; the live fetch below overwrites it.
+let D = JSON.parse(document.getElementById('snapshot').textContent);
+const EXP = () => D.explorer || 'https://stellar.expert/explorer/testnet';
+const N = v => Number(v);                       // fields arrive as bigint-safe strings
+const fmtUsd = n => '$' + (N(n)/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtNum = n => (N(n)/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const trunc = a => a.slice(0,4) + '…' + a.slice(-4);
-const hf = v => (v/SCALE).toFixed(2);
-const pct = v => ((v/SCALE - 1) * 100);
+const hf = v => (N(v)/SCALE).toFixed(2);
+const pct = v => (N(v)/SCALE - 1) * 100;
 
 function render(){
-  // KPI tiles
-  const pledged = D.users.reduce((s,u)=>s+u.collateral_shares,0);
-  const util = D.total_shares ? (pledged / D.total_shares * 100) : 0;
+  const users = (D.users || []).filter(u => !u.error);
+  const pledged = users.reduce((s,u)=>s+N(u.collateral_shares),0);
+  const total = N(D.total_shares);
+  const util = total ? (pledged/total*100) : 0;
   const vaultReturn = pct(D.share_price);
-  const debtTot = D.users.reduce((s,u)=>s+u.debt,0);
   const kpis = [
     ['Wrapped AUM', fmtUsd(D.total_assets_value), 'ldLEOD at live NAV'],
     ['Utility ratio', util.toFixed(0)+'%', 'of shares put to work'],
-    ['Active wallets', String(D.users.length), 'holding positions'],
+    ['Active wallets', String(users.length), 'holding positions'],
     ['Vault return', (vaultReturn>=0?'+':'')+vaultReturn.toFixed(2)+'%', 'share price vs mint'],
     ['Liquidations', '0', 'all positions healthy'],
   ];
   document.getElementById('kpis').innerHTML = kpis.map(([k,v,s])=>
     `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
 
-  // rows, ranked by collateral value
-  const rows = [...D.users].sort((a,b)=>b.collateral_value-a.collateral_value);
+  const rows = [...users].sort((a,b)=>N(b.collateral_value)-N(a.collateral_value));
   document.getElementById('rows').innerHTML = rows.map((u,i)=>{
-    const pnlPct = u.basis ? (u.pnl / u.basis * 100) : 0;
-    const gain = u.pnl >= 0 ? '+' : '';
+    const pnl = N(u.pnl), pnlPct = N(u.basis) ? (pnl/N(u.basis)*100) : 0;
+    const g = pnl >= 0 ? '+' : '−', ap = Math.abs(pnl), apc = Math.abs(pnlPct);
     return `<tr>
       <td class="rank">${i+1}</td>
-      <td class="addr"><a href="${EXP}/account/${u.address}" target="_blank" rel="noopener">${trunc(u.address)}</a></td>
+      <td class="addr"><a href="${EXP()}/account/${u.address}" target="_blank" rel="noopener">${trunc(u.address)}</a></td>
       <td class="big">${fmtNum(u.collateral_shares)}</td>
       <td>${fmtUsd(u.collateral_value)}</td>
       <td>${fmtUsd(u.debt)}</td>
       <td><span class="hf">${hf(u.hf)}</span></td>
-      <td class="pnl">${gain}${fmtUsd(u.pnl)} <span style="color:var(--dim)">(${gain}${pnlPct.toFixed(2)}%)</span></td>
+      <td class="pnl">${g}${fmtUsd(ap)} <span style="color:var(--dim)">(${g}${apc.toFixed(2)}%)</span></td>
     </tr>`;}).join('');
   document.getElementById('utilNote').textContent =
-    `Utility ratio = pledged shares ÷ total shares. Both wallets have their full ldLEOD balance pledged as collateral — and it still accrued +${vaultReturn.toFixed(2)}% while locked (the NAV tick above).`;
+    `Utility ratio = pledged shares ÷ total shares. Every wallet has its full ldLEOD balance pledged as collateral — and it keeps accruing (+${vaultReturn.toFixed(2)}% share-price gain since mint) while locked.`;
 
-  // activity feed
-  document.getElementById('feed').innerHTML = D.txs.map(t=>{
+  document.getElementById('feed').innerHTML = (D.txs||[]).map(t=>{
     const label = {wrap:'wrapped LEOD → ldLEOD',supply_collateral:'supplied collateral',
-      borrow:'borrowed USDC',nav_tick:'NAV tick (yield accrual)',repay:'repaid',liquidate:'liquidated'}[t.action]||t.action;
+      borrow:'borrowed USDC',nav_tick:'NAV tick (yield accrual)',repay:'repaid USDC',liquidate:'liquidated'}[t.action]||t.action;
     const isAddr = /^G[A-Z2-7]{55}$/.test(t.who);
     const who = isAddr
-      ? `<a class="tx" href="${EXP}/account/${t.who}" target="_blank" rel="noopener">${trunc(t.who)}</a>`
+      ? `<a class="tx" href="${EXP()}/account/${t.who}" target="_blank" rel="noopener">${trunc(t.who)}</a>`
       : `<span style="color:var(--dim)">${t.who}</span>`;
     return `<li>
       <span class="act">${who} ${label}</span>
       <span class="meta"><span class="tag">${t.action}</span>
-        <a class="tx" href="${EXP}/tx/${t.hash}" target="_blank" rel="noopener">${t.hash.slice(0,10)}…</a></span>
+        <a class="tx" href="${EXP()}/tx/${t.hash}" target="_blank" rel="noopener">${t.hash.slice(0,10)}…</a></span>
     </li>`;}).join('');
 
-  // contracts
-  const c = D.contracts;
-  const link = (label,id)=>`<div>${label} · <a href="${EXP}/contract/${id}" target="_blank" rel="noopener">${trunc(id)}</a></div>`;
+  const c = D.contracts||{};
+  const link=(l,id)=>id?`<div>${l} · <a href="${EXP()}/contract/${id}" target="_blank" rel="noopener">${trunc(id)}</a></div>`:'';
   document.getElementById('contracts').innerHTML =
     link('Vault (ldLEOD)',c.vault)+link('Mini-pool',c.mini_pool)+link('Oracle adapter',c.oracle_adapter)+
     link('USDC (SAC)',c.usdc_sac)+link('LEOD (SAC)',c.leod_sac);
-  document.getElementById('asof').textContent = `testnet · as of ${D.asof}`;
 }
-render();
 
-// ── live refresh from on-chain (never blocks the baked render above) ─────────
-// Loads the official stellar-sdk browser bundle once, then reads share_price +
-// each wallet's position/health_factor straight from the Soroban RPC via
-// simulateTransaction — the same read path verified end-to-end against these
-// contracts. If the CDN/RPC is unreachable it silently keeps the baked snapshot.
-let _sdk = null;
-function loadSdk(){
-  if(_sdk) return _sdk;
-  _sdk = new Promise((resolve,reject)=>{
-    if(window.StellarSdk) return resolve(window.StellarSdk);
-    const s=document.createElement('script');
-    s.src='https://cdn.jsdelivr.net/npm/@stellar/stellar-sdk@13.1.0/dist/stellar-sdk.min.js';
-    s.onload=()=>window.StellarSdk?resolve(window.StellarSdk):reject(new Error('StellarSdk global missing'));
-    s.onerror=()=>reject(new Error('stellar-sdk failed to load'));
-    document.head.appendChild(s);
-  });
-  return _sdk;
+let lastLive = 0;
+function setStatus(){
+  const live = lastLive > 0;
+  document.getElementById('pulse').classList.toggle('live', live);
+  const secs = live ? Math.max(1, Math.round((Date.now()-lastLive)/1000)) : 0;
+  document.getElementById('statusText').textContent = live ? `testnet · live` : `testnet · snapshot`;
+  document.getElementById('asof').textContent = live
+    ? `on-chain · updated ${secs}s ago`
+    : `testnet · ${D.asof||''}`;
 }
-async function refresh(){
+render(); setStatus();
+
+// ── live: fetch the server-side read-API (reads the chain per request) ───────
+async function tick(){
   try{
-    const sdk = await loadSdk();
-    const { rpc, Contract, Address, TransactionBuilder, Account, BASE_FEE } = sdk;
-    const server = new rpc.Server('https://soroban-testnet.stellar.org');
-    const SRC = 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF';
-    const PASS = 'Test SDF Network ; September 2015';
-    async function read(cid, method, ...scvals){
-      const tx = new TransactionBuilder(new Account(SRC,'0'),{fee:BASE_FEE,networkPassphrase:PASS})
-        .addOperation(new Contract(cid).call(method, ...scvals)).setTimeout(30).build();
-      const sim = await server.simulateTransaction(tx);
-      if(rpc.Api.isSimulationError(sim) || !sim.result?.retval) throw new Error(method+' failed');
-      return sdk.scValToNative(sim.result.retval);
+    const r = await fetch('/api/performance', {cache:'no-store'});
+    const j = await r.json();
+    if(j && Array.isArray(j.users) && j.users.length){
+      D = {...D, ...j}; lastLive = Date.now(); render();
     }
-    const addr = a => new Address(a).toScVal();
-    const [sp, ts, tav] = await Promise.all([
-      read(D.contracts.vault,'share_price'),
-      read(D.contracts.vault,'total_shares'),
-      read(D.contracts.vault,'total_assets_value'),
-    ]);
-    D.share_price = Number(sp); D.total_shares = Number(ts); D.total_assets_value = Number(tav);
-    for(const u of D.users){
-      const [pos, health] = await Promise.all([
-        read(D.contracts.mini_pool,'position', addr(u.address)),
-        read(D.contracts.mini_pool,'health_factor', addr(u.address)),
-      ]);
-      u.collateral_shares = Number(pos.collateral_shares);
-      u.debt = Number(pos.debt);
-      u.hf = Number(health);
-      u.collateral_value = Math.floor(u.collateral_shares * D.share_price / SCALE);
-      u.pnl = u.collateral_value - (u.basis ?? u.collateral_shares);
-    }
-    render();
-    document.getElementById('pulse').classList.add('live');
-    document.getElementById('statusText').textContent = 'testnet · live';
-  }catch(e){
-    // keep the baked snapshot; label stays "snapshot"
-    console.warn('live refresh unavailable:', e.message);
-  }
+  }catch(_){/* keep last good data */}
+  setStatus();
 }
-refresh();
-setInterval(refresh, 20000);
+tick();
+setInterval(tick, 10000);
+setInterval(setStatus, 1000);   // keep the "updated Ns ago" ticking
 </script>
 </body>
 </html>
