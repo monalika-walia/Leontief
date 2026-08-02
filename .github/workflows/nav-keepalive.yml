@@ -1,0 +1,55 @@
+name: NAV keepalive (testnet demo)
+
+# Keeps the /performance dashboard live. The mock oracle's NAV carries a
+# timestamp; once it is older than the adapter's max_age it fails closed and
+# every share_price / health read reverts (by design). For a persistent testnet
+# demo we re-assert the current NAV with a fresh timestamp every 6 hours, so the
+# feed never goes stale between manual updates. This ONLY touches the testnet
+# mock oracle — it is not a mainnet mechanism.
+on:
+  schedule:
+    - cron: "0 */6 * * *" # every 6 hours
+  workflow_dispatch: # allow manual runs
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    env:
+      STELLAR_CLI_VERSION: 27.0.0
+      NET: testnet
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install stellar-cli (prebuilt)
+        run: |
+          curl -fsSL "https://github.com/stellar/stellar-cli/releases/download/v${STELLAR_CLI_VERSION}/stellar-cli-${STELLAR_CLI_VERSION}-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar xz -C /usr/local/bin
+          stellar --version
+
+      - name: Configure network + signer
+        env:
+          NAV_ADMIN_SK: ${{ secrets.NAV_ADMIN_SK }}
+        run: |
+          if [ -z "$NAV_ADMIN_SK" ]; then
+            echo "NAV_ADMIN_SK secret not set — skipping (add it in repo Settings → Secrets)."; exit 0
+          fi
+          stellar network add "$NET" \
+            --rpc-url https://soroban-testnet.stellar.org \
+            --network-passphrase "Test SDF Network ; September 2015"
+          echo "$NAV_ADMIN_SK" | stellar keys add navadmin --secret-key
+
+      - name: Re-assert NAV with a fresh timestamp
+        env:
+          NAV_ADMIN_SK: ${{ secrets.NAV_ADMIN_SK }}
+        run: |
+          [ -z "$NAV_ADMIN_SK" ] && { echo "no secret; skip"; exit 0; }
+          MOCK=$(python3 -c "import json;print(json.load(open('deployments/testnet.json'))['contracts']['mock_oracle'])")
+          echo "mock oracle: $MOCK"
+          # read the current price, re-assert it at now() → zero deviation, always accepted
+          RAW=$(stellar contract invoke --id "$MOCK" --source navadmin --network "$NET" -- lastprice --asset LEOD)
+          PRICE=$(echo "$RAW" | python3 -c "import sys,json,re;s=sys.stdin.read();m=re.search(r'price\"?\s*:\s*\"?(\d+)',s);print(m.group(1))")
+          TS=$(date +%s)
+          echo "re-asserting price=$PRICE at ts=$TS"
+          stellar contract invoke --id "$MOCK" --source navadmin --network "$NET" -- \
+            set_price --asset LEOD --price "$PRICE" --ts "$TS"
+          echo "✓ NAV refreshed — dashboard stays live"
