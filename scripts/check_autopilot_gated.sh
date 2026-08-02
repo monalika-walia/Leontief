@@ -6,7 +6,7 @@
 #
 #   1. the engine refuses to run unless AUTOPILOT_FLAG=true  (never on by default)
 #   2. the engine refuses to run on any network but testnet   (mainnet needs an
-#      audit and human sign-off — DECISIONS #7)
+#      audit and human sign-off — DECISIONS #11)
 #
 # Also checks that the app's Autopilot panel is testnet-gated, and that no
 # session SECRET is ever persisted server-side.

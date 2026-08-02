@@ -1,6 +1,6 @@
 // The session signer — the only code in this repo that signs on a user's behalf.
 //
-// DECISIONS #7 (Path B): the on-chain grant is a classic additional signer on the
+// DECISIONS #11 (Path B): the on-chain grant is a classic additional signer on the
 // user's own account. That signer is NOT scope-limited on-chain, so:
 //
 //   * it exists only on testnet (asserted here, again, at construction time);

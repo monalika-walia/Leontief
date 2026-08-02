@@ -46,7 +46,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (cfg.NETWORK_PASSPHRASE !== TESTNET_PASSPHRASE) {
     console.error(
       "autopilot: refusing to run outside testnet.\n" +
-        "Mainnet Autopilot requires an audit and human sign-off — see DECISIONS #7.",
+        "Mainnet Autopilot requires an audit and human sign-off — see DECISIONS #11.",
     );
     process.exit(2);
   }

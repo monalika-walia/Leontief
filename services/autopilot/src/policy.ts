@@ -1,6 +1,6 @@
 // The leash.
 //
-// DECISIONS #7: Autopilot ships on Path B, where the on-chain grant is a classic
+// DECISIONS #11: Autopilot ships on Path B, where the on-chain grant is a classic
 // additional signer that is NOT scope-limited. The single on-chain guarantee is
 // that the user can revoke it instantly. Everything else — which contracts may be
 // touched, how much per action, how much per day, and the health-factor floor —

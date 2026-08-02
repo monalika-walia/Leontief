@@ -200,6 +200,6 @@ to act when a read fails (fail-closed, matching the oracle policy in spec §5).
 
 - The custom Leontief policy contract for Path A is unwritten and unaudited. Do
   not describe Autopilot as "on-chain-constrained" in any submission text while
-  Path B is what ships — the honest sentence is in DECISIONS #7.
+  Path B is what ships — the honest sentence is in DECISIONS #11.
 - `smart-account-kit` is pre-1.0 with an rc migration in flight; re-read this file
   before starting Path A, and re-verify the contract IDs (they are per-release).
