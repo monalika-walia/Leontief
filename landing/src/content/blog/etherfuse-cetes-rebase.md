@@ -3,6 +3,7 @@ title: "CETES On-Chain: How Etherfuse Stablebonds and the Weekly Rebase Work"
 description: "Mexican treasury certificates as a token, and the accounting problem they create: when a balance can change on its own, most DeFi arithmetic quietly breaks."
 slug: etherfuse-cetes-rebase
 pubDate: 2026-08-17
+updatedDate: 2026-08-27
 author: monalika
 cluster: Etherfuse stablebonds
 tags:
@@ -13,6 +14,7 @@ tags:
   - Stellar
 oneLine: "A stablebond can pay you by growing your balance rather than its price — and a balance that changes on its own is the single assumption most vault arithmetic gets wrong."
 siblings:
+  - rebase-vs-price-accrual
   - borrow-against-usdy-stellar
   - idle-rwa-stellar
 faq:
@@ -149,9 +151,10 @@ share price close both at once.
 
 The consequence worth stating plainly: a rebasing asset and a price-accruing asset need
 **no separate code paths**. Both raise the vault's holdings. The share price rises
-either way. That is the whole trick: the mechanic a token uses to report yield is an
-implementation detail of the token, and the vault above it never needs to know which
-one it is holding.
+either way. That is the whole trick, and it is why
+[one formula covers every RWA yield mechanic](/blog/rebase-vs-price-accrual) — the
+mechanic a token uses to report yield is an implementation detail of the token, and the
+vault above it never needs to know which one it is holding.
 
 ## Try it on testnet
 
