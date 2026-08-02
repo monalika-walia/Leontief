@@ -3,7 +3,7 @@ title: "The Idle $3B: Why Real-World Assets on Stellar Earn the Minimum"
 description: "Stellar carries $3.07B of tokenized real-world assets and $221.76M of DeFi. The gap is not a liquidity problem — it is three rules working exactly as designed."
 slug: idle-rwa-stellar
 pubDate: 2026-08-03
-updatedDate: 2026-08-10
+updatedDate: 2026-08-24
 author: monalika
 cluster: RWA on Stellar
 tags:
@@ -13,6 +13,7 @@ tags:
   - collateral
 oneLine: "Tokenized treasuries on Stellar earn their coupon and nothing else, because the same rules that make them lawful also make them unusable as collateral."
 siblings:
+  - productive-treasuries
   - sep-8-sep-57-explained
   - borrow-against-usdy-stellar
 ---
@@ -169,6 +170,7 @@ to build a lending pool. It is that a lending pool is the wrong shape for an ass
 whose issuer must approve every holder and may reverse any transfer.
 
 Something the right shape has to hold the restriction and hand back something that
-composes. That is a narrow, unglamorous piece of infrastructure, and it is the one
+composes — the argument for why that is worth doing at all is
+[the case for productive treasuries](/blog/productive-treasuries). That is a narrow, unglamorous piece of infrastructure, and it is the one
 missing piece between three billion dollars of collateral and a market that can
 use it.
