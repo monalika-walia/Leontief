@@ -6,16 +6,21 @@
 //   LEONTIEF_DB=1 pnpm --filter @leontief/indexer test
 import { Keypair } from "@stellar/stellar-sdk";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { buildApi } from "./api.js";
 import { migrateTelegram, sql } from "./db.js";
 import { linkChallenge, sep53Digest } from "./sep53.js";
+
+// ./api.js is imported lazily inside beforeAll: it pulls in ./config.js, which
+// process.exit(2)s on missing contract env. A static import would kill this file
+// at collection time on any machine without deploy.env sourced — including CI,
+// where the whole point is that it skips quietly.
+type Api = Awaited<ReturnType<typeof import("./api.js").buildApi>>;
 
 const live = process.env.LEONTIEF_DB === "1";
 const CHAT = -999_000_001; // a chat id no real user will hold
 
 describe.skipIf(!live)("link ceremony (live Postgres)", () => {
   const wallet = Keypair.random();
-  let app: Awaited<ReturnType<typeof buildApi>>;
+  let app: Api;
 
   const mintCode = async (code: string, minutes = 15) => {
     await sql`
@@ -29,6 +34,7 @@ describe.skipIf(!live)("link ceremony (live Postgres)", () => {
     await migrateTelegram();
     await sql`DELETE FROM tg_links WHERE chat_id = ${CHAT}`;
     await sql`DELETE FROM tg_link_codes WHERE chat_id = ${CHAT}`;
+    const { buildApi } = await import("./api.js");
     app = await buildApi();
     await app.ready();
   });
