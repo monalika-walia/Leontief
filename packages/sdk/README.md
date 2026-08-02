@@ -54,7 +54,16 @@ source deploy.env                                    # VAULT, MINI_POOL, … + d
 pnpm exec tsx packages/sdk/examples/deposit.ts       # wrap 10 LEOD
 pnpm exec tsx packages/sdk/examples/borrow.ts        # supply + borrow USDC
 TARGET=G... pnpm exec tsx packages/sdk/examples/liquidate.ts
+
+./scripts/agent_onboard.sh                           # once: trustlines + SEP-8 auth
+pnpm exec tsx packages/sdk/examples/agent-treasury.ts   # the full A7 policy loop
 ```
+
+`agent-treasury.ts` is also this package's **dogfood test**: an agent earning
+USDC parks idle cash in ld-shares and borrows against them instead of selling,
+using only the exported surface. If it ever needs a private import, that is an
+SDK gap to close first — that rule is what added `tokenBalance`/`transfer` and
+`maxBorrowForHealthFactor`. See `docs/APP.md` § Agent treasury.
 
 ## Test
 
