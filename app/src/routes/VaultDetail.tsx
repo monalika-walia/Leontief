@@ -1,10 +1,12 @@
 import { Keypair } from "@stellar/stellar-sdk";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useApp } from "../ctx";
 import { useNav, useSharePrice, useTokenBalance, useVaultBalance } from "../hooks";
 import { addr, i128 } from "../lib/chain";
 import { humanError } from "../lib/errors";
 import { amt, SCALE, STROOP, scaled } from "../lib/format";
+import { prefillAmount, prefillTab } from "../lib/intent";
 import { submitTx } from "../lib/submitTx";
 import { useSubmit } from "../lib/useSubmit";
 
@@ -16,8 +18,17 @@ export function VaultDetail() {
   const ldBal = useVaultBalance(wallet.address);
   const submit = useSubmit();
 
-  const [tab, setTab] = useState<"wrap" | "unwrap">("wrap");
-  const [amount, setAmount] = useState("");
+  // A deep-link intent (A8) may seed the tab and amount — prefill only; the
+  // user reviews and presses Wrap/Unwrap themselves.
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<"wrap" | "unwrap">(
+    prefillTab(params, ["wrap", "unwrap"] as const) ?? "wrap",
+  );
+  const [amount, setAmount] = useState(prefillAmount(params));
+  const confirmRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (prefillAmount(params)) confirmRef.current?.focus();
+  }, [params]);
   const [restrictionMsg, setRestrictionMsg] = useState<string | null>(null);
   const [restrictionBusy, setRestrictionBusy] = useState(false);
 
@@ -159,6 +170,7 @@ export function VaultDetail() {
           </div>
 
           <button
+            ref={confirmRef}
             type="button"
             className="btn solid"
             style={{ marginTop: 18, width: "100%" }}
