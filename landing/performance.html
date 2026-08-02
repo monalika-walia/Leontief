@@ -313,10 +313,10 @@
 
 <script type="module">
 const SCALE = 1e12, STROOP = 1e7;
-// Baked snapshot renders instantly; the live fetch below overwrites it.
 let D = JSON.parse(document.getElementById('snapshot').textContent);
+const C = D.contracts, WALLETS = D.users.map(u => ({address:u.address, basis:u.basis}));
 const EXP = () => D.explorer || 'https://stellar.expert/explorer/testnet';
-const N = v => Number(v);                       // fields arrive as bigint-safe strings
+const N = v => Number(v);
 const fmtUsd = n => '$' + (N(n)/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmtNum = n => (N(n)/STROOP).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const trunc = a => a.slice(0,4) + '…' + a.slice(-4);
@@ -324,7 +324,7 @@ const hf = v => (N(v)/SCALE).toFixed(2);
 const pct = v => (N(v)/SCALE - 1) * 100;
 
 function render(){
-  const users = (D.users || []).filter(u => !u.error);
+  const users = (D.users||[]).filter(u => !u.error);
   const pledged = users.reduce((s,u)=>s+N(u.collateral_shares),0);
   const total = N(D.total_shares);
   const util = total ? (pledged/total*100) : 0;
@@ -362,45 +362,116 @@ function render(){
     const who = isAddr
       ? `<a class="tx" href="${EXP()}/account/${t.who}" target="_blank" rel="noopener">${trunc(t.who)}</a>`
       : `<span style="color:var(--dim)">${t.who}</span>`;
-    return `<li>
-      <span class="act">${who} ${label}</span>
+    return `<li><span class="act">${who} ${label}</span>
       <span class="meta"><span class="tag">${t.action}</span>
-        <a class="tx" href="${EXP()}/tx/${t.hash}" target="_blank" rel="noopener">${t.hash.slice(0,10)}…</a></span>
-    </li>`;}).join('');
+        <a class="tx" href="${EXP()}/tx/${t.hash}" target="_blank" rel="noopener">${t.hash.slice(0,10)}…</a></span></li>`;
+  }).join('');
 
-  const c = D.contracts||{};
   const link=(l,id)=>id?`<div>${l} · <a href="${EXP()}/contract/${id}" target="_blank" rel="noopener">${trunc(id)}</a></div>`:'';
   document.getElementById('contracts').innerHTML =
-    link('Vault (ldLEOD)',c.vault)+link('Mini-pool',c.mini_pool)+link('Oracle adapter',c.oracle_adapter)+
-    link('USDC (SAC)',c.usdc_sac)+link('LEOD (SAC)',c.leod_sac);
+    link('Vault (ldLEOD)',C.vault)+link('Mini-pool',C.mini_pool)+link('Oracle adapter',C.oracle_adapter)+
+    link('USDC (SAC)',C.usdc_sac)+link('LEOD (SAC)',C.leod_sac);
 }
 
 let lastLive = 0;
 function setStatus(){
   const live = lastLive > 0;
   document.getElementById('pulse').classList.toggle('live', live);
-  const secs = live ? Math.max(1, Math.round((Date.now()-lastLive)/1000)) : 0;
-  document.getElementById('statusText').textContent = live ? `testnet · live` : `testnet · snapshot`;
+  document.getElementById('statusText').textContent = live ? 'testnet · live' : 'testnet · snapshot';
   document.getElementById('asof').textContent = live
-    ? `on-chain · updated ${secs}s ago`
+    ? `on-chain · updated ${Math.max(1,Math.round((Date.now()-lastLive)/1000))}s ago`
     : `testnet · ${D.asof||''}`;
 }
 render(); setStatus();
 
-// ── live: fetch the server-side read-API (reads the chain per request) ───────
-async function tick(){
+// ── real-time on-chain reads (browser → Soroban RPC simulateTransaction) ─────
+let _sdk = null;
+function loadSdk(){
+  if(_sdk) return _sdk;
+  _sdk = new Promise((res,rej)=>{
+    if(window.StellarSdk) return res(window.StellarSdk);
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@stellar/stellar-sdk@13.1.0/dist/stellar-sdk.min.js';
+    s.onload=()=>window.StellarSdk?res(window.StellarSdk):rej(new Error('sdk global missing'));
+    s.onerror=()=>rej(new Error('sdk load failed'));
+    document.head.appendChild(s);
+  });
+  return _sdk;
+}
+// Primary: the server-side read-API (reads the chain per request, no client bundle).
+async function tickServer(){
+  const r = await fetch('/api/performance', { cache: 'no-store' });
+  if(!r.ok) throw new Error('api ' + r.status);
+  const j = await r.json();
+  if(!(j && j.live && Array.isArray(j.users) && j.users.length)) throw new Error('api not live');
+  D = { ...D,
+    share_price: String(j.share_price),
+    total_shares: String(j.total_shares),
+    total_assets_value: String(j.total_assets_value),
+    contracts: j.contracts || C,
+    explorer: j.explorer || D.explorer,
+    users: j.users.map(u => ({
+      address: u.address,
+      collateral_shares: String(u.collateral_shares),
+      debt: String(u.debt),
+      hf: String(u.hf ?? 9000000000000000),
+      collateral_value: String(u.collateral_value),
+      basis: u.basis,
+      pnl: String(u.pnl),
+    })) };
+  lastLive = Date.now(); render();
+}
+
+// Fallback: read the chain directly from the browser (works even if the API
+// isn't deployed). Either path shows genuine, real-time on-chain data.
+async function tickClientSide(){
   try{
-    const r = await fetch('/api/performance', {cache:'no-store'});
-    const j = await r.json();
-    if(j && Array.isArray(j.users) && j.users.length){
-      D = {...D, ...j}; lastLive = Date.now(); render();
+    const sdk = await loadSdk();
+    const { rpc, Contract, Address, TransactionBuilder, Account, BASE_FEE, scValToNative } = sdk;
+    const server = new rpc.Server('https://soroban-testnet.stellar.org');
+    const SRC='GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF';
+    const PASS='Test SDF Network ; September 2015';
+    const read = async (cid, method, ...sv) => {
+      const tx=new TransactionBuilder(new Account(SRC,'0'),{fee:BASE_FEE,networkPassphrase:PASS})
+        .addOperation(new Contract(cid).call(method,...sv)).setTimeout(30).build();
+      const sim=await server.simulateTransaction(tx);
+      if(rpc.Api.isSimulationError(sim)||!sim.result?.retval) throw new Error(method);
+      return scValToNative(sim.result.retval);
+    };
+    const addr = a => new Address(a).toScVal();
+    const [sp, ts, tav] = await Promise.all([
+      read(C.vault,'share_price'), read(C.vault,'total_shares'), read(C.vault,'total_assets_value')]);
+    const P = BigInt(sp);
+    const users = [];
+    for(const w of WALLETS){
+      try{
+        const [pos, health] = await Promise.all([
+          read(C.mini_pool,'position', addr(w.address)),
+          read(C.mini_pool,'health_factor', addr(w.address))]);
+        const cs=BigInt(pos.collateral_shares), debt=BigInt(pos.debt), cv=cs*P/SCALE_BI;
+        users.push({address:w.address, collateral_shares:cs.toString(), debt:debt.toString(),
+          hf:health.toString(), collateral_value:cv.toString(), basis:w.basis,
+          pnl:(cv-BigInt(w.basis)).toString()});
+      }catch{ /* skip a momentarily-unreadable wallet */ }
     }
-  }catch(_){/* keep last good data */}
+    if(users.length){
+      D = {...D, share_price:P.toString(), total_shares:BigInt(ts).toString(),
+           total_assets_value:BigInt(tav).toString(), users};
+      lastLive = Date.now(); render();
+    }
+  }catch(_){ /* keep last good data */ }
   setStatus();
 }
+const SCALE_BI = 1000000000000n;
+
+// Server-side API first; on any failure, read the chain client-side.
+async function tick(){
+  try { await tickServer(); setStatus(); return; }
+  catch(_) { await tickClientSide(); }
+}
 tick();
-setInterval(tick, 10000);
-setInterval(setStatus, 1000);   // keep the "updated Ns ago" ticking
+setInterval(tick, 12000);
+setInterval(setStatus, 1000);
 </script>
 </body>
 </html>
