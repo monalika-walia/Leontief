@@ -74,6 +74,27 @@ export class LeontiefClient {
     return this.read<boolean>(this.config.contracts.miniPool, "is_whitelisted", addr(account));
   }
 
+  /** SEP-41 `balance` on any token contract (SAC or custom), 7-dec integer. */
+  tokenBalance(tokenId: string, account: string): Promise<bigint> {
+    return this.read<bigint>(tokenId, "balance", addr(account));
+  }
+
+  /** Wallet balance of the vault's underlying — needs `contracts.underlyingSac`. */
+  underlyingBalance(account: string): Promise<bigint> {
+    return this.tokenBalance(this.sac("underlyingSac"), account);
+  }
+
+  /** Wallet balance of the pool's debt asset — needs `contracts.debtSac`. */
+  debtBalance(account: string): Promise<bigint> {
+    return this.tokenBalance(this.sac("debtSac"), account);
+  }
+
+  private sac(which: "underlyingSac" | "debtSac"): string {
+    const id = this.config.contracts[which];
+    if (!id) throw new Error(`contracts.${which} is not configured`);
+    return id;
+  }
+
   /** ≈ shares a deposit would mint right now (client-side preview; the mint is
    *  exact on-chain). Combines live nav + vault totals. */
   async quoteShares(amount: bigint): Promise<bigint> {
@@ -159,6 +180,13 @@ export class LeontiefClient {
       addr(signer.address),
       i128(amount),
     );
+  }
+
+  /** SEP-41 `transfer` on any token contract — moving underlying or debt assets
+   *  (funding a bot, settling revenue, paying a desk). Not a protocol call; it
+   *  lives here so an integrator needs no second SDK for the surrounding flow. */
+  transfer(signer: Signer, tokenId: string, to: string, amount: bigint): Promise<TxResult> {
+    return this.write(signer, tokenId, "transfer", addr(signer.address), addr(to), i128(amount));
   }
 
   /** Whitelisted-only. Returns seized shares in `returnValue`. */
