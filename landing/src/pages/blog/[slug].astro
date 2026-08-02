@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import BlogPost from "../../layouts/BlogPost.astro";
+import { type Post, publishedPosts } from "../../lib/post";
+
+export const getStaticPaths = (async () => {
+  const posts = await publishedPosts();
+  const bySlug = new Map(posts.map((p) => [p.data.slug, p]));
+
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: {
+      post,
+      // Declared siblings first, then the next-newest posts, so a post is never
+      // a dead end and every post is reachable from at least two others.
+      siblings: [
+        ...post.data.siblings.map((s) => bySlug.get(s)).filter((s): s is Post => Boolean(s)),
+        ...posts.filter(
+          (p) => p.data.slug !== post.data.slug && !post.data.siblings.includes(p.data.slug),
+        ),
+      ].slice(0, 2),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { post, siblings } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BlogPost post={post} siblings={siblings}>
+  <Content />
+</BlogPost>

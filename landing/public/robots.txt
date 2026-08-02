@@ -1,0 +1,7 @@
+# leontief.tech — everything here is public.
+User-agent: *
+Allow: /
+
+# docs.leontief.tech and app.leontief.tech are separate hosts with their own
+# robots.txt; a sitemap may only list URLs on the host that serves it.
+Sitemap: https://leontief.tech/sitemap.xml

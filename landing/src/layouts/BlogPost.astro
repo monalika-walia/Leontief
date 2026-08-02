@@ -1,0 +1,123 @@
+---
+import CtaBand from "../components/CtaBand.astro";
+import { AUTHORS, type AuthorId } from "../data/authors";
+import { SITE, url } from "../data/site";
+import { article, breadcrumbs, faqPage, organization, website } from "../lib/jsonld";
+import { formatDate, isoDay, ogPath, postPath, type Post, wordCount } from "../lib/post";
+import Base from "./Base.astro";
+
+interface Props {
+  post: Post;
+  siblings: Post[];
+}
+
+const { post, siblings } = Astro.props;
+const d = post.data;
+const path = postPath(d.slug);
+const author = AUTHORS[d.author as AuthorId];
+const words = wordCount(post.body ?? "");
+const ogImage = url(ogPath(d.slug));
+
+const jsonld: unknown[] = [
+  organization(),
+  website(),
+  article({
+    headline: d.title,
+    description: d.description,
+    path,
+    author: d.author as AuthorId,
+    datePublished: d.pubDate,
+    dateModified: d.updatedDate,
+    image: ogImage,
+    keywords: [d.cluster, ...d.tags],
+    wordCount: words,
+  }),
+  breadcrumbs([
+    { name: "Leontief", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: d.title, path },
+  ]),
+];
+if (d.faq?.length) jsonld.push(faqPage(path, d.faq));
+---
+
+<Base
+  title={`${d.title} — Leontief`}
+  description={d.description}
+  path={path}
+  ogImage={ogImage}
+  ogImageAlt={d.title}
+  ogType="article"
+  jsonld={jsonld}
+>
+  <article class="wrap post">
+    <p class="kicker">{d.cluster}</p>
+    <h1 class="post__title">{d.title}</h1>
+    <p class="post__standfirst">{d.description}</p>
+
+    <div class="byline">
+      <span>
+        By {author.url ? <a href={author.url} rel="author">{author.name}</a> : author.name}
+      </span>
+      <span>
+        <time datetime={isoDay(d.pubDate)}>{formatDate(d.pubDate)}</time>
+      </span>
+      {d.updatedDate && (
+        <span class="byline__updated">
+          Updated <time datetime={isoDay(d.updatedDate)}>{formatDate(d.updatedDate)}</time>
+        </span>
+      )}
+      <span>{words.toLocaleString("en-GB")} words</span>
+    </div>
+
+    <aside class="ledger" aria-label="Summary">
+      <p class="ledger__label">In one line</p>
+      <p class="ledger__body">{d.oneLine}</p>
+    </aside>
+
+    <div class="prose">
+      <slot />
+
+      {d.faq?.length && (
+        <section aria-labelledby="faq-heading">
+          <h2 id="faq-heading">Questions people actually ask</h2>
+          {d.faq.map((entry) => (
+            <>
+              <h3>{entry.q}</h3>
+              <p>{entry.a}</p>
+            </>
+          ))}
+        </section>
+      )}
+    </div>
+
+    <section class="author" aria-label="About the author">
+      <p class="author__role">{author.role}</p>
+      <p class="author__name">
+        {author.url ? <a href={author.url} rel="author">{author.name}</a> : author.name}
+      </p>
+      <p class="author__bio">{author.bio}</p>
+    </section>
+
+    {siblings.length > 0 && (
+      <section class="siblings" aria-labelledby="siblings-heading">
+        <p class="kicker" id="siblings-heading">Read next</p>
+        <ul class="siblings__list">
+          {siblings.map((s) => (
+            <li>
+              <a href={postPath(s.data.slug)}>{s.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <CtaBand />
+
+    <p class="colophon" style="padding-inline:0">
+      <a href="/blog">← All posts</a>
+      <span>Testnet prototype · no token exists · nothing here is investment advice</span>
+      <a href={SITE.performance}>Live testnet performance</a>
+    </p>
+  </article>
+</Base>

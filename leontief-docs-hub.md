@@ -145,10 +145,12 @@ Mirror of the SCF submission §4 (single source of truth: the submission; this p
 
 ## 09 · UI/UX
 
-Cinematic landing (dormant→awake concept) · dApp (markets, deposit/mint, borrow, positions, health) · liquidator console · issuer panel — live links + Claude Design system reference for new assets.
+Cinematic landing (dormant→awake concept) · dApp (markets, deposit/mint, borrow, positions, health) · liquidator console · issuer panel — live links + Claude Design system reference for new assets. The design tokens every surface inherits are inventoried in `docs/DESIGN-TOKENS.md`; the blog at `leontief.tech/blog` is the reading room of the same system (typography-first, ~68ch measure, zero client JS).
 
 **Live (testnet):**
 - dApp — https://leontief-app.vercel.app (guided 5-beat demo at `/demo`)
 - Landing — https://leontief-landing.vercel.app
+- Blog — https://leontief.tech/blog (Astro, in-repo; SEO foundation in `docs/SEO.md`,
+  tokens in `docs/DESIGN-TOKENS.md`)
 - Litepaper — https://leontief-landing.vercel.app/Litepaper.dc.html
 - Testnet contract registry — `deployments/testnet.json`; deploy how-to in `docs/DEPLOY.md`, app details in `docs/APP.md`.

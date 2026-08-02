@@ -2,7 +2,29 @@
   "name": "leontief-landing",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "seo": "node scripts/seo-check.mjs",
+    "lighthouse": "node scripts/lighthouse-check.mjs",
+    "verify": "npm run check && npm run build && npm run seo"
+  },
   "dependencies": {
     "@stellar/stellar-sdk": "13.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/rss": "^4.0.19",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.1.2",
+    "astro": "^7.1.6",
+    "satori": "^0.29.0",
+    "schema-dts": "^2.0.0",
+    "typescript": "^5.8.0"
   }
 }
