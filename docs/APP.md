@@ -71,6 +71,18 @@ blank app). Contract IDs + `VITE_DEMO_*` throwaway testnet keys. See
 testnet; the route only mounts when `VITE_DEMO_MODE=true` and the network is
 testnet. Never reuse this pattern on mainnet.
 
+## Telegram + Autopilot routes (A8)
+
+| Route | What |
+|---|---|
+| `/link` | Telegram link ceremony — shows the exact SEP-53 challenge, signs it with the connected wallet, binds chat ↔ address. A message signature, not a transaction. |
+| `/intent` | Deep-link intents from the bot (`?action=…&asset=…&amt=…`). Validates, prefills the owning panel, focuses confirm. **Never auto-submits.** |
+| `/autopilot` | Tier 2 panel — strategy + limits picker, plain-language can/cannot list, action log, and Disable at equal weight to Enable. Testnet only; never on by default. |
+
+Details, including the alert semantics and the honest account of what an
+Autopilot grant does and does not constrain: `INTEGRATIONS/telegram.md`,
+`INTEGRATIONS/delegated-auth.md`, and DECISIONS #7.
+
 ## Agent treasury (A7)
 
 `packages/sdk/examples/agent-treasury.ts` — an autonomous agent's treasury, run
