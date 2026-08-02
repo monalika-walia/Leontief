@@ -3,6 +3,7 @@ title: "SEP-8 and SEP-57, Explained: How Stellar Enforces Who Can Hold an Asset"
 description: "Stellar has two answers for permissioned tokens: SEP-8 puts the rule in the ledger and an approval server; SEP-57 puts it in a Soroban contract. How each works."
 slug: sep-8-sep-57-explained
 pubDate: 2026-08-06
+updatedDate: 2026-08-10
 author: aditya
 cluster: Permissioned tokens on Stellar
 tags:
@@ -14,6 +15,7 @@ tags:
 oneLine: "SEP-8 enforces holder rules with ledger flags and a co-signing approval server; SEP-57 enforces them with a Soroban compliance hook — and neither asks a lending protocol to re-implement securities law."
 siblings:
   - idle-rwa-stellar
+  - borrow-against-usdy-stellar
 ---
 
 Every conversation about real-world assets on a public ledger arrives at the same
@@ -177,5 +179,7 @@ question a reviewer has to ask is whether that one custody point is correct — 
 that is a question that can actually be answered.
 
 You can see the vault-and-share pattern running against a live testnet deployment in
-[the Leontief app](https://app.leontief.tech). It is a prototype, on testnet, and
-there is no token.
+[the Leontief app](https://app.leontief.tech), and the deposit-pledge-borrow-repay
+sequence is written out step by step in
+[how to borrow against tokenized treasuries on Stellar](/blog/borrow-against-usdy-stellar).
+It is a prototype, on testnet, and there is no token.

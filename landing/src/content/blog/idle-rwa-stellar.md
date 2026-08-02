@@ -3,7 +3,7 @@ title: "The Idle $3B: Why Real-World Assets on Stellar Earn the Minimum"
 description: "Stellar carries $3.07B of tokenized real-world assets and $221.76M of DeFi. The gap is not a liquidity problem — it is three rules working exactly as designed."
 slug: idle-rwa-stellar
 pubDate: 2026-08-03
-updatedDate: 2026-08-06
+updatedDate: 2026-08-10
 author: monalika
 cluster: RWA on Stellar
 tags:
@@ -14,6 +14,7 @@ tags:
 oneLine: "Tokenized treasuries on Stellar earn their coupon and nothing else, because the same rules that make them lawful also make them unusable as collateral."
 siblings:
   - sep-8-sep-57-explained
+  - borrow-against-usdy-stellar
 ---
 
 On 2 August 2026, [rwa.xyz counted $3.07B of tokenized real-world assets on
@@ -152,7 +153,9 @@ also the only version that survives contact with a securities lawyer.
 
 The mechanics are documented in
 [the protocol docs](https://docs.leontief.tech/protocol/vault), and the contracts
-are open source.
+are open source. If you want the loop rather than the argument, we walk through
+deposit, pledge, borrow, and repay step by step in
+[how to borrow against tokenized treasuries on Stellar](/blog/borrow-against-usdy-stellar).
 
 ## The number to watch
 
