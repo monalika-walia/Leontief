@@ -1,0 +1,23 @@
+{
+  "name": "@leontief/autopilot",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Policy-delegated Autopilot engine (A8 Tier 2) — flag-gated, testnet only.",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "start": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@leontief/sdk": "workspace:*",
+    "@stellar/stellar-sdk": "^16.2.0",
+    "postgres": "^3.4.5",
+    "tsx": "^4.20.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "vitest": "^3.2.0"
+  }
+}
