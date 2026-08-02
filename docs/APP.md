@@ -81,7 +81,7 @@ testnet. Never reuse this pattern on mainnet.
 
 Details, including the alert semantics and the honest account of what an
 Autopilot grant does and does not constrain: `INTEGRATIONS/telegram.md`,
-`INTEGRATIONS/delegated-auth.md`, and DECISIONS #11.
+`INTEGRATIONS/delegated-auth.md`, and DECISIONS #12.
 
 ## Agent treasury (A7)
 

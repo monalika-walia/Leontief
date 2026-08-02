@@ -8,7 +8,7 @@ set. **Off by default. Testnet only. Not audited.**
 > any network but testnet.
 
 This is the only thing in the repo that signs on a user's behalf. Read
-`INTEGRATIONS/delegated-auth.md` and DECISIONS #11 before changing anything here.
+`INTEGRATIONS/delegated-auth.md` and DECISIONS #12 before changing anything here.
 
 ## What the grant actually is (Path B)
 

@@ -9,7 +9,7 @@ import {
 import type { Signer } from "./submitTx";
 
 /**
- * The Autopilot grant ceremony (A8 Tier 2, Path B — DECISIONS #11).
+ * The Autopilot grant ceremony (A8 Tier 2, Path B — DECISIONS #12).
  *
  * A session keypair is added as an **additional signer on the user's own
  * account**, and the account's thresholds are set so that key can act but cannot

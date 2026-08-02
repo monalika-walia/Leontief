@@ -61,7 +61,7 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Test impact:** docs workflow build + link-check gate.
 - *AI-assisted session; entry reviewed by the human author of record.*
 
-## #11 · 2026-08-02 · monalika walia · Autopilot ships on Path B (session signer), not Path A (on-chain policy signer)
+## #12 · 2026-08-02 · monalika walia · Autopilot ships on Path B (session signer), not Path A (on-chain policy signer)
 
 - **Decision:** the A8 Tier 2 decision gate resolves to **Path B**. Autopilot's
   capability is a session keypair added as an additional signer on the user's own

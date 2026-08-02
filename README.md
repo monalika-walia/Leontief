@@ -44,7 +44,7 @@ mainnet use**; nothing in it is audited for production.
 refuses to start on any network but testnet, is never enabled by default, and its
 guardrails are asserted in CI. What a grant does and does not constrain is written
 plainly in [`INTEGRATIONS/delegated-auth.md`](INTEGRATIONS/delegated-auth.md) and
-DECISIONS #11 — including the part where a classic Stellar signer is not
+DECISIONS #12 — including the part where a classic Stellar signer is not
 scope-limited, so the engine-side policy is the real leash.
 
 ## Quickstart
