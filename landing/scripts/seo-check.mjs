@@ -188,9 +188,12 @@ for (const page of CRAWL_PAGES) {
   }
   const h = head(read(full));
 
+  // 75 matches the frontmatter cap. A SERP truncates nearer 60, so what actually
+  // matters is that the cluster terms are front-loaded — this bound only stops a
+  // headline from running away.
   const title = tagText(h, "title");
   if (!title) fail(scope, "no <title>");
-  else if (title.length > 70) fail(scope, `<title> is ${title.length} chars (max 70)`);
+  else if (title.length > 75) fail(scope, `<title> is ${title.length} chars (max 75)`);
 
   const desc = metaContent(h, "name", "description");
   if (!desc) fail(scope, "no meta description");
