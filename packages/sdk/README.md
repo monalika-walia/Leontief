@@ -57,6 +57,9 @@ TARGET=G... pnpm exec tsx packages/sdk/examples/liquidate.ts
 
 ./scripts/agent_onboard.sh                           # once: trustlines + SEP-8 auth
 pnpm exec tsx packages/sdk/examples/agent-treasury.ts   # the full A7 policy loop
+
+pnpm exec tsx packages/sdk/examples/hf-drill.ts 1.4     # scripted at-risk position
+pnpm exec tsx packages/sdk/examples/hf-drill.ts --restore
 ```
 
 `agent-treasury.ts` is also this package's **dogfood test**: an agent earning
