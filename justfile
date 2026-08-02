@@ -76,9 +76,21 @@ app:
     ./scripts/gen_app_env.sh
     pnpm --filter @leontief/app dev
 
-# Serve the static landing site (landing.html + litepaper) on :8080
+# Landing + blog dev server (Astro; serves public/ verbatim and /blog live)
 landing:
-    cd landing && python3 -m http.server 8080
+    cd landing && npm install && npm run dev
+
+# Build the landing + blog exactly as Vercel does, into landing/dist
+blog-build:
+    cd landing && npm ci && npm run build
+
+# The A9 gate: build, then structural SEO + JSON-LD + editorial + honesty rails
+blog-check:
+    cd landing && npm ci && npm run build && node scripts/seo-check.mjs
+
+# Lighthouse budget on /blog and up to 3 posts (needs Chrome)
+blog-lighthouse:
+    cd landing && npm run lighthouse
 
 # Telegram bot (A8 Tier 1); needs the indexer's schema migrated first
 bot:
@@ -88,6 +100,10 @@ bot:
 # Prove the bot has no signing capability (CI runs this too)
 bot-cannot-sign:
     ./scripts/check_bot_cannot_sign.sh
+
+# Prove Autopilot is off by default, testnet-only, and floored at HF 1.6
+autopilot-gated:
+    ./scripts/check_autopilot_gated.sh
 
 # Backend API (early-access intake); needs `docker compose up -d postgres`
 api:
