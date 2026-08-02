@@ -3,6 +3,7 @@ title: "How to Borrow Against Tokenized Treasuries (USDY) on Stellar"
 description: "USDY keeps accruing while you hold it. Here is the wrap-and-borrow loop that lets it also serve as collateral, the health factor in plain words, and the risks."
 slug: borrow-against-usdy-stellar
 pubDate: 2026-08-10
+updatedDate: 2026-08-13
 author: vyom
 cluster: Borrowing against USDY
 tags:
@@ -13,6 +14,7 @@ tags:
   - health factor
 oneLine: "Wrap a restricted treasury token into a vault share, pledge the share, borrow a stablecoin against it — the underlying keeps accruing the whole time, and the restricted asset never leaves the vault."
 siblings:
+  - permissioned-liquidation
   - idle-rwa-stellar
   - sep-8-sep-57-explained
 faq:
@@ -155,7 +157,9 @@ Withdrawals and repayments keep working.
 **Liquidation is real, and it is permissioned.** If your health factor reaches 1, an
 approved liquidator can repay part of your debt and take collateral at a 5% discount.
 For restricted assets the liquidator set is a whitelist, which makes seizure lawful
-but also means it depends on someone on that list choosing to act.
+but also means it depends on someone on that list choosing to act. The full mechanism,
+including what happens when nobody does, is in
+[permissioned liquidation](/blog/permissioned-liquidation).
 
 **Issuer action is a live risk, not a theoretical one.** A regulated issuer can
 freeze a trustline or claw back units. If that happens to the asset in a vault, the
