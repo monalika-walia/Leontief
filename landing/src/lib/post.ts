@@ -39,3 +39,13 @@ const DATE = new Intl.DateTimeFormat("en-GB", {
 
 export const formatDate = (d: Date) => DATE.format(d);
 export const isoDay = (d: Date) => d.toISOString().slice(0, 10);
+
+/**
+ * The brand suffix is a nicety; staying under the length a SERP will render is not.
+ * A headline that cannot carry " — Leontief" and stay inside 70 characters ships
+ * without it rather than being truncated mid-brand.
+ */
+export function pageTitle(title: string): string {
+  const suffixed = `${title} — Leontief`;
+  return suffixed.length <= 70 ? suffixed : title;
+}
