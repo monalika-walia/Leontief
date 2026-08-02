@@ -61,6 +61,46 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Test impact:** docs workflow build + link-check gate.
 - *AI-assisted session; entry reviewed by the human author of record.*
 
+## #7 · 2026-08-02 · monalika walia · Autopilot ships on Path B (session signer), not Path A (on-chain policy signer)
+
+- **Decision:** the A8 Tier 2 decision gate resolves to **Path B**. Autopilot's
+  capability is a session keypair added as an additional signer on the user's own
+  classic account, with app-side one-tap revoke and engine-side limits. Research
+  and evidence: `INTEGRATIONS/delegated-auth.md` (2026-08-02, every contract ID
+  verified live on testnet).
+- **Why not Path A**, despite policy-signer tooling being real, deployed on
+  testnet and audited: (1) the live beta signs with Freighter/Wallets-Kit against
+  classic `G…` accounts — Path A presumes a contract account, and migrating the
+  cohort onto passkey smart wallets is a larger and riskier change than Autopilot
+  itself; (2) even on a smart account the constraints that matter here are not
+  expressible — OpenZeppelin's shipped spending-limit policy **panics on any
+  function name that is not `transfer`**, so it cannot meter `borrow`/`repay` at
+  all, and an HF floor depends on mini-pool state. Both caps and the floor would
+  need a **custom Soroban policy contract**: new contract, ≥90% coverage bar, and
+  an audit before mainnet. Out of scope for a stretch item whose premise is zero
+  contract changes.
+- **What Path B honestly grants:** a classic additional signer is **not**
+  scope-limited — weight and thresholds decide how much authority it has, not
+  which contracts it may touch. The session key is weight 1 with the account's
+  high threshold raised above 1, so it cannot add/remove signers or change
+  thresholds (no lockout, no escalation), but it *can* sign at the medium
+  threshold. The on-chain layer therefore contributes exactly one guarantee —
+  **revocation is unilateral and instant** — and the engine-side policy is the
+  real leash. This is stated in the UI and the README rather than glossed.
+- **Binding consequence for submission text:** while Path B is what ships,
+  Autopilot must NOT be described as "on-chain-constrained". The honest sentence
+  is "a user-revocable session signer with engine-enforced limits, testnet only".
+  The CAP-0071 claim is only earned on Path A.
+- **Alternatives:** Path A now (rejected — needs a smart-wallet migration plus an
+  unaudited custom policy contract); no delegation at all, Tier 1 alerts only
+  (viable, and remains the recommendation for any mainnet posture).
+- **Spec sections affected:** none — no contract change. A8 Tier 2 only.
+- **Test impact:** the HF floor of 1.6 is asserted by engine pre-flight
+  simulation before every action on either path, and unit-tested in
+  `services/autopilot`; policy limits are property-tested against a bounded
+  action generator.
+- *AI-assisted session; entry reviewed by the human author of record.*
+
 ## #3 · 2026-07-16 · monalika walia · Vault mint/redeem legs are value-consistent (spec §3 ambiguity resolution) — ✅ APPROVED 2026-07-17
 
 - **Decision:** spec §3 defines `V` in quote units (`balance·nav/SCALE`) but writes the mint leg
