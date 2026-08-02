@@ -20,7 +20,8 @@ function toScVal(a: ArgKind): xdr.ScVal {
   if ("i128" in a) return nativeToScVal(a.i128, { type: "i128" });
   if ("sym" in a) return nativeToScVal(a.sym, { type: "symbol" });
   if ("u32" in a) return nativeToScVal(a.u32, { type: "u32" });
-  return nativeToScVal(a.bool, { type: "bool" });
+  // stellar-sdk 16 dropped the "bool" type hint; a JS boolean infers to ScvBool.
+  return nativeToScVal(a.bool);
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
