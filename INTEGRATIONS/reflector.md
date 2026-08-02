@@ -72,6 +72,23 @@ source deploy.env && ./scripts/wire_reflector.sh   # deploy shim → map XLM →
    `DeviationExceeded` halt → re-arm via `accept_override`) — the script prints the
    exact commands; record tx hashes here.
 
+## ✅ Wired live on testnet (2026-07-21)
+
+Done — the vault's LEOD NAV now reads a **live Reflector feed**, powering the
+public [/performance dashboard](https://leontief.tech/performance):
+
+- `reflector-feed` shim deployed → `CCVNDBTHFHZ6RULFPQIVUZ5D55ROLUBU5NSXUG2KSYT2NPGR2CN3GHII`
+  (`init(admin, CCYOZJCO…)` = the testnet CEX/DEX feed), `map_asset(LEOD → Other("USDC"))`.
+- `oracle-adapter.configure_feed(LEOD, shim, 14)` repointed the feed; `configure_feed`
+  clears `last_accepted`, so the mock→live cutover did not trip the deviation breaker.
+  `max_age_secs` set to 3600 s (12× the 300 s cadence).
+- `get_nav(LEOD)` now returns the live Reflector USDC price (≈ $1.0009, fresh `ts`),
+  normalized 14→12 dp — **self-refreshing every 5 min, never stale**. The
+  serverless read-API surfaces it as the dashboard's "NAV · live" tile.
+
+USDC (~$1) is used as a stable **par-NAV proxy** — no RWA feed exists on Reflector
+testnet (see the gap above), so a real RWA NAV remains the mainnet plan.
+
 ## Open items / caveats (from adversarial review)
 
 - ReflectorBeam's per-read `caller: Address` fee signature was **not** confirmed

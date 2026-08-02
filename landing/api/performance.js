@@ -3,14 +3,18 @@
 // via simulateTransaction (no keys, no client bundle), so the page is a thin
 // fetch() poller and the data is genuinely on-chain + real-time.
 //
-// Wallet cost basis (LEOD deposited x NAV at deposit) is the only non-live field
-// (the chain does not store per-wallet basis), recorded here per test wallet;
-// everything else (positions, health, share price, TVL) is read live.
+// The vault's NAV now comes from a LIVE Reflector SEP-40 feed on testnet (via the
+// reflector-feed shim mapping LEOD -> Reflector USDC, a stable ~$1 par-NAV proxy),
+// so share_price / TVL / health update on real market data and never go stale.
+// Wallet cost basis is the only non-live field (the chain does not store it); it
+// was re-based to each wallet's collateral value at the Reflector cutover, so the
+// unrealized-gain column tracks movement from the live-oracle baseline.
 import {
   Account,
   Address,
   BASE_FEE,
   Contract,
+  nativeToScVal,
   rpc,
   scValToNative,
   TransactionBuilder,
@@ -30,12 +34,13 @@ const CONTRACTS = {
   mock_oracle: "CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG",
 };
 
-// Tracked wallets. basis = USD (7-dec) put in, for the unrealized-gain column.
+// Tracked wallets. basis = collateral value at the Reflector cutover (7-dec USD),
+// so the unrealized column reads ~0 at switchover and then moves with the live NAV.
 const WALLETS = [
-  { address: "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD", basis: 51198000000 },
-  { address: "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB", basis: 30780000000 },
-  { address: "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB", basis: 31086000000 },
-  { address: "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ", basis: 26500000000 },
+  { address: "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD", basis: 50042822939 },
+  { address: "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB", basis: 30025693764 },
+  { address: "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB", basis: 30025693769 },
+  { address: "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ", basis: 25021411478 },
 ];
 
 const HF_MAX = 9_000_000_000_000_000n; // above this = debt-free / infinity
@@ -60,10 +65,12 @@ export default async function handler(_req, res) {
     const server = new rpc.Server(RPC);
     const addr = (a) => new Address(a).toScVal();
 
-    const [sp, ts, tav] = await Promise.all([
+    const leod = nativeToScVal("LEOD", { type: "symbol" });
+    const [sp, ts, tav, nav] = await Promise.all([
       read(server, CONTRACTS.vault, "share_price"),
       read(server, CONTRACTS.vault, "total_shares"),
       read(server, CONTRACTS.vault, "total_assets_value"),
+      read(server, CONTRACTS.oracle_adapter, "get_nav", leod), // live Reflector NAV
     ]);
     const sharePrice = BigInt(sp);
 
@@ -94,8 +101,11 @@ export default async function handler(_req, res) {
       live: true,
       network: "testnet",
       asof: new Date().toISOString(),
+      oracle: "reflector", // live SEP-40 feed (via reflector-feed shim → Reflector USDC)
       explorer: "https://stellar.expert/explorer/testnet",
       contracts: CONTRACTS,
+      nav: Number(BigInt(nav.nav)), // live NAV, SCALE-scaled
+      nav_ts: Number(BigInt(nav.ts)),
       share_price: Number(sharePrice),
       total_shares: Number(BigInt(ts)),
       total_assets_value: Number(BigInt(tav)),

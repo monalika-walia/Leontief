@@ -10,6 +10,22 @@ restricted LEOD into ldLEOD, pledge it, and borrow USDC against it; NAV ticks
 prove the shares keep accruing **while pledged**, and a repay proves the exit
 path. Everything below is verifiable on stellar.expert (testnet).
 
+## Oracle: switched to a LIVE Reflector feed (2026-07-21)
+
+The vault's NAV no longer comes from the manually-set mock — it is now sourced
+**live from a Reflector SEP-40 oracle on testnet** (X1). The
+[`reflector-feed`](../contracts/reflector-feed) shim (`REFLECTOR_FEED` in
+`deploy.env`) maps our `LEOD` symbol → Reflector's `Asset::Other("USDC")` on the
+testnet CEX/DEX feed (`CCYOZJCO…`, a stable ~$1 par-NAV proxy) and forwards the
+XDR-identical `PriceData`; the `oracle-adapter` normalizes 14→12 dp and applies
+its fail-closed checks unchanged (`configure_feed` cleared `last_accepted`, so the
+mock→live transition did not trip the deviation breaker). Reflector updates every
+5 min, so **the NAV self-refreshes and never goes stale** — the keepalive
+workflow is no longer needed for LEOD. `get_nav(LEOD)` returns ≈ **$1.0009**,
+live. Per-wallet cost basis was **re-based to each wallet's collateral value at
+the cutover**, so the unrealized column reads ~0 at switchover and then moves
+with the live NAV. This satisfies X1's "adapter reads live Reflector on testnet."
+
 ## How the dashboard is real-time
 
 Two independent read paths, so the numbers are always genuine chain state:

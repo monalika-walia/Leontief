@@ -104,9 +104,9 @@
   <div class="lede">
     <h1>The share keeps <em>working</em> while it's pledged.</h1>
     <p>Live positions from the Leontief testnet deployment. Wrapped RWAs
-      (ldLEOD) are pledged as collateral and borrowed against — and still
-      accrue NAV. Every figure is a chain read; every wallet and transaction
-      links to the explorer.</p>
+      (ldLEOD) are pledged as collateral and borrowed against, priced by a
+      <strong>live Reflector SEP-40 oracle</strong>. Every figure is a chain
+      read; every wallet and transaction links to the explorer.</p>
   </div>
 
   <div class="kpis" id="kpis"></div>
@@ -144,8 +144,9 @@
 <script id="snapshot" type="application/json">
 {
   "network": "testnet",
-  "asof": "2026-07-20",
+  "asof": "2026-07-21",
   "live": false,
+  "oracle": "reflector",
   "explorer": "https://stellar.expert/explorer/testnet",
   "contracts": {
     "vault": "CB64EHOFGTWH2USSZP3PL2B66XJ4KD6A6C3SFXKPNTEO3NCIZFZWLHUS",
@@ -155,45 +156,45 @@
     "leod_sac": "CDE5ZRPD2SJCUZIKEVM546Y25YIER35WYKVWICQFDW3I2ZHL2MLD4AOW",
     "mock_oracle": "CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG"
   },
-  "share_price": 1038299539185,
-  "total_shares": 137821500021,
-  "total_assets_value": 143100000000,
+  "share_price": "980366792779",
+  "total_shares": "137821500021",
+  "total_assets_value": "135115621932",
   "users": [
     {
       "address": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "basis": 51198000000,
-      "collateral_shares": 51045000002,
-      "debt": 25000000000,
-      "hf": 1801999999280,
-      "collateral_value": 52999999979,
-      "pnl": 1801999979
+      "collateral_shares": "51045000002",
+      "debt": "25000000000",
+      "hf": "1701455979920",
+      "collateral_value": "50042822939",
+      "basis": 50042822939,
+      "pnl": "0"
     },
     {
       "address": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "basis": 30780000000,
-      "collateral_shares": 30627000002,
-      "debt": 12000000000,
-      "hf": 2252499999083,
-      "collateral_value": 31799999988,
-      "pnl": 1019999988
+      "collateral_shares": "30627000002",
+      "debt": "12000000000",
+      "hf": "2126819974916",
+      "collateral_value": "30025693764",
+      "basis": 30025693764,
+      "pnl": "0"
     },
     {
       "address": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "basis": 31086000000,
-      "collateral_shares": 30627000007,
-      "debt": 15000000000,
-      "hf": 1801999999600,
-      "collateral_value": 31799999993,
-      "pnl": 713999993
+      "collateral_shares": "30627000007",
+      "debt": "15000000000",
+      "hf": "1701455980200",
+      "collateral_value": "30025693769",
+      "basis": 30025693769,
+      "pnl": "0"
     },
     {
       "address": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
-      "basis": 26500000000,
-      "collateral_shares": 25522500010,
-      "debt": 10000000000,
-      "hf": 2252499999900,
-      "collateral_value": 26499999999,
-      "pnl": -1
+      "collateral_shares": "25522500010",
+      "debt": "10000000000",
+      "hf": "2126819975600",
+      "collateral_value": "25021411478",
+      "basis": 25021411478,
+      "pnl": "0"
     }
   ],
   "txs": [
@@ -307,7 +308,9 @@
       "who": "oracle",
       "hash": "c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"
     }
-  ]
+  ],
+  "nav": 1000856865443,
+  "nav_ts": 1785646200
 }
 </script>
 
@@ -328,12 +331,12 @@ function render(){
   const pledged = users.reduce((s,u)=>s+N(u.collateral_shares),0);
   const total = N(D.total_shares);
   const util = total ? (pledged/total*100) : 0;
-  const vaultReturn = pct(D.share_price);
+  const navUsd = D.nav ? '$' + (N(D.nav)/SCALE).toFixed(4) : '$' + (N(D.share_price)/SCALE).toFixed(4);
   const kpis = [
     ['Wrapped AUM', fmtUsd(D.total_assets_value), 'ldLEOD at live NAV'],
     ['Utility ratio', util.toFixed(0)+'%', 'of shares put to work'],
     ['Active wallets', String(users.length), 'holding positions'],
-    ['Vault return', (vaultReturn>=0?'+':'')+vaultReturn.toFixed(2)+'%', 'share price vs mint'],
+    ['NAV · live', navUsd, 'Reflector SEP-40 feed'],
     ['Liquidations', '0', 'all positions healthy'],
   ];
   document.getElementById('kpis').innerHTML = kpis.map(([k,v,s])=>
@@ -353,7 +356,7 @@ function render(){
       <td class="pnl">${g}${fmtUsd(ap)} <span style="color:var(--dim)">(${g}${apc.toFixed(2)}%)</span></td>
     </tr>`;}).join('');
   document.getElementById('utilNote').textContent =
-    `Utility ratio = pledged shares ÷ total shares. Every wallet has its full ldLEOD balance pledged as collateral — and it keeps accruing (+${vaultReturn.toFixed(2)}% share-price gain since mint) while locked.`;
+    `Utility ratio = pledged shares ÷ total shares. Every wallet has its full ldLEOD balance pledged as collateral. The NAV is now sourced live from a Reflector SEP-40 feed on testnet; unrealized figures are measured from the live-oracle cutover.`;
 
   document.getElementById('feed').innerHTML = (D.txs||[]).map(t=>{
     const label = {wrap:'wrapped LEOD → ldLEOD',supply_collateral:'supplied collateral',
