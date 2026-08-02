@@ -80,6 +80,15 @@ app:
 landing:
     cd landing && python3 -m http.server 8080
 
+# Telegram bot (A8 Tier 1); needs the indexer's schema migrated first
+bot:
+    pnpm --filter @leontief/indexer migrate
+    pnpm --filter @leontief/bot dev
+
+# Prove the bot has no signing capability (CI runs this too)
+bot-cannot-sign:
+    ./scripts/check_bot_cannot_sign.sh
+
 # Backend API (early-access intake); needs `docker compose up -d postgres`
 api:
     pnpm --filter @leontief/api migrate

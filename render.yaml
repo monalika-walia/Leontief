@@ -30,6 +30,57 @@ services:
       - key: NODE_VERSION
         value: "22"
 
+  # A8 Tier 1 — Telegram access layer. Deployed beside the indexer, sharing the
+  # same Postgres (the indexer owns the schema and serves /tg/link).
+  #
+  # There is deliberately NO key, seed, or signer variable in this block. The bot
+  # reads chain state and sends messages; it cannot sign anything, and CI proves
+  # it (scripts/check_bot_cannot_sign.sh).
+  - type: web
+    name: leontief-bot
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: npx --yes pnpm@10.32.1 install --frozen-lockfile
+    startCommand: npx --yes tsx services/bot/src/index.ts
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: leontief-db
+          property: connectionString
+      - key: BOT_PORT
+        value: 8789
+      # Set in the Render dashboard — never committed. See docs/SECRETS.md.
+      - key: BOT_TOKEN
+        sync: false
+      - key: WEBHOOK_SECRET
+        generateValue: true
+      - key: PUBLIC_URL
+        sync: false
+      - key: APP_BASE_URL
+        value: https://app.leontief.tech
+      - key: INDEXER_URL
+        sync: false
+      - key: RPC_URL
+        value: https://soroban-testnet.stellar.org
+      - key: NETWORK_PASSPHRASE
+        value: Test SDF Network ; September 2015
+      # Contract IDs for the live testnet deployment (deployments/testnet.json).
+      - key: VAULT
+        sync: false
+      - key: MINI_POOL
+        sync: false
+      - key: ORACLE_ADAPTER
+        sync: false
+      - key: USDC_SAC
+        sync: false
+      - key: LEOD_SAC
+        sync: false
+      - key: NODE_VERSION
+        value: "22"
+
 databases:
   - name: leontief-db
     plan: free
