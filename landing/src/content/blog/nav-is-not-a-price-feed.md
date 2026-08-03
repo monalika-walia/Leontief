@@ -90,7 +90,7 @@ and it would be dishonest to describe it without saying where it came from.
 
 ## Fail-closed, and what that costs
 
-Our adapter reverts unless **all three** hold:
+Our adapter is [fail-closed](https://leontief.tech/litepaper#sec-b) — it reverts unless **all three** hold:
 
 1. the reading is fresh — `now − ts ≤ max_age`;
 2. the move is bounded — `|nav − last_accepted| / last_accepted ≤ max_deviation`;
