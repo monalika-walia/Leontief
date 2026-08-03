@@ -159,6 +159,24 @@ logged and skipped; it never kills the loop.
 
 Every alert carries a deep link to the relevant app view.
 
+## Running the alert drill
+
+The Tier-1 acceptance needs a *forced* HF warning against a scripted at-risk
+position. `packages/sdk/examples/hf-drill.ts` is that script:
+
+```sh
+source deploy.env
+pnpm exec tsx packages/sdk/examples/hf-drill.ts 1.4    # sink to HF 1.4 → warn band
+pnpm exec tsx packages/sdk/examples/hf-drill.ts 1.15   # → urgent band
+pnpm exec tsx packages/sdk/examples/hf-drill.ts --restore
+```
+
+It borrows only against the driver's own position, on testnet, and refuses a
+target below 1.0625 — the floor the pool's own LTV cap makes unreachable. From a
+clean account it wraps and supplies first, so the drill is one command.
+
+Verified live 2026-08-02: sank to exactly HF 1.400 and restored to debt-free.
+
 ## Deploy
 
 ```sh

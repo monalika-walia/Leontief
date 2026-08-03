@@ -21,10 +21,31 @@ It converts tokenized real-world assets on Stellar — restricted, rebasing, pri
 contracts/   vault · vault-factory · oracle-adapter · mock-oracle · mini-pool
 app/         React dApp
 packages/    sdk · bindings
-services/    indexer
+services/    indexer · api · monitor · bot · autopilot
 scripts/     install_tools.sh · setup_testnet.sh · demo.sh
 tests/       integration beats 1..5b
 ```
+
+## Agents, bots, and automation — where the line is
+
+Three surfaces in this repo touch automation. They are deliberately not equal:
+
+| Surface | Signs? | Status |
+|---|---|---|
+| [`packages/sdk/examples/agent-treasury.ts`](packages/sdk/examples/agent-treasury.ts) (A7) | its own throwaway testnet key | demo script |
+| [`services/bot`](services/bot) (A8 Tier 1) | **never — no signing capability at all**, proven in CI | shipping to the beta |
+| [`services/autopilot`](services/autopilot) (A8 Tier 2) | on a user's behalf, via a revocable session signer | **off by default, testnet only** |
+
+The agent-treasury example is a **policy loop, not an LLM** — a plain Stellar
+keypair plus scripted rules. **This pattern requires human sign-off before any
+mainnet use**; nothing in it is audited for production.
+
+**Mainnet Autopilot requires an audit and human sign-off. Full stop.** The engine
+refuses to start on any network but testnet, is never enabled by default, and its
+guardrails are asserted in CI. What a grant does and does not constrain is written
+plainly in [`INTEGRATIONS/delegated-auth.md`](INTEGRATIONS/delegated-auth.md) and
+DECISIONS #12 — including the part where a classic Stellar signer is not
+scope-limited, so the engine-side policy is the real leash.
 
 ## Quickstart
 

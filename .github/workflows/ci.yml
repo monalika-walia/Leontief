@@ -96,6 +96,9 @@ jobs:
       # A8 Tier 1 hard rule: the Telegram bot has no signing capability at all.
       - name: Bot cannot sign (A8 Tier 1)
         run: ./scripts/check_bot_cannot_sign.sh
+      # A8 Tier 2: engine off by default, testnet-only, 1.6 floor with no override.
+      - name: Autopilot guardrails (A8 Tier 2)
+        run: ./scripts/check_autopilot_gated.sh
 
   deployments:
     runs-on: ubuntu-latest

@@ -1,5 +1,6 @@
 import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
+import { migrateAutopilot, registerAutopilotRoutes } from "./autopilot.js";
 import { PORT } from "./config.js";
 import { migrate, sql } from "./db.js";
 import { computeAtRisk, type Snapshot } from "./risk.js";
@@ -93,6 +94,8 @@ export async function buildApi(): Promise<FastifyInstance> {
   });
 
   registerTelegramRoutes(app);
+  if (process.env.AUTOPILOT_FLAG === "true") await migrateAutopilot();
+  registerAutopilotRoutes(app);
 
   return app;
 }

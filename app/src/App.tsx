@@ -2,6 +2,7 @@ import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import { Shell } from "./components/Shell";
 import { ToastProvider } from "./components/TxToast";
 import { useApp } from "./ctx";
+import { Autopilot } from "./routes/Autopilot";
 import { Borrow } from "./routes/Borrow";
 import { Demo } from "./routes/Demo";
 import { Intent } from "./routes/Intent";
@@ -29,6 +30,8 @@ export function App() {
           {/* Telegram access layer (A8): deep-link intents + the link ceremony. */}
           <Route path="/intent" element={<Intent />} />
           <Route path="/link" element={<Link />} />
+          {/* Tier 2 Autopilot: testnet-only, never enabled by default. */}
+          <Route path="/autopilot" element={<Autopilot />} />
           <Route path="/liquidate" element={<Liquidate />} />
           <Route path="/issuer" element={<Issuer />} />
           {demoEnabled && <Route path="/demo" element={<Demo />} />}
