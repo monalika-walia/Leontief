@@ -93,6 +93,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm -r test
+      # A8 Tier 1 hard rule: the Telegram bot has no signing capability at all.
+      - name: Bot cannot sign (A8 Tier 1)
+        run: ./scripts/check_bot_cannot_sign.sh
 
   deployments:
     runs-on: ubuntu-latest

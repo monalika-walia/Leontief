@@ -15,6 +15,7 @@ cat > "$OUT" <<EOF
 VITE_RPC_URL=${STELLAR_RPC_URL:-https://soroban-testnet.stellar.org}
 VITE_NETWORK_PASSPHRASE=Test SDF Network ; September 2015
 VITE_EXPLORER_BASE=https://stellar.expert/explorer/testnet
+VITE_INDEXER_URL=${INDEXER_URL:-http://localhost:8788}
 VITE_VAULT_FACTORY=$VAULT_FACTORY
 VITE_VAULT_LEOD=$VAULT
 VITE_ORACLE_ADAPTER=$ORACLE_ADAPTER

@@ -1,10 +1,22 @@
+import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
 import { PORT } from "./config.js";
 import { migrate, sql } from "./db.js";
 import { computeAtRisk, type Snapshot } from "./risk.js";
+import { registerTelegramRoutes } from "./tg.js";
+
+/** Comma-separated allowlist (same convention as services/api). */
+function corsOrigins(): string[] {
+  return (process.env.CORS_ORIGINS ?? "http://localhost:5173,https://app.leontief.tech")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 export async function buildApi(): Promise<FastifyInstance> {
   const app = Fastify({ logger: true });
+  // The dApp POSTs the link ceremony here from another origin.
+  await app.register(cors, { origin: corsOrigins(), methods: ["GET", "POST"] });
 
   app.get("/health", async () => {
     await sql`SELECT 1`;
@@ -79,6 +91,8 @@ export async function buildApi(): Promise<FastifyInstance> {
       positions: computeAtRisk(snaps, BigInt(sp.share_price), hfLt),
     };
   });
+
+  registerTelegramRoutes(app);
 
   return app;
 }

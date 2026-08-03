@@ -4,7 +4,9 @@ import { ToastProvider } from "./components/TxToast";
 import { useApp } from "./ctx";
 import { Borrow } from "./routes/Borrow";
 import { Demo } from "./routes/Demo";
+import { Intent } from "./routes/Intent";
 import { Issuer } from "./routes/Issuer";
+import { Link } from "./routes/Link";
 import { Liquidate } from "./routes/Liquidate";
 import { Positions } from "./routes/Positions";
 import { Stats } from "./routes/Stats";
@@ -24,6 +26,9 @@ export function App() {
           <Route path="/borrow" element={<Borrow />} />
           <Route path="/positions" element={<Positions />} />
           <Route path="/stats" element={<Stats />} />
+          {/* Telegram access layer (A8): deep-link intents + the link ceremony. */}
+          <Route path="/intent" element={<Intent />} />
+          <Route path="/link" element={<Link />} />
           <Route path="/liquidate" element={<Liquidate />} />
           <Route path="/issuer" element={<Issuer />} />
           {demoEnabled && <Route path="/demo" element={<Demo />} />}

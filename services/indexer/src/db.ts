@@ -63,4 +63,59 @@ export async function migrate(): Promise<void> {
     )
   `;
   await sql`INSERT INTO cursor (id, last_ledger) VALUES (1, 0) ON CONFLICT (id) DO NOTHING`;
+
+  await migrateTelegram();
+}
+
+/**
+ * Telegram access layer (A8 Tier 1). The bot and the indexer share this
+ * Postgres; the indexer owns the schema (it owns migrations) and the bot reads
+ * and writes rows. Nothing here stores a key, a seed, or anything signable —
+ * `tg_links` binds a chat to a PUBLIC address and nothing more.
+ */
+export async function migrateTelegram(): Promise<void> {
+  // One-time link codes minted by the bot, spent by the app's /link ceremony.
+  await sql`
+    CREATE TABLE IF NOT EXISTS tg_link_codes (
+      code        TEXT PRIMARY KEY,
+      chat_id     BIGINT NOT NULL,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      expires_at  TIMESTAMPTZ NOT NULL,
+      used_at     TIMESTAMPTZ
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS tg_links (
+      chat_id     BIGINT NOT NULL,
+      address     TEXT NOT NULL,
+      verified    BOOLEAN NOT NULL DEFAULT false,
+      method      TEXT,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (chat_id, address)
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS tg_links_address ON tg_links (address)`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS alert_prefs (
+      chat_id      BIGINT PRIMARY KEY,
+      hf_warn      NUMERIC NOT NULL DEFAULT 1.5,
+      hf_urgent    NUMERIC NOT NULL DEFAULT 1.2,
+      daily_digest BOOLEAN NOT NULL DEFAULT false,
+      paused       BOOLEAN NOT NULL DEFAULT false
+    )
+  `;
+  // Delivery log — also the hysteresis memory (last band per chat+address) and
+  // the rate limiter's clock.
+  await sql`
+    CREATE TABLE IF NOT EXISTS alert_log (
+      id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      chat_id  BIGINT NOT NULL,
+      address  TEXT,
+      kind     TEXT NOT NULL,
+      band     TEXT,
+      body     TEXT NOT NULL,
+      sent_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS alert_log_chat_sent ON alert_log (chat_id, sent_at DESC)`;
 }

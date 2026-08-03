@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { HealthGauge } from "../components/HealthGauge";
 import { LedgerPanel } from "../components/LedgerPanel";
 import { useApp } from "../ctx";
@@ -12,6 +13,7 @@ import {
 } from "../hooks";
 import { addr, i128 } from "../lib/chain";
 import { amt, hfNumber, SCALE, STROOP } from "../lib/format";
+import { prefillAmount, prefillTab } from "../lib/intent";
 import { useSubmit } from "../lib/useSubmit";
 
 type Tab = "supply" | "borrow" | "repay" | "withdraw";
@@ -25,8 +27,17 @@ export function Borrow() {
   const usdcBal = useTokenBalance(env.USDC_SAC, wallet.address, "usdc");
   const submit = useSubmit();
 
-  const [tab, setTab] = useState<Tab>("supply");
-  const [amount, setAmount] = useState("");
+  // A deep-link intent (A8) may seed the tab and amount. It only PREFILLS:
+  // the user still reads the numbers and presses the button themselves.
+  const [params] = useSearchParams();
+  const TABS: readonly Tab[] = ["supply", "borrow", "repay", "withdraw"];
+  const [tab, setTab] = useState<Tab>(prefillTab(params, TABS) ?? "supply");
+  const [amount, setAmount] = useState(prefillAmount(params));
+  const confirmRef = useRef<HTMLButtonElement>(null);
+  // Focus the confirm button so the intent lands one deliberate press away.
+  useEffect(() => {
+    if (prefillAmount(params)) confirmRef.current?.focus();
+  }, [params]);
 
   const parsed = (() => {
     try {
@@ -127,7 +138,7 @@ export function Borrow() {
         {/* Right — actions */}
         <div className="panel" style={{ flex: 1, minWidth: 320 }}>
           <div className="tabs">
-            {(["supply", "borrow", "repay", "withdraw"] as Tab[]).map((t) => (
+            {TABS.map((t) => (
               <button
                 key={t}
                 type="button"
@@ -167,6 +178,7 @@ export function Borrow() {
           </div>
 
           <button
+            ref={confirmRef}
             type="button"
             className="btn solid"
             style={{ marginTop: 16, width: "100%" }}

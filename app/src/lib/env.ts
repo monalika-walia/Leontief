@@ -6,6 +6,8 @@ const schema = z.object({
   RPC_URL: z.string().url(),
   NETWORK_PASSPHRASE: z.string().min(1),
   EXPLORER_BASE: z.string().url(),
+  // Indexer REST base — serves /tg/challenge and /tg/link for the Telegram bind.
+  INDEXER_URL: z.string().url().default("http://localhost:8788"),
   VAULT_FACTORY: z.string().min(56),
   VAULT_LEOD: z.string().min(56),
   ORACLE_ADAPTER: z.string().min(56),
@@ -30,6 +32,7 @@ function raw(): Record<string, string | undefined> {
     RPC_URL: e.VITE_RPC_URL,
     NETWORK_PASSPHRASE: e.VITE_NETWORK_PASSPHRASE,
     EXPLORER_BASE: e.VITE_EXPLORER_BASE,
+    INDEXER_URL: e.VITE_INDEXER_URL,
     VAULT_FACTORY: e.VITE_VAULT_FACTORY,
     VAULT_LEOD: e.VITE_VAULT_LEOD,
     ORACLE_ADAPTER: e.VITE_ORACLE_ADAPTER,

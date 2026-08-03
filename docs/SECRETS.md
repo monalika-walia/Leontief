@@ -15,6 +15,9 @@ touch CI** — they are hardware-wallet signers only (see `docs/MULTISIG.md` at 
 | `DISCORD_WEBHOOK_URL` (monitor) | monitor host env / GH Actions secret | DevOps (Vyom) | Alert sink; treat as secret (anyone with it can post). |
 | `HEALTHCHECK_URL` (monitor) | monitor host env | DevOps | Heartbeat ping URL (Healthchecks.io). |
 | Sentry DSN (frontend) | Vercel project env `VITE_SENTRY_DSN` | DevOps | Public-ish (client DSN) but env-managed; enables error capture. |
+| Telegram `BOT_TOKEN` | Render service env `leontief-bot` (`sync: false`) | bot owner (Kunal) — rotate via @BotFather on any leak | Grants full control of the bot account. Never committed, never in CI. A leaked token lets someone message users AS Leontief — treat a leak as a phishing incident and rotate immediately. |
+| Telegram `WEBHOOK_SECRET` | Render `generateValue` + `setWebhook(secret_token=…)` | Render / DevOps | Compared against `X-Telegram-Bot-Api-Secret-Token` on every webhook POST; without it anyone who learns the URL can inject fake updates. Rotate = re-run `pnpm --filter @leontief/bot set-webhook`. |
+| **User secret keys / seed phrases** | **nowhere — the bot never receives, requests, or stores one** | n/a | Not a secret we hold. Tier 1 has no signing capability at all; CI enforces it (`scripts/check_bot_cannot_sign.sh`). Any change that adds one is a security review failure, not a config change. |
 | Mainnet admin/multisig signer keys | **hardware wallets only** | each signer (Monalika / Aditya / Vyom) | NEVER in CI, Vercel, Render, or any `.env`. Geo-separated. Signer change → KYC re-verification (SCF rule). |
 | Mainnet RPC provider key (if any) | Render/host env, read at runtime | DevOps | Provider chosen in DECISIONS.md; never hardcoded. |
 
