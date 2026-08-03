@@ -3,6 +3,7 @@ title: "How to Borrow Against Tokenized Treasuries (USDY) on Stellar"
 description: "USDY keeps accruing while you hold it. Here is the wrap-and-borrow loop that lets it also serve as collateral, the health factor in plain words, and the risks."
 slug: borrow-against-usdy-stellar
 pubDate: 2026-08-10
+updatedDate: 2026-08-17
 author: vyom
 cluster: Borrowing against USDY
 tags:
@@ -13,6 +14,8 @@ tags:
   - health factor
 oneLine: "Wrap a restricted treasury token into a vault share, pledge the share, borrow a stablecoin against it — the underlying keeps accruing the whole time, and the restricted asset never leaves the vault."
 siblings:
+  - permissioned-liquidation
+  - etherfuse-cetes-rebase
   - idle-rwa-stellar
   - sep-8-sep-57-explained
 faq:
@@ -51,7 +54,8 @@ Two properties define how it behaves on-chain.
 **It accrues by price, not by balance.** Yield is "reflected through an increasing
 redemption price". Your unit count never changes; each unit is simply worth more
 tomorrow. This is the friendliest possible shape for collateral, and it is why the
-accounting in this post is simpler than it would be for a rebasing asset.
+accounting in this post is simpler than it would be for a rebasing asset like
+[Etherfuse's CETES stablebond](/blog/etherfuse-cetes-rebase).
 
 **It is a Regulation S instrument with real holder conditions.** Ondo's
 [eligibility policy](https://docs.ondo.finance/general-access-products/usdy/faq/eligibility)
@@ -88,7 +92,7 @@ and every step is verifiable on stellar.expert.
 
 **1. Deposit.** Send the restricted asset to the vault. The vault measures what it
 actually received by balance difference rather than trusting the amount you claimed,
-values it at the current net asset value, and mints you `ld`-shares.
+values it at the current [net asset value](https://leontief.tech/litepaper#sec-b), and mints you `ld`-shares.
 
 **2. Hold the share.** `ldLEOD` is an ordinary SEP-41 token. It transfers freely,
 because it is a claim on the vault, not the restricted asset itself. The vault is the
@@ -155,7 +159,9 @@ Withdrawals and repayments keep working.
 **Liquidation is real, and it is permissioned.** If your health factor reaches 1, an
 approved liquidator can repay part of your debt and take collateral at a 5% discount.
 For restricted assets the liquidator set is a whitelist, which makes seizure lawful
-but also means it depends on someone on that list choosing to act.
+but also means it depends on someone on that list choosing to act. The full mechanism,
+including what happens when nobody does, is in
+[permissioned liquidation](/blog/permissioned-liquidation).
 
 **Issuer action is a live risk, not a theoretical one.** A regulated issuer can
 freeze a trustline or claw back units. If that happens to the asset in a vault, the
