@@ -3,7 +3,7 @@ title: "The Idle $3B: Why Real-World Assets on Stellar Earn the Minimum"
 description: "Stellar carries $3.07B of tokenized real-world assets and $221.76M of DeFi. The gap is not a liquidity problem — it is three rules working exactly as designed."
 slug: idle-rwa-stellar
 pubDate: 2026-08-03
-updatedDate: 2026-08-06
+updatedDate: 2026-08-24
 author: monalika
 cluster: RWA on Stellar
 tags:
@@ -13,7 +13,9 @@ tags:
   - collateral
 oneLine: "Tokenized treasuries on Stellar earn their coupon and nothing else, because the same rules that make them lawful also make them unusable as collateral."
 siblings:
+  - productive-treasuries
   - sep-8-sep-57-explained
+  - borrow-against-usdy-stellar
 ---
 
 On 2 August 2026, [rwa.xyz counted $3.07B of tokenized real-world assets on
@@ -127,7 +129,7 @@ contract.
 
 What has been missing is the layer above: something that holds the restricted asset
 under the issuer's rules, and issues a claim on it that ordinary DeFi can handle.
-The restricted thing stays restricted. The composable thing is a share of a vault,
+The restricted thing stays restricted. The composable thing is an [`ld`-share](https://leontief.tech/litepaper#sec-b) of a vault,
 and the vault is the single account the issuer has to authorize — once — instead of
 authorizing every counterparty a holder might ever want to trade with.
 
@@ -152,7 +154,9 @@ also the only version that survives contact with a securities lawyer.
 
 The mechanics are documented in
 [the protocol docs](https://docs.leontief.tech/protocol/vault), and the contracts
-are open source.
+are open source. If you want the loop rather than the argument, we walk through
+deposit, pledge, borrow, and repay step by step in
+[how to borrow against tokenized treasuries on Stellar](/blog/borrow-against-usdy-stellar).
 
 ## The number to watch
 
@@ -166,6 +170,7 @@ to build a lending pool. It is that a lending pool is the wrong shape for an ass
 whose issuer must approve every holder and may reverse any transfer.
 
 Something the right shape has to hold the restriction and hand back something that
-composes. That is a narrow, unglamorous piece of infrastructure, and it is the one
+composes — the argument for why that is worth doing at all is
+[the case for productive treasuries](/blog/productive-treasuries). That is a narrow, unglamorous piece of infrastructure, and it is the one
 missing piece between three billion dollars of collateral and a market that can
 use it.
