@@ -129,7 +129,7 @@ contract.
 
 What has been missing is the layer above: something that holds the restricted asset
 under the issuer's rules, and issues a claim on it that ordinary DeFi can handle.
-The restricted thing stays restricted. The composable thing is a share of a vault,
+The restricted thing stays restricted. The composable thing is an [`ld`-share](https://leontief.tech/litepaper#sec-b) of a vault,
 and the vault is the single account the issuer has to authorize — once — instead of
 authorizing every counterparty a holder might ever want to trade with.
 

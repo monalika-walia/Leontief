@@ -65,7 +65,7 @@ Here is the whole thesis, and it fits in a sentence: **the restricted thing shou
 still, and something unrestricted should move in its place.**
 
 Put the regulated asset in one vault that the issuer has evaluated and approved, once.
-Issue the holder a share in that vault. The share is not the security; it is a claim on
+Issue the holder an [`ld`-share](https://leontief.tech/litepaper#sec-b) in that vault. The share is not the security; it is a claim on
 a pool of the security, and it can do everything an ordinary token can do — sit in a
 pool, back a loan, be transferred to a counterparty who was never on anyone's list.
 
