@@ -3,6 +3,7 @@ title: "Permissioned Liquidation: How Restricted Collateral Gets Unwound Lawfull
 description: "A liquidation race cannot settle a security with holder conditions. The three-tier waterfall that can, what it costs, and what to ask a venue claiming one."
 slug: permissioned-liquidation
 pubDate: 2026-08-13
+updatedDate: 2026-08-20
 author: aditya
 cluster: Permissioned liquidation
 tags:
@@ -13,6 +14,7 @@ tags:
   - Stellar
 oneLine: "If the collateral has holder conditions, the liquidator needs them too — which turns a race into a waterfall, and turns speed into the thing you trade away for lawfulness."
 siblings:
+  - nav-is-not-a-price-feed
   - borrow-against-usdy-stellar
   - sep-8-sep-57-explained
 ---
@@ -142,7 +144,7 @@ questions separate a design from a slogan.
    A venue that has not decided in advance will decide under pressure.
 5. **What does the oracle do when it cannot price the collateral?** If the answer is a
    fallback price, liquidation can be triggered against a number nobody stands behind.
-   [Fail-closed is the only defensible policy](https://docs.leontief.tech/protocol/vault),
+   [Fail-closed is the only defensible policy](/blog/nav-is-not-a-price-feed),
    and it means new borrows and liquidations halt while withdrawals stay open.
 
 ## The risks, and our open questions

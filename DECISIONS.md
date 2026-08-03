@@ -105,6 +105,27 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - *AI-assisted session; entry reviewed by the human author of record.*
 - *AI-assisted analysis; **approved by the team on 2026-07-17** — this is the canonical §3 reading for spec freeze v1.1.*
 
+## #7 · 2026-08-02 · monalika walia · A9 slate ships 8 posts; posts 9 and 10 are held
+
+- **Decision:** the A9 editorial slate lists ten posts, two of them conditional. Both are
+  **held**, and the blog launches with the eight core posts. `erc-4626-on-soroban` was
+  gated on the contracts being open-sourced; `agent-treasuries` was gated on "the A8
+  ship-state matrix", which does not exist in the repo — and the agent-treasury work it
+  would describe is still on a feature branch, not merged. Publishing a tutorial for code
+  whose public status we cannot point at, or a post about a capability that has not
+  shipped, would breach the A9 Phase-4 honesty rails in the first week of the blog.
+  Revisit each when its gate is actually met: for post 9, a public contracts repo we can
+  link; for post 10, a written ship-state matrix that records the feature as shipped.
+- **Alternatives:** author both now with `draft: true` (costs the writing up front and
+  risks the content drifting from what eventually ships — and a draft that sits for a
+  quarter gets published without a re-check); ship post 9 immediately on the grounds that
+  the repo is already public (defensible, but the tutorial should be written against the
+  code as an outside reader finds it, which is a different piece of work).
+- **Spec sections affected:** none.
+- **Test impact:** none — `scripts/seo-check.mjs` only inspects posts that exist, and
+  `draft: true` posts are excluded from the build, sitemap, and feed by construction.
+- *AI-assisted session; entry reviewed by the human author of record.*
+
 ## #8 · 2026-08-02 · monalika walia · Blog lives at `leontief.tech/blog`, built by Astro inside `landing/`
 
 - **Decision:** the blog is a path on the root domain (`leontief.tech/blog/<slug>`), never a

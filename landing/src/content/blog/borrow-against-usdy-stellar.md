@@ -92,7 +92,7 @@ and every step is verifiable on stellar.expert.
 
 **1. Deposit.** Send the restricted asset to the vault. The vault measures what it
 actually received by balance difference rather than trusting the amount you claimed,
-values it at the current net asset value, and mints you `ld`-shares.
+values it at the current [net asset value](https://leontief.tech/litepaper#sec-b), and mints you `ld`-shares.
 
 **2. Hold the share.** `ldLEOD` is an ordinary SEP-41 token. It transfers freely,
 because it is a claim on the vault, not the restricted asset itself. The vault is the
