@@ -11,7 +11,7 @@
     "test:live": "LEONTIEF_LIVE=1 vitest run"
   },
   "dependencies": {
-    "@stellar/stellar-sdk": "^13.1.0"
+    "@stellar/stellar-sdk": "^16.2.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1"
