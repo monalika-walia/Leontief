@@ -12,7 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@stellar/stellar-sdk": "^13.1.0",
+    "@stellar/stellar-sdk": "^16.2.0",
     "fastify": "^5.2.0",
     "postgres": "^3.4.5",
     "tsx": "^4.20.0"

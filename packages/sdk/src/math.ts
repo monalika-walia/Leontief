@@ -47,6 +47,22 @@ export function healthFactor(
   return (adjusted * SCALE) / debt;
 }
 
+/** Largest extra debt that keeps the position at or above `minHf` (SCALE-scaled).
+ *  Floors — the user-facing direction — so acting on it can only overshoot the
+ *  floor upward. Returns 0 when already at/below it. */
+export function maxBorrowForHealthFactor(
+  collateralShares: bigint,
+  debt: bigint,
+  sharePrice: bigint,
+  minHf: bigint,
+): bigint {
+  if (minHf <= 0n || sharePrice <= 0n || collateralShares <= 0n) return 0n;
+  const collValue = (collateralShares * sharePrice) / SCALE;
+  const adjusted = (collValue * POOL_PARAMS.liqThresholdBps) / POOL_PARAMS.bps;
+  const maxDebt = (adjusted * SCALE) / minHf;
+  return maxDebt > debt ? maxDebt - debt : 0n;
+}
+
 /** Shares a liquidator seizes for `repay` at `sharePrice` (protocol-side ceil). */
 export function quoteSeize(repay: bigint, sharePrice: bigint): bigint {
   if (repay <= 0n || sharePrice <= 0n) return 0n;

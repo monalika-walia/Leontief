@@ -2,7 +2,13 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { healthFactor, quoteSeize, quoteShares, quoteWithdraw } from "./math.js";
+import {
+  healthFactor,
+  maxBorrowForHealthFactor,
+  quoteSeize,
+  quoteShares,
+  quoteWithdraw,
+} from "./math.js";
 import { extractCode } from "./tx.js";
 import { SCALE } from "./types.js";
 
@@ -58,6 +64,37 @@ describe("edge cases", () => {
   it("quoteSeize is zero for non-positive inputs", () => {
     expect(quoteSeize(0n, SCALE)).toBe(0n);
     expect(quoteSeize(100n, 0n)).toBe(0n);
+  });
+});
+
+describe("maxBorrowForHealthFactor", () => {
+  const FLOOR = (SCALE * 16n) / 10n; // the agent-treasury policy floor, 1.6
+
+  it("never lands below the floor, for any share price / collateral", () => {
+    for (const shares of [1_000_000n, 50_000_000n, 12_345_678_901n, 10n ** 14n]) {
+      for (const price of [SCALE / 2n, (SCALE * 979_939n) / 1_000_000n, SCALE, SCALE * 3n]) {
+        for (const debt of [0n, 1n, 25_000_000_000n]) {
+          const room = maxBorrowForHealthFactor(shares, debt, price, FLOOR);
+          if (room === 0n) continue;
+          const hf = healthFactor(shares, debt + room, price);
+          expect(hf).not.toBeNull();
+          expect(hf as bigint).toBeGreaterThanOrEqual(FLOOR);
+        }
+      }
+    }
+  });
+
+  it("is zero when the position is already at or under the floor", () => {
+    const shares = 100_000_000n;
+    const atFloor = maxBorrowForHealthFactor(shares, 0n, SCALE, FLOOR);
+    expect(maxBorrowForHealthFactor(shares, atFloor, SCALE, FLOOR)).toBe(0n);
+    expect(maxBorrowForHealthFactor(shares, atFloor * 2n, SCALE, FLOOR)).toBe(0n);
+  });
+
+  it("is zero for degenerate inputs", () => {
+    expect(maxBorrowForHealthFactor(0n, 0n, SCALE, FLOOR)).toBe(0n);
+    expect(maxBorrowForHealthFactor(100n, 0n, 0n, FLOOR)).toBe(0n);
+    expect(maxBorrowForHealthFactor(100n, 0n, SCALE, 0n)).toBe(0n);
   });
 });
 

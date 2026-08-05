@@ -1,9 +1,6 @@
-import {
-  allowAllModules,
-  FREIGHTER_ID,
-  StellarWalletsKit,
-  WalletNetwork,
-} from "@creit.tech/stellar-wallets-kit";
+import { defaultModules } from "@creit.tech/stellar-wallets-kit/modules/utils";
+import { StellarWalletsKit } from "@creit.tech/stellar-wallets-kit/sdk";
+import { Networks } from "@creit.tech/stellar-wallets-kit/types";
 import { createContext, type ReactNode, useContext, useMemo, useState } from "react";
 import { Chain } from "./lib/chain";
 import type { Env } from "./lib/env";
@@ -15,23 +12,28 @@ type Wallet = {
   connect: () => Promise<void>;
   disconnect: () => void;
   signer: Signer | null;
+  /** SEP-53 message signature — used by the Telegram link ceremony (A8). */
+  signMessage: ((message: string) => Promise<string>) | null;
 };
 
 type Ctx = { env: Env; chain: Chain; wallet: Wallet };
 
 const AppCtx = createContext<Ctx | null>(null);
 
+// Wallets-kit v2 is a static singleton — init once per page load, not per render.
+let kitReady = false;
+function initKit(passphrase: string) {
+  if (kitReady) return;
+  StellarWalletsKit.init({
+    modules: defaultModules(),
+    network: passphrase === Networks.PUBLIC ? Networks.PUBLIC : Networks.TESTNET,
+  });
+  kitReady = true;
+}
+
 export function AppProvider({ env, children }: { env: Env; children: ReactNode }) {
   const chain = useMemo(() => new Chain(env), [env]);
-  const kit = useMemo(
-    () =>
-      new StellarWalletsKit({
-        network: WalletNetwork.TESTNET,
-        selectedWalletId: FREIGHTER_ID,
-        modules: allowAllModules(),
-      }),
-    [],
-  );
+  initKit(env.NETWORK_PASSPHRASE);
   const [address, setAddress] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
 
@@ -40,7 +42,7 @@ export function AppProvider({ env, children }: { env: Env; children: ReactNode }
       ? {
           address,
           sign: async (xdr: string) => {
-            const { signedTxXdr } = await kit.signTransaction(xdr, {
+            const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, {
               address,
               networkPassphrase: env.NETWORK_PASSPHRASE,
             });
@@ -52,23 +54,30 @@ export function AppProvider({ env, children }: { env: Env; children: ReactNode }
       address,
       connecting,
       signer,
+      signMessage: address
+        ? async (message: string) => {
+            const { signedMessage } = await StellarWalletsKit.signMessage(message, {
+              address,
+              networkPassphrase: env.NETWORK_PASSPHRASE,
+            });
+            return signedMessage;
+          }
+        : null,
       connect: async () => {
         setConnecting(true);
         try {
-          await kit.openModal({
-            onWalletSelected: async (opt) => {
-              kit.setWallet(opt.id);
-              const { address: a } = await kit.getAddress();
-              setAddress(a);
-            },
-          });
+          const { address: a } = await StellarWalletsKit.authModal();
+          setAddress(a);
         } finally {
           setConnecting(false);
         }
       },
-      disconnect: () => setAddress(null),
+      disconnect: () => {
+        void StellarWalletsKit.disconnect();
+        setAddress(null);
+      },
     };
-  }, [address, connecting, kit, env.NETWORK_PASSPHRASE]);
+  }, [address, connecting, env.NETWORK_PASSPHRASE]);
 
   return <AppCtx.Provider value={{ env, chain, wallet }}>{children}</AppCtx.Provider>;
 }
