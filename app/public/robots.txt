@@ -1,0 +1,8 @@
+# app.leontief.tech — the Leontief dApp (Stellar testnet).
+# Indexable, but it is an application, not a content surface: the writing lives at
+# https://leontief.tech/blog and the reference material at https://docs.leontief.tech.
+User-agent: *
+Allow: /
+
+# No sitemap here on purpose. This is a single-page app with no crawlable route
+# inventory; leontief.tech and docs.leontief.tech each ship their own.

@@ -30,3 +30,5 @@ tests/test_snapshots/
 app/dist/
 # mdBook build output
 docs-site/book/
+# Astro generated types
+landing/.astro/

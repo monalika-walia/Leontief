@@ -1,0 +1,56 @@
+---
+import CtaBand from "../../components/CtaBand.astro";
+import { AUTHORS, type AuthorId } from "../../data/authors";
+import { SITE, url } from "../../data/site";
+import Base from "../../layouts/Base.astro";
+import { breadcrumbs, organization, website } from "../../lib/jsonld";
+import { formatDate, isoDay, postPath, publishedPosts } from "../../lib/post";
+
+const posts = await publishedPosts();
+
+const jsonld: unknown[] = [
+  organization(),
+  website(),
+  breadcrumbs([
+    { name: "Leontief", path: "/" },
+    { name: "Blog", path: "/blog" },
+  ]),
+];
+---
+
+<Base
+  title={`${SITE.blogTitle} — real-world assets on Stellar`}
+  description={SITE.blogDescription}
+  path="/blog"
+  ogImage={url("/og/blog.png")}
+  ogImageAlt={SITE.blogTitle}
+  jsonld={jsonld}
+>
+  <div class="wrap index">
+    <p class="kicker">Leontief · Notes</p>
+    <h1 class="index__title">The blog</h1>
+    <p class="index__lede">{SITE.blogDescription}</p>
+
+    {posts.length === 0 ? (
+      <p class="empty">No posts published yet.</p>
+    ) : (
+      <ul class="entries">
+        {posts.map((post) => (
+          <li class="entry">
+            <p class="entry__meta">
+              <time datetime={isoDay(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+              <span>{post.data.cluster}</span>
+              <span>{AUTHORS[post.data.author as AuthorId].name}</span>
+            </p>
+            <h2 class="entry__title">
+              <a href={postPath(post.data.slug)}>{post.data.title}</a>
+            </h2>
+            <p class="entry__desc">{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <CtaBand />
+  </div>
+</Base>

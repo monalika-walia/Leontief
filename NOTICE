@@ -9,4 +9,11 @@ This product depends on third-party open-source software, including:
 - soroban-sdk and stellar tooling — Copyright Stellar Development Foundation, Apache-2.0
   https://github.com/stellar/rs-soroban-sdk
 - proptest — MIT OR Apache-2.0 · https://github.com/proptest-rs/proptest
+- Newsreader — Copyright the Newsreader Project Authors, SIL Open Font License 1.1
+  https://github.com/productiontype/Newsreader · license text:
+  landing/src/assets/fonts/OFL-Newsreader.txt
+- IBM Plex Mono — Copyright IBM Corp., SIL Open Font License 1.1
+  https://github.com/IBM/plex · license text: landing/src/assets/fonts/OFL-IBMPlexMono.txt
+  Both faces are redistributed as latin subsets in landing/public/fonts (web) and
+  landing/src/assets/fonts (build-time OG card rendering).
 - Full transitive inventories: `cargo license` (Rust) and `pnpm licenses list` (JS).

@@ -17,19 +17,29 @@ vercel deploy --prod --yes --name leontief-app
 ```
 → https://leontief-app.vercel.app
 
-## Landing + litepaper (`landing/`)
+## Landing + litepaper + blog (`landing/`)
 
-Deploy the static files **from a clean directory** — Vercel otherwise mis-detects
-the `public/` folder as the output root and serves 404s (`.vercelignore` guards
-against this for direct deploys):
+Since A9 this is an Astro project (DECISIONS.md #8). Vercel's Root Directory stays
+`landing/`; `landing/vercel.json` carries the build command, output directory,
+rewrites, and cache headers, so no dashboard settings are needed:
 
 ```sh
+cd landing && npm ci && npm run build     # → landing/dist
 vercel deploy --prod --yes --name leontief-landing --cwd landing
 ```
-→ https://leontief-landing.vercel.app · `/Litepaper.dc.html`
+→ https://leontief.tech · `/litepaper` · `/performance` · `/blog`
 
-`index.html` mirrors `landing.html` so `/` serves the landing; the nav links keep
-their explicit `landing.html` / `Litepaper.dc.html` filenames.
+`public/` is copied verbatim into the output, so the three hand-built pages
+(`index.html`, `Litepaper.dc.html`, `performance.html`) ship byte-identical; Astro
+adds `/blog`, `sitemap.xml`, `/blog/rss.xml`, and the generated `/og/*.png` cards.
+`index.html` mirrors `landing.html` so `/` serves the landing, and the mirror
+canonicalizes to `/` so the two paths do not compete.
+
+Before merging anything under `landing/`, run the A9 gate — CI runs the same thing:
+
+```sh
+just blog-check       # build + structural SEO, JSON-LD, editorial, honesty rails
+```
 
 ## Deployment protection
 

@@ -1,0 +1,69 @@
+name: Blog & SEO
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "landing/**"
+      - "app/index.html"
+      - ".github/workflows/blog.yml"
+  pull_request:
+    paths:
+      - "landing/**"
+      - "app/index.html"
+      - ".github/workflows/blog.yml"
+
+concurrency:
+  group: blog-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: landing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+      - run: npm ci
+      # schema-dts types are the first JSON-LD gate: an invalid property on a
+      # schema.org node fails here, before it can ever reach a page.
+      - run: npm run check
+      - run: npm run build
+      # The A9 gate: structural SEO, JSON-LD, editorial rules, honesty rails,
+      # zero client JS, sitemap/RSS/robots, and the orphan-post checker.
+      - run: node scripts/seo-check.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blog-dist
+          path: landing/dist
+          if-no-files-found: error
+          retention-days: 5
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - name: Lighthouse — SEO 100, Performance ≥ 95, zero client JS
+        run: node scripts/lighthouse-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: landing/.lighthouse
+          if-no-files-found: ignore
+          retention-days: 5
