@@ -2,8 +2,7 @@
 title: "Permissioned Liquidation: How Restricted Collateral Gets Unwound Lawfully"
 description: "A liquidation race cannot settle a security with holder conditions. The three-tier waterfall that can, what it costs, and what to ask a venue claiming one."
 slug: permissioned-liquidation
-pubDate: 2026-08-13
-updatedDate: 2026-08-20
+pubDate: 2026-07-30
 author: aditya
 cluster: Permissioned liquidation
 tags:

@@ -2,8 +2,7 @@
 title: "CETES On-Chain: How Etherfuse Stablebonds and the Weekly Rebase Work"
 description: "Mexican treasury certificates as a token, and the accounting problem they create: when a balance can change on its own, most DeFi arithmetic quietly breaks."
 slug: etherfuse-cetes-rebase
-pubDate: 2026-08-17
-updatedDate: 2026-08-27
+pubDate: 2026-08-04
 author: monalika
 cluster: Etherfuse stablebonds
 tags:

@@ -2,8 +2,7 @@
 title: "How to Borrow Against Tokenized Treasuries (USDY) on Stellar"
 description: "USDY keeps accruing while you hold it. Here is the wrap-and-borrow loop that lets it also serve as collateral, the health factor in plain words, and the risks."
 slug: borrow-against-usdy-stellar
-pubDate: 2026-08-10
-updatedDate: 2026-08-17
+pubDate: 2026-08-03
 author: vyom
 cluster: Borrowing against USDY
 tags:

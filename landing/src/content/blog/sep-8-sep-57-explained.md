@@ -2,8 +2,7 @@
 title: "SEP-8 and SEP-57, Explained: How Stellar Enforces Who Can Hold an Asset"
 description: "Stellar has two answers for permissioned tokens: SEP-8 puts the rule in the ledger and an approval server; SEP-57 puts it in a Soroban contract. How each works."
 slug: sep-8-sep-57-explained
-pubDate: 2026-08-06
-updatedDate: 2026-08-10
+pubDate: 2026-07-29
 author: aditya
 cluster: Permissioned tokens on Stellar
 tags:

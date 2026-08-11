@@ -2,7 +2,7 @@
 title: "NAV Is Not a Price Feed: Fail-Closed Oracle Design for RWAs"
 description: "A spot price is what someone paid. A net asset value is what a fund says its holdings are worth. Confusing the two is how RWA collateral gets drained."
 slug: nav-is-not-a-price-feed
-pubDate: 2026-08-20
+pubDate: 2026-08-01
 author: aditya
 cluster: RWA oracle design
 tags:

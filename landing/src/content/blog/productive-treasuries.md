@@ -2,7 +2,7 @@
 title: "Still Earning, Now Working: The Case for Productive Treasuries"
 description: "The safest assets on-chain are also the least useful ones. That is not an accident of engineering — it is a choice nobody has got round to unmaking."
 slug: productive-treasuries
-pubDate: 2026-08-24
+pubDate: 2026-08-05
 author: monalika
 cluster: Productive treasuries
 tags:

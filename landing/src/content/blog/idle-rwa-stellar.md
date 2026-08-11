@@ -2,8 +2,7 @@
 title: "The Idle $3B: Why Real-World Assets on Stellar Earn the Minimum"
 description: "Stellar carries $3.07B of tokenized real-world assets and $221.76M of DeFi. The gap is not a liquidity problem — it is three rules working exactly as designed."
 slug: idle-rwa-stellar
-pubDate: 2026-08-03
-updatedDate: 2026-08-24
+pubDate: 2026-08-02
 author: monalika
 cluster: RWA on Stellar
 tags:

@@ -2,7 +2,7 @@
 title: "Rebase vs Price-Accrual: One Accounting Formula for Every RWA Yield"
 description: "Three tokens deliver yield three ways. A vault that measures instead of trusting needs one formula for all of them — here it is, with the arithmetic worked."
 slug: rebase-vs-price-accrual
-pubDate: 2026-08-27
+pubDate: 2026-07-31
 author: monalika
 cluster: RWA vault accounting
 tags:
