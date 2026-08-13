@@ -197,3 +197,21 @@ This file is an audit input and part of the AI-assistance discipline (every AI-a
 - **Test impact:** `scripts/seo-check.mjs` asserts the canonical of every static page, including the
   mirror.
 - *AI-assisted session; entry reviewed by the human author of record.*
+
+## #12 · 2026-08-13 · monalika walia · Docs truth pass: hub = Docusaurus at docs.leontief.tech; org line = Lemma Labs; Autopilot Path A
+
+- **Decision (1):** the public unified docs hub is the **Docusaurus portal at docs.leontief.tech**
+  (already live and linked from the site's DOCS nav). Supersedes #6's mdBook-as-unified-source:
+  mdBook (`docs-site/`, GH Pages) remains the internal engineering book; both build in CI.
+- **Decision (2):** org line standardized verbatim everywhere: "Leontief is a Lemma Labs protocol
+  (lemmalabs.space) — a Stellar-focused studio; Estonian OÜ registration in progress." Replaces all
+  29Projects Lab framing on public pages (this log keeps its history unedited).
+- **Decision (3):** Autopilot delegated signing is **Path A — Protocol 27 delegated signing
+  (CAP-0071-01)**, constraint set enforced by the ledger; Path B (session-key policy contract) is
+  the documented fallback if Path A tooling isn't production-ready in the Tranche 2 window.
+- **Why:** the Build application is now the single source of truth for tranches/budget/claims; the
+  truth pass (docs/DRIFT.md) binds every claim to a current page and nothing more.
+- **Spec sections affected:** none (spec frozen; status ledger added at `docs/STATUS.md`).
+- **Test impact:** CI greps added — zero occurrences of the retired domain, zero of the old studio-incubation phrase,
+  zero unfilled insert-placeholders on published pages (patterns live in .github/workflows/docs-hub.yml).
+- *AI-assisted session; entry reviewed by the human author of record.*

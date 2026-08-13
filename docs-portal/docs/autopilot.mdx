@@ -1,0 +1,55 @@
+---
+id: autopilot
+title: Autopilot (Tranche 2 scope)
+description: Bounded, revocable position maintenance under an on-chain policy — delegated signing design, testnet-only.
+---
+
+# Autopilot
+
+:::warning Tranche 2 scope — testnet only
+Autopilot is **design scope for Tranche 2**, not shipped work. Nothing on this page is live on
+mainnet; the engine is flag-gated and excluded from production bundles (verified in CI). Source of
+truth for scope and budget: `leontief-build-application.md`.
+:::
+
+*Updated August 2026.* Autopilot lets a user delegate **bounded, revocable** position maintenance —
+"keep my health factor above the floor" — without handing over their account.
+
+## The policy table
+
+Every Autopilot authorization is constrained by an explicit policy, enforced on-chain, mirroring
+the Build application verbatim:
+
+| Constraint | Value |
+|---|---|
+| Allowed contracts | Explicit allow-list (the user's vault + pool only) |
+| Health-factor floor | **1.6** — the engine may act only to restore HF toward the floor |
+| Per-action cap | Maximum value moved in a single action |
+| Daily cap | Maximum cumulative value moved per day |
+| Expiry | **≤ 30 days**, then the delegation is dead unless re-signed |
+| Revocation | **One-tap revoke** from the dApp, effective immediately |
+
+## Path A / Path B
+
+- **Path A (chosen): Protocol 27 delegated signing (CAP-0071-01).** The user signs a delegation
+  whose constraint set (contract allow-list, caps, HF floor, expiry) is enforced by the ledger, so
+  the engine's key can do nothing outside the policy — compromise of the engine is bounded by
+  construction.
+- **Path B (fallback): session-key smart-account pattern** — a policy contract holds the
+  constraint set and a rotating session key may only call through it. Same bounds, enforced one
+  layer up; used only if Path A tooling is not production-ready in the tranche window.
+- **Decision recorded:** Path A, with Path B as the documented fallback (`DECISIONS.md`).
+
+## Acceptance test (the design goal)
+
+> **Revoke proves capability removed:** after one-tap revoke, the engine's next action attempt
+> **fails on-chain** — not by the engine politely declining, but because the ledger no longer
+> honors the delegation. This test is the acceptance gate for the tranche deliverable.
+
+## Safety posture
+
+- Engine is **flag-gated**; the flag is off by default and the module is excluded from production
+  bundles — both checked in CI.
+- Every engine action emits an event; the [Telegram layer](/telegram) alerts on each one.
+- Runbook procedures (pause, revoke, kill-switch) live in the ops runbook; threat rows in
+  [Security](/security#delegated-surface).

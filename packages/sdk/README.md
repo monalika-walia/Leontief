@@ -1,6 +1,6 @@
 # @leontief/sdk
 
-Typed TypeScript client for the [Leontief](https://github.com/monalika-walia/Leontief)
+Typed TypeScript client for the [Leontief](https://github.com/monalika-walia/leontief)
 protocol on Stellar — wrap restricted RWAs into composable **ld-shares**, borrow
 against them, and liquidate, from Node or the browser.
 

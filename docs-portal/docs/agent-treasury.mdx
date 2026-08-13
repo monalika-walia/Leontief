@@ -1,0 +1,47 @@
+---
+id: agent-treasury
+title: Agent Treasury Example
+description: A deterministic policy loop that parks idle income in ld-shares and borrows instead of selling — public SDK only.
+---
+
+# Agent Treasury Example
+
+*Updated August 2026 · Live on testnet as an SDK example.*
+
+An honest framing first: **this is a policy loop, not an AI.** No LLM, no model, no autonomy claims
+— a deterministic program (`packages/sdk/examples/agent-treasury.ts`) that demonstrates how an
+automated treasury would use Leontief.
+
+## The loop
+
+An agent earning USDC income runs four rules on a cycle:
+
+1. **Earn** — USDC revenue arrives at the treasury address.
+2. **Wrap** — idle USDC above a working-capital floor is converted to the RWA and deposited;
+   the treasury now holds yield-bearing ld-shares instead of idle cash.
+3. **Borrow, don't sell** — when the treasury needs liquidity, it pledges shares and borrows USDC
+   against them (inside a health-factor floor), keeping the yield position intact.
+4. **Repay** — incoming revenue pays debt down first when the health factor tightens.
+
+Onboarding (trustlines + SEP-8 issuer authorization) is deliberately **outside** the loop — it is a
+compliance step the issuer performs, not something an autonomous treasury can do for itself
+(`scripts/agent_onboard.sh`).
+
+## The "public SDK only" rule
+
+The example imports **nothing** but the exported `@leontief/sdk` surface. If the loop ever needs a
+private import, that is an SDK gap to close first — this rule is what forced `tokenBalance`,
+`transfer`, and `maxBorrowForHealthFactor` into the public API. The example doubles as the SDK's
+dogfood test.
+
+## Guardrails
+
+- Health-factor floor enforced before every borrow (`maxBorrowForHealthFactor`, floor-rounded in
+  the user-facing direction).
+- Working-capital floor: the loop never wraps the last unit of operating cash.
+- Every action simulates first and aborts on any contract error; typed errors, no retries past
+  policy bounds.
+- Testnet only; the example is documentation, not a product.
+
+Where this goes next: the same pattern under [Autopilot](/autopilot)'s on-chain policy constraints
+(Tranche 2 scope) — the loop's authority bounded by the ledger instead of by its own code.

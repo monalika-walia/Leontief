@@ -1,5 +1,10 @@
 # Leontief — Business Plan v1.0
-**A 29Projects Lab protocol · July 2026 · tokenless by design**
+**A Lemma Labs protocol · July 2026 · tokenless by design**
+
+> **Superseded for tranches, budget, and org details** by `leontief-build-application.md` (the Build
+> application — single source of truth) — pending commit to this repo. Org line, standardized:
+> Leontief is a Lemma Labs protocol (lemmalabs.space) — a Stellar-focused studio; Estonian OÜ
+> registration in progress. Thesis truth: `leontief-litepaper.md` v1.1. Updated August 2026.
 
 ## 1 · Executive summary
 
@@ -34,7 +39,7 @@ Fee switch ships **OFF** at mainnet (cleaner audit, cleaner launch narrative). A
 
 1. **Issuers as distribution** (weeks 1–8 post-mainnet): Etherfuse and Ondo gain AUM when their assets gain utility — co-announcements, docs co-marketing, their holder channels. The Ethereum causality data is the pitch deck.
 2. **Venue co-launch:** a Blend pool accepting ldUSDY at launch day; Aquarius incentive alignment via the Stellar Liquidity Award (separate SCF supporting program — not our budget).
-3. **Holder conversion:** waitlist + LOI pipeline built pre-SCF converts to first depositors; "your idle T-bills now borrow" campaign run by the studio (marketing costs are outside the SCF budget by rule and funded by 29Projects Lab).
+3. **Holder conversion:** waitlist + LOI pipeline built pre-SCF converts to first depositors; "your idle T-bills now borrow" campaign run by the studio (marketing costs are outside the SCF budget by rule and funded by the studio, Lemma Labs).
 4. **B2B wedge (months 3–9):** SDK-first outreach to Stellar protocols that want RWA collateral without compliance plumbing; success metric = 2+ external integrations in 90 days.
 5. **Permissioned era (months 6–12):** SEP-57 pilot with one permissioned issuer — the step that opens the BENJI-class majority of the market.
 
@@ -55,7 +60,7 @@ Wrapped AUM · unique suppliers · % of shares deployed (utility ratio — *the*
 ## 8 · Organization
 
 - **Protocol team (submitter):** Monalika (protocol lead), Aditya (contracts/risk), Vyom (full-stack), part-time DevOps/QA. Dedicated solely to Leontief; each completes SCF KYC.
-- **29Projects Lab:** incubating studio — advisory (Kunal), design system, GTM/marketing spend (outside SCF budget), entity/ops support. Entity for KYB: `[29Projects Lab HK entity / new SPV — decide pre-award; registration costs borne by studio, not the award]`.
+- **Lemma Labs (studio):** incubating studio — advisory (Kunal), design system, GTM/marketing spend (outside SCF budget), entity/ops support. Entity for KYB: Lemma Labs (Estonian OÜ registration in progress); registration costs borne by the studio, not the award.
 - **Governance of funds:** award XLM held in a 2-of-3 team multisig; payroll and infra paid on a published monthly cadence; tranche reports include spend-vs-deliverable mapping.
 
 ## 9 · Risk register

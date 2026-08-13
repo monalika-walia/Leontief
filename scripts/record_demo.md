@@ -19,7 +19,7 @@ testnet transaction with an explorer link visible.
 
 | t | Scene | Script |
 |---|---|---|
-| 0:00–0:20 | **Team card** | Names/roles over the landing page: “Monalika — protocol · Aditya — contracts/risk · Vyom — full-stack · incubated by 29Projects Lab. Prior artifact: this prototype, live on testnet today.” |
+| 0:00–0:20 | **Team card** | Names/roles over the landing page: “Monalika — protocol · Aditya — contracts/risk · Vyom — full-stack · a Lemma Labs protocol. Prior artifact: this prototype, live on testnet today.” |
 | 0:20–0:35 | Landing scroll | Dormant→awake transition. One line: “$3B of RWAs on Stellar sit idle. Leontief wakes them up.” |
 | 0:35–2:35 | **The five beats** at `/demo` | Click through, reading each caption below. Let each explorer link flash on screen. |
 | 2:35–2:55 | `/stats` | “Every number here is a chain read — total wrapped, and the KPI: how much of it is *working*.” |

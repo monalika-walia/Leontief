@@ -2,7 +2,7 @@
 
 Leontief holds user funds; we treat reports accordingly.
 
-- **Contact:** `security@leontief.app`
+- **Contact:** `security@leontief.tech`
 - **Policy:** coordinated disclosure, **90 days**. Report privately first; we
   acknowledge within 48 h and agree a timeline with you.
 - **Critical fast lane:** a report demonstrating loss-of-funds risk goes

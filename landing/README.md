@@ -56,7 +56,7 @@ the blog adds no hues of its own.
 `index.html` is the imported Claude Design (`landing.html` from the shared Design
 project), with three intentional changes:
 
-1. **Branding** — footer reads *"a 29Projects Lab protocol"* (was "XXIX Labs").
+1. **Branding** — footer reads *"a Lemma Labs protocol (lemmalabs.space)"* (was "XXIX Labs").
 2. **Backend wiring** — the early-access modal POSTs to the API (below), with a
    honeypot field and an offline-safe `localStorage` fallback.
 3. **Crawl surface (A9)** — the `<title>` is now the A9 line, and the head carries
@@ -91,5 +91,5 @@ the immutable cache headers for fonts and OG images — no dashboard settings ar
 required. Override the API origin at deploy time via `config.js`:
 
 ```js
-window.LEONTIEF = { API_BASE: "https://api.leontief.app" };
+window.LEONTIEF = { API_BASE: "https://api.leontief.tech" };
 ```

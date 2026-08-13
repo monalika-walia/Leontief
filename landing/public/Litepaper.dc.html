@@ -189,7 +189,7 @@
     <span class="k">Litepaper · The awake state</span>
     <h1>Leontief</h1>
     <p class="tag">The layer that wakes up real-world assets on Stellar.</p>
-    <p class="meta">v1.0 · July 2026 · a 29Projects Lab protocol</p>
+    <p class="meta">v1.1 · August 2026 · a Lemma Labs protocol</p>
   </div>
   <div class="cue" aria-hidden="true"><small>Read</small><i></i></div>
 </header>
@@ -218,7 +218,7 @@
 <section class="sec" id="sec-00">
   <span class="k rv">Entry 00</span>
   <h2 class="rv d1">Abstract</h2>
-  <p class="lead rv d1">Roughly <span class="mark">$3 billion of tokenized real-world assets</span> — US and Mexican treasuries, money-market funds, short credit — now live on Stellar, growing about 3× year over year. Almost all of it is idle. Holders earn the base coupon and nothing else: the assets cannot be borrowed against, pooled, or compounded, because the very rules that make them safe in the real world make them incompatible with on-chain DeFi.</p>
+  <p class="lead rv d1">Roughly <span class="mark">$2 billion of tokenized real-world assets</span> — US and Mexican treasuries, money-market funds, short credit — now live on Stellar, growing about 3× year over year. Almost all of it is idle. Holders earn the base coupon and nothing else: the assets cannot be borrowed against, pooled, or compounded, because the very rules that make them safe in the real world make them incompatible with on-chain DeFi.</p>
   <p class="rv d2">Leontief is an <em>adapter layer</em>, not another lending protocol. It wraps restricted RWAs into normalized, freely-composable share tokens — <span class="mono">ld-shares</span> — that keep accruing the underlying's native yield, then routes those shares into existing venues: Blend for credit, Aquarius for liquidity. One asset, two jobs, at the same time: still earning, now working.</p>
   <div class="box mono-box rv d3">
     <span class="bk">The mechanism, in one line</span>
@@ -233,7 +233,7 @@
   <p class="rv d1">A tokenized treasury is a near-perfect on-chain asset: real yield, real backing, daily NAV. And yet, once it lands in a wallet, it does nothing but sit there. It cannot be posted as collateral, cannot join a liquidity pool, cannot compound. On-chain, it is a beautiful receipt.</p>
   <p class="rv d2">This is not a theoretical gap. On Ethereum, roughly <span class="mark">$9 billion</span> of tokenized treasuries became active collateral the moment venues accepted them — and issuer AUM measurably followed the new utility (BUIDL rose after exchange-margin acceptance; OUSG rose after its Aave listing). The same assets, the same holders, exist on Stellar today. The rail that makes them useful does not.</p>
   <div class="stats rv d3">
-    <div class="stat"><div class="n mono">$3B+</div><div class="l">RWAs on Stellar,<br/>≈3× YoY</div></div>
+    <div class="stat"><div class="n mono">$2B+</div><div class="l">RWAs on Stellar,<br/>≈3× YoY</div></div>
     <div class="stat"><div class="n mono">~$217M</div><div class="l">of it doing<br/>anything productive</div></div>
     <div class="stat"><div class="n mono">$1B</div><div class="l">further growth<br/>SDF targets in 2026</div></div>
   </div>
@@ -320,7 +320,7 @@
     <div class="li"><span class="no">Stream 02</span><span class="b">Utility uplift — a share of the <em>incremental</em> yield users earn by deploying their shares.</span><span class="tg">5–10% of uplift</span></div>
     <div class="li"><span class="no">Stream 03</span><span class="b">B2B integration — issuer white-label wrapping and protocol integration support.</span><span class="tg">negotiated</span></div>
   </div>
-  <p class="rv d3">At a 20 bps management fee alone, $50M of wrapped AUM is $100K/yr; the uplift share at scale is comparable or larger. Break-even for a lean team sits around $60–90M AUM with both streams on — aggressive for year one, plausible in year two against a $3B+ and compounding base.</p>
+  <p class="rv d3">At a 20 bps management fee alone, $50M of wrapped AUM is $100K/yr; the uplift share at scale is comparable or larger. Break-even for a lean team sits around $60–90M AUM with both streams on — aggressive for year one, plausible in year two against a $2B+ and compounding base.</p>
 </section>
 
 <!-- ══ 09 · ROADMAP ══ -->
@@ -329,10 +329,10 @@
   <h2 class="rv d1">Roadmap</h2>
   <div class="steps rv d2" id="road">
     <div class="flow" aria-hidden="true"><i></i></div>
-    <div class="st"><span class="num">01</span><div><h3>Prototype</h3><p>The full loop on testnet: restricted asset → wrapped share → borrow → yield-while-pledged → permissioned liquidation, proven by the public five-beat demo.</p></div></div>
-    <div class="st"><span class="num">02</span><div><h3>Mainnet, capped</h3><p>Two to three assets under conservative per-asset caps, 2-of-3 multisig admin, fail-closed oracle live, fee switch off.</p></div></div>
-    <div class="st"><span class="num">03</span><div><h3>Venues &amp; depth</h3><p>Blend pool accepting ld-shares at launch; Aquarius liquidity; the fee switch turned on at demonstrated utility.</p></div></div>
-    <div class="st"><span class="num">04</span><div><h3>Permissioned era</h3><p>A SEP-57 pilot with one permissioned issuer — the step that opens the BENJI-class majority of the market by value.</p></div></div>
+    <div class="st"><span class="num">01</span><div><h3>Prototype</h3><p>The full loop on testnet: restricted asset → wrapped share → borrow → yield-while-pledged → permissioned liquidation, proven by the public five-beat demo. <strong>Status: live on testnet</strong> — core deployed on a SEP-8 demo asset; $469k team-seeded soak at live Reflector NAV, 49 wallets (Aug 2026). Blend utility in progress (Tranche 1–2).</p></div></div>
+    <div class="st"><span class="num">02</span><div><h3>Mainnet, capped</h3><p>Two to three assets under conservative per-asset caps, 2-of-3 multisig admin, fail-closed oracle live, fee switch off. <strong>Status: Tranche 3</strong> — after security review/audit.</p></div></div>
+    <div class="st"><span class="num">03</span><div><h3>Venues &amp; depth</h3><p>Blend pool accepting ld-shares at launch; Aquarius liquidity; the fee switch turned on at demonstrated utility. <strong>Status: months 3–5.</strong></p></div></div>
+    <div class="st"><span class="num">04</span><div><h3>Permissioned era</h3><p>A SEP-57 pilot with one permissioned issuer — the step that opens the BENJI-class majority of the market by value. Multi-asset era (commodities, then equities/ETFs) follows, supply-triggered. <strong>Status: months 5–8.</strong></p></div></div>
   </div>
 </section>
 
@@ -379,8 +379,8 @@
 
 <footer>
   <span class="wordmark" style="font-size:17px">Leontief</span>
-  <span class="mono">RWA utility layer on Stellar · a 29Projects Lab protocol</span>
-  <span class="mono">Litepaper v1.0 · Named for Wassily Leontief · © 2026</span>
+  <span class="mono">RWA utility layer on Stellar · a Lemma Labs protocol (lemmalabs.space)</span>
+  <span class="mono">Litepaper v1.1 · Updated August 2026 · Named for Wassily Leontief · © 2026</span>
 </footer>
 
 <script>

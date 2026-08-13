@@ -11,8 +11,10 @@ description: The RWA utility layer on Stellar — wrap restricted assets into co
   <p>An adapter layer that turns restricted, tokenized real-world assets on Stellar into composable, yield-passing <strong>ld-shares</strong> — with a fail-closed NAV oracle and permissioned liquidation built for regulated assets.</p>
 </div>
 
-Roughly **$3B of tokenized real-world assets** now live on Stellar — US and Mexican
-treasuries, money-market funds, short credit — growing about 3× year over year.
+*Updated August 2026. New here with ten minutes? Start at [For Reviewers](/reviewers).*
+
+Roughly **$2 billion of tokenized real-world assets** now live on Stellar — US and Mexican
+treasuries, money-market funds, private credit — growing about 3× year over year.
 Almost all of it is idle: holders earn the base coupon and nothing else, because
 the very rules that make these assets safe in the real world (transfer
 restrictions, off-chain NAV, non-standard yield accrual) make them incompatible
@@ -42,14 +44,24 @@ deposit → mint ld-share at fail-closed NAV → move / borrow / LP → underlyi
     <p><a href="https://app.leontief.tech/demo">app.leontief.tech/demo</a> — the whole thesis on-chain, no wallet needed.</p>
   </div>
   <div className="ld-card">
+    <div className="n">Live metrics</div>
+    <h3>Positions &amp; wrapped value</h3>
+    <p><a href="https://leontief.tech/performance">leontief.tech/performance</a> — testnet figures read straight from the chain; counting rules in <a href="/metrics-methodology">Metrics Methodology</a>.</p>
+  </div>
+  <div className="ld-card">
+    <div className="n">Faucet</div>
+    <h3>Mint test tokens</h3>
+    <p><a href="https://app.leontief.tech/faucet">app.leontief.tech/faucet</a> — authorizes your SEP-8 trustline and funds test LEOD + USDC so you can try the app.</p>
+  </div>
+  <div className="ld-card">
     <div className="n">Litepaper</div>
     <h3>The awake state</h3>
-    <p><a href="https://leontief.tech/litepaper">leontief.tech/litepaper</a> — the full narrative + business model.</p>
+    <p><a href="https://leontief.tech/litepaper">leontief.tech/litepaper</a> — the full narrative + business model (v1.1, August 2026).</p>
   </div>
   <div className="ld-card">
     <div className="n">Source</div>
     <h3>Monorepo</h3>
-    <p><a href="https://github.com/monalika-walia/Leontief">github.com/monalika-walia/Leontief</a> — contracts, SDK, indexer, tests.</p>
+    <p><a href="https://github.com/monalika-walia/leontief">github.com/monalika-walia/leontief</a> — contracts, SDK, indexer, tests.</p>
   </div>
 </div>
 

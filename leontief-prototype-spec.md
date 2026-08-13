@@ -1,4 +1,6 @@
 # Leontief Prototype — Technical Specification v1.0
+
+> **FROZEN.** This spec is never rewritten; implementation status lives in [`docs/STATUS.md`](docs/STATUS.md).
 **For:** Monalika · Aditya · Vyom — 3–4 week sprint ending in the 5-beat SCF demo
 **Scope:** Testnet prototype proving the full loop: restricted asset → wrapped share → borrow → yield-while-pledged → permissioned liquidation.
 

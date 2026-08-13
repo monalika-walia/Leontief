@@ -1,7 +1,7 @@
 # Contributing
 
 Leontief is built by a three-person protocol team (Monalika · Aditya · Vyom,
-incubated by 29Projects Lab) and welcomes outside contributions once the SCF
+a Lemma Labs protocol — lemmalabs.space, a Stellar-focused studio; Estonian OÜ registration in progress) and welcomes outside contributions once the SCF
 prototype phase settles. Until then, issues and small PRs are appreciated;
 larger changes should start with an issue.
 

@@ -6,16 +6,16 @@ export const SITE = {
   /** Root-shell title — A9 Phase 1.1. */
   title: "Leontief — Put tokenized treasuries to work on Stellar",
   description:
-    "Leontief wraps restricted real-world assets on Stellar into composable ld-shares — still earning, now working. A testnet prototype by 29Projects Lab.",
+    "Leontief wraps restricted real-world assets on Stellar into composable ld-shares — still earning, now working. A testnet prototype by Lemma Labs.",
   blogTitle: "Leontief Blog",
   blogDescription:
     "Plainspoken notes on real-world assets, permissioned collateral, and fail-closed oracle design on Stellar.",
-  publisher: "29Projects Lab",
+  publisher: "Lemma Labs",
   app: "https://app.leontief.tech",
   docs: "https://docs.leontief.tech",
   litepaper: "https://leontief.tech/litepaper",
   performance: "https://leontief.tech/performance",
-  github: "https://github.com/monalika-walia/Leontief",
+  github: "https://github.com/monalika-walia/leontief",
 } as const;
 
 export const url = (path: string) =>
