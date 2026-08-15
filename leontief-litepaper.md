@@ -195,7 +195,7 @@ revenue. No token is required for the protocol to function or to earn.
 | Phase | Scope | Status |
 |---|---|---|
 | 0 — Thesis | Architecture, mechanism design, full frontend (landing + app) | **Complete** |
-| 1 — Testnet MVP | Vault factory, share token, yield accounting, NAV oracle adapter; comprehensive test suite | **Live on testnet** — core deployed on a SEP-8 demo asset; $469k team-seeded soak at live Reflector NAV, 49 wallets (Aug 2026) |
+| 1 — Testnet MVP | Vault factory, share token, yield accounting, NAV oracle adapter; comprehensive test suite | **Live on testnet** — core deployed on a SEP-8 demo asset; $469k wrapped at live Reflector NAV across 49 testnet wallets (Aug 2026) |
 | 2 — First utility | USDC borrowing against shares via Blend with yield-passthrough proven; permissioned-liquidation Tier 1 live | **In progress · Tranche 1–2** |
 | 3 — Mainnet, capped | Security review/audit; conservative supply caps; 2–3 assets (USDY, CETES/USTRY); first issuer partnership | Tranche 3 |
 | 4 — Growth | TVL and active-supplier targets; management fee accruing; Aquarius LP path | Months 3–5 |

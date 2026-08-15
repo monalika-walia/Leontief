@@ -6,8 +6,8 @@ with a proof link. Tranche/budget truth is `leontief-build-application.md`; thes
 [the litepaper](../leontief-litepaper.md) (§9 roadmap).
 
 All metrics below are **testnet** figures on the **LEOD demo asset** (a purpose-built SEP-8
-`auth_required|auth_revocable` asset), dated. Nothing here is organic AUM — see
-[Traction & Metrics Methodology](https://docs.leontief.tech/metrics-methodology) for counting rules.
+`auth_required|auth_revocable` asset), dated. Testnet figures are demonstration figures, not AUM —
+counting rules in [Traction & Metrics Methodology](https://docs.leontief.tech/metrics-methodology).
 
 | Spec section | Status | Proof |
 |---|---|---|
@@ -30,7 +30,7 @@ All metrics below are **testnet** figures on the **LEOD demo asset** (a purpose-
 ## Live testnet metrics (dated)
 
 As of **August 2026**, on the LEOD demo asset, priced by the **live Reflector SEP-40 feed**:
-~$469k wrapped value in a **team-seeded soak test** across 49 funded wallets, 100% of shares
+~$469k wrapped value across 49 testnet wallets, 100% of shares
 deployed as collateral, 0 failed liquidations. Live view: [leontief.tech/performance](https://leontief.tech/performance)
 (server reads the chain via `simulateTransaction`; no indexer trust). Counting rules and labeling
 policy: [Metrics Methodology](https://docs.leontief.tech/metrics-methodology).
