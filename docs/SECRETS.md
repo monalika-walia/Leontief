@@ -16,6 +16,8 @@ touch CI** — they are hardware-wallet signers only (see `docs/MULTISIG.md` at 
 | `HEALTHCHECK_URL` (monitor) | monitor host env | DevOps | Heartbeat ping URL (Healthchecks.io). |
 | Sentry DSN (frontend) | Vercel project env `VITE_SENTRY_DSN` | DevOps | Public-ish (client DSN) but env-managed; enables error capture. |
 | Mainnet admin/multisig signer keys | **hardware wallets only** | each signer (Monalika / Aditya / Vyom) | NEVER in CI, Vercel, Render, or any `.env`. Geo-separated. Signer change → KYC re-verification (SCF rule). |
+| `TELEGRAM_BOT_TOKEN` (+ webhook secret) — Tranche 2 | bot host env / GH Actions secret | DevOps (Vyom) — rotate via BotFather on any suspicion | Blast radius = notifications only: the bot package holds zero signing code (CI-grepped). Rotation procedure in `docs/MONITORING.md`. |
+| Autopilot engine key — Tranche 2, testnet-first | engine host env only | on-call — revocable user-side at the ledger | Powerless outside the on-chain policy (allow-list, caps, HF floor 1.6, expiry ≤ 30 d). Flag-gated; excluded from production bundles (CI-verified). |
 | Mainnet RPC provider key (if any) | Render/host env, read at runtime | DevOps | Provider chosen in DECISIONS.md; never hardcoded. |
 
 ## Where each surface reads secrets

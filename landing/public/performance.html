@@ -5,6 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Leontief — Performance</title>
 <meta name="description" content="Live testnet performance: wrapped AUM, utility ratio, and per-wallet positions on the Leontief protocol." />
+
+<!-- Canonical is the pretty URL: /performance rewrites to this file. -->
+<link rel="canonical" href="https://leontief.tech/performance" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Leontief" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://leontief.tech/performance" />
+<meta property="og:title" content="Leontief — live testnet performance" />
+<meta property="og:description" content="Live testnet performance: wrapped AUM, utility ratio, and per-wallet positions on the Leontief protocol." />
+<meta property="og:image" content="https://leontief.tech/og/performance.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Leontief — live testnet performance" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Leontief — live testnet performance" />
+<meta name="twitter:description" content="Live testnet performance: wrapped AUM, utility ratio, and per-wallet positions on the Leontief protocol." />
+<meta name="twitter:image" content="https://leontief.tech/og/performance.png" />
+<meta name="twitter:image:alt" content="Leontief — live testnet performance" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
@@ -136,7 +157,7 @@
   </div>
 
   <footer>
-    <span>Leontief · a 29Projects Lab protocol · testnet prototype</span>
+    <span>Leontief · a Lemma Labs protocol · testnet prototype</span>
     <span id="asof"></span>
   </footer>
 </div>
@@ -144,7 +165,7 @@
 <script id="snapshot" type="application/json">
 {
   "network": "testnet",
-  "asof": "2026-07-21",
+  "asof": "2026-08-15",
   "live": false,
   "oracle": "reflector",
   "explorer": "https://stellar.expert/explorer/testnet",
@@ -156,161 +177,454 @@
     "leod_sac": "CDE5ZRPD2SJCUZIKEVM546Y25YIER35WYKVWICQFDW3I2ZHL2MLD4AOW",
     "mock_oracle": "CBKHRAA4GJPOP537MNZ5EVYPW5PSKV3S2R6MQPXP7MTWOJFXQMXXHSYG"
   },
-  "share_price": "980366792779",
-  "total_shares": "137821500021",
-  "total_assets_value": "135115621932",
+  "nav": 1000918582508,
+  "nav_ts": 1786789200,
+  "share_price": "980427644876",
+  "total_shares": "4787066470458",
+  "total_assets_value": "4693372305480",
   "users": [
     {
       "address": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "collateral_shares": "51045000002",
+      "collateral_shares": "163343999989",
       "debt": "25000000000",
-      "hf": "1701455979920",
-      "collateral_value": "50042822939",
-      "basis": 50042822939,
-      "pnl": "0"
+      "hf": "5444997089240",
+      "collateral_value": "160146973213",
+      "basis": "160072275700",
+      "pnl": "74697513"
     },
     {
       "address": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "collateral_shares": "30627000002",
+      "collateral_shares": "137821499987",
       "debt": "12000000000",
-      "hf": "2126819974916",
-      "collateral_value": "30025693764",
-      "basis": 30025693764,
-      "pnl": "0"
+      "hf": "9571283945666",
+      "collateral_value": "135124008645",
+      "basis": "135060982618",
+      "pnl": "63026027"
     },
     {
       "address": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "collateral_shares": "30627000007",
+      "collateral_shares": "132716999992",
       "debt": "15000000000",
-      "hf": "1701455980200",
-      "collateral_value": "30025693769",
-      "basis": 30025693769,
-      "pnl": "0"
+      "hf": "7373433558400",
+      "collateral_value": "130119415737",
+      "basis": "130058724007",
+      "pnl": "60691730"
     },
     {
       "address": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
-      "collateral_shares": "25522500010",
+      "collateral_shares": "45940500007",
       "debt": "10000000000",
-      "hf": "2126819975600",
-      "collateral_value": "25021411478",
-      "basis": 25021411478,
-      "pnl": "0"
+      "hf": "3828513579200",
+      "collateral_value": "45041336226",
+      "basis": "45020327550",
+      "pnl": "21008676"
+    },
+    {
+      "address": "GAD2PST6IJVTWPRFQGP6X6YIQ53AHLS57MSIU6L5DQK74O2RH6AX7WHW",
+      "collateral_shares": "449173781492",
+      "debt": "258000000000",
+      "hf": "1450872224100",
+      "collateral_value": "440382392728",
+      "basis": "440176984727",
+      "pnl": "205408001"
+    },
+    {
+      "address": "GB2TFIEJ2P2Y4SL5YYCT4KARGTSLWAOBKPNT4ULMZDEKAZXWO4U7JHA4",
+      "collateral_shares": "159238613271",
+      "debt": "82900000000",
+      "hf": "1600767765910",
+      "collateral_value": "156121938582",
+      "basis": "156049118470",
+      "pnl": "72820112"
+    },
+    {
+      "address": "GC2RH4AYGCWXHDWC7PBCUMUBWWRZIXJYWQ4EMGJKC27K77BRDZV45EJL",
+      "collateral_shares": "66336713283",
+      "debt": "17900000000",
+      "hf": "3088413152849",
+      "collateral_value": "65038347572",
+      "basis": "65008011671",
+      "pnl": "30335901"
+    },
+    {
+      "address": "GCY7AVYALU5UWEPHE7SSGBIYTBOUZYWGU7UV5T34NI3UZCZ4AQSFPRQ6",
+      "collateral_shares": "62253113285",
+      "debt": "36600000000",
+      "hf": "1417471919590",
+      "collateral_value": "61034673244",
+      "basis": "61006204780",
+      "pnl": "28468464"
+    },
+    {
+      "address": "GAGTIVKVCMN2ATYEURXUXSTXEXDIHIPUL6FYD7BPEL5FU2GYD5NT2YH6",
+      "collateral_shares": "134737013274",
+      "debt": "23400000000",
+      "hf": "4798500372222",
+      "collateral_value": "132099892601",
+      "basis": "132038277116",
+      "pnl": "61615485"
+    },
+    {
+      "address": "GBP7XPL4IOEWXGQTJ5RK7TS6DFVWGBDX25QZ5FHVIA7WKZ42OOJFT52U",
+      "collateral_shares": "43869651052",
+      "debt": "27900000000",
+      "hf": "1310371536272",
+      "collateral_value": "43011018662",
+      "basis": "42990956989",
+      "pnl": "20061673"
+    },
+    {
+      "address": "GDSQD53O2TW4MIZEL6FT4VHHT2K54B63INYEVNZTRRNPDL6HEAV5UAQJ",
+      "collateral_shares": "42338301052",
+      "debt": "9400000000",
+      "hf": "3753531347765",
+      "collateral_value": "41509640788",
+      "basis": "41490279405",
+      "pnl": "19361383"
+    },
+    {
+      "address": "GBAIIXCBBZ4JJBBBXMNGLCK4GOW3C7JH65FYMFDZOL34EWWJLKI3SK7D",
+      "collateral_shares": "58169513285",
+      "debt": "8900000000",
+      "hf": "5446780795056",
+      "collateral_value": "57030998913",
+      "basis": "57004397887",
+      "pnl": "26601026"
+    },
+    {
+      "address": "GDJBH32QJRPHOH2HEODNYJVQ5DWRHOZ343B7RAQD6A3DVFXJKZMTL6JY",
+      "collateral_shares": "316457213250",
+      "debt": "125500000000",
+      "hf": "2101385579649",
+      "collateral_value": "310263400290",
+      "basis": "310118683821",
+      "pnl": "144716469"
+    },
+    {
+      "address": "GBOBRO7QHI7KCD52IFKP5KXANKQQBJ6JACTT7TRW2TLA4AO4QKTDGXN2",
+      "collateral_shares": "54085913285",
+      "debt": "23800000000",
+      "hf": "1893833020756",
+      "collateral_value": "53027324582",
+      "basis": "53002590994",
+      "pnl": "24733588"
+    },
+    {
+      "address": "GAAPCY442ETTFLX3ALWOSBA5OA6JCD77V23URI4D3ZF5IRGD5DXVLXHO",
+      "collateral_shares": "119423513276",
+      "debt": "72100000000",
+      "hf": "1380349469958",
+      "collateral_value": "117086113864",
+      "basis": "117031501270",
+      "pnl": "54612594"
+    },
+    {
+      "address": "GAOT2JY3NKDTMVO4AX2JBRBTFPLBAO5RKJEKK2WQMSKERV5KLDHP4NTU",
+      "collateral_shares": "51023213286",
+      "debt": "17800000000",
+      "hf": "2388813680280",
+      "collateral_value": "50024568835",
+      "basis": "50001235826",
+      "pnl": "23333009"
+    },
+    {
+      "address": "GAUPAM7G7JH4JRSSJTMCCPBADTVH4SRY55GQD4G4QPBYXQGFI54PISP7",
+      "collateral_shares": "48981413286",
+      "debt": "30300000000",
+      "hf": "1347172340561",
+      "collateral_value": "48022731670",
+      "basis": "48000332379",
+      "pnl": "22399291"
+    },
+    {
+      "address": "GCDI2BZAQ2F54NNMXNIE3YZ3KKLIRZ5R4UM7UM6EVMYIJN2R57BSRU5Y",
+      "collateral_shares": "105130913279",
+      "debt": "33100000000",
+      "hf": "2646896243262",
+      "collateral_value": "103073253709",
+      "basis": "103025177148",
+      "pnl": "48076561"
+    },
+    {
+      "address": "GCUAWP6QY22OZIZEIOKXBSBMR6PIFTEDQ57Y2GA7NVH745NL7FQG4UNG",
+      "collateral_shares": "46939613286",
+      "debt": "4900000000",
+      "hf": "7983216393673",
+      "collateral_value": "46020894505",
+      "basis": "45999428933",
+      "pnl": "21465572"
+    },
+    {
+      "address": "GDUSUNQNVNATBBD3BAJ33N4ELMJW7ORIH6C63IDUWC3NVHC3T7OOQGVD",
+      "collateral_shares": "44897813286",
+      "debt": "21800000000",
+      "hf": "1716339391697",
+      "collateral_value": "44019057340",
+      "basis": "43998525487",
+      "pnl": "20531853"
+    },
+    {
+      "address": "GD26YDOOSFNUVACN4NCPVGTL2NAKN2O7GKMADSUY36BZREMTJBG3F3PX",
+      "collateral_shares": "244994213259",
+      "debt": "153400000000",
+      "hf": "1330959808252",
+      "collateral_value": "240199099513",
+      "basis": "240087063207",
+      "pnl": "112036306"
+    },
+    {
+      "address": "GBCFWTZ7QPTGEZE2ZXCF2VGCP5TWXHGMNUGL3JLK64YRXJ5BGF5IEZAM",
+      "collateral_shares": "42856013287",
+      "debt": "9500000000",
+      "hf": "3759435489263",
+      "collateral_value": "42017220175",
+      "basis": "41997622041",
+      "pnl": "19598134"
+    },
+    {
+      "address": "GARMQKIYPQFB7GNDOZOV7EEYZDKPXCYF6PDG7LYGP4B5MC33GTGFPPVG",
+      "collateral_shares": "41324663287",
+      "debt": "16100000000",
+      "hf": "2139035152484",
+      "collateral_value": "40515842301",
+      "basis": "40496944456",
+      "pnl": "18897845"
+    },
+    {
+      "address": "GBKXMUCNPOOW5T2PSWJGLRQ2WJ7ZDA3EWXIWMZFFNRMJDIB2XE4EE6WH",
+      "collateral_shares": "95942813279",
+      "debt": "52600000000",
+      "hf": "1520061568346",
+      "collateral_value": "94064986465",
+      "basis": "94021111639",
+      "pnl": "43874826"
+    },
+    {
+      "address": "GD5LNFR4EEPX6EEXEUB4TDQ4MYIMTETBGHMLNURCTUFZSSAD2LJGKOBX",
+      "collateral_shares": "50002313286",
+      "debt": "29000000000",
+      "hf": "1436900093620",
+      "collateral_value": "49023650253",
+      "basis": "49000784103",
+      "pnl": "22866150"
+    },
+    {
+      "address": "GASYFVBKA5LCBYRNMA7IBOP5UQDZCXQEMQZ2623XIGLPH6IRU5LPPMQO",
+      "collateral_shares": "48470963286",
+      "debt": "6200000000",
+      "hf": "6515150245483",
+      "collateral_value": "47522272379",
+      "basis": "47500106518",
+      "pnl": "22165861"
+    },
+    {
+      "address": "GCM5Z6Q3CV3LHTDIR3JTKPULDXLJKCAGEDYOP2HAHA6V7IQ35XTH7JS2",
+      "collateral_shares": "46939613286",
+      "debt": "24000000000",
+      "hf": "1629906680375",
+      "collateral_value": "46020894505",
+      "basis": "45999428933",
+      "pnl": "21465572"
+    },
+    {
+      "address": "GB3DNVIZRWERPCLQIZ6YKNE3NWX7BPXA2WI2M54VKQHXU7JLG5GRLF2J",
+      "collateral_shares": "82671113281",
+      "debt": "11200000000",
+      "hf": "6151347157053",
+      "collateral_value": "81053044893",
+      "basis": "81015239240",
+      "pnl": "37805653"
+    },
+    {
+      "address": "GBFEL3YFYG7OQUX33E4DTABI66UK3VYYTWHLKY42NAWXUSJBIIYE2CFK",
+      "collateral_shares": "45408263287",
+      "debt": "15000000000",
+      "hf": "2522772609133",
+      "collateral_value": "44519516632",
+      "basis": "44498751349",
+      "pnl": "20765283"
+    },
+    {
+      "address": "GBDKVSM52F7SCBXKEQFE4YOJGFFME5LPUGPJLRBGLGUSIHBITVQIP7XH",
+      "collateral_shares": "43876913287",
+      "debt": "27500000000",
+      "hf": "1329651561600",
+      "collateral_value": "43018138758",
+      "basis": "42998073764",
+      "pnl": "20064994"
+    },
+    {
+      "address": "GD4AW5JJOEFP462335QINRJHO3FWLF4VDXOJCDCCWYWGBEB4MWIQNRFC",
+      "collateral_shares": "199051853776",
+      "debt": "48800000000",
+      "hf": "3399232565040",
+      "collateral_value": "195155940205",
+      "basis": "195064913425",
+      "pnl": "91026780"
+    },
+    {
+      "address": "GB6RYJOJYNGFCLJKDNJNZ7OJMI2KRGJXIVITKQFHSAMX2JCRPQOQYTI7",
+      "collateral_shares": "42345563287",
+      "debt": "8000000000",
+      "hf": "4411155843875",
+      "collateral_value": "41516760884",
+      "basis": "41497396180",
+      "pnl": "19364704"
+    },
+    {
+      "address": "GCG5WB2OXVS5UCNQZJCMTFN4OT7O7ABXF5A2TSJX2XTRKZS5YHAFO2QC",
+      "collateral_shares": "40814213288",
+      "debt": "19500000000",
+      "hf": "1744260285076",
+      "collateral_value": "40015383011",
+      "basis": "39996718596",
+      "pnl": "18664415"
+    },
+    {
+      "address": "GD6G2Z2PDI2DA4W2D2F7CTIJOP2YMXCMLECTDNZSRNDLVZ3DWA27U2J3",
+      "collateral_shares": "77566613282",
+      "debt": "50500000000",
+      "hf": "1280023449168",
+      "collateral_value": "76048451981",
+      "basis": "76012980625",
+      "pnl": "35471356"
+    },
+    {
+      "address": "GBFTZTSRRVIS6KTAWXUBWY4T7KWDUCREFD54ZQCHRFGT74BLJT2KWM2G",
+      "collateral_shares": "39793313287",
+      "debt": "14800000000",
+      "hf": "2240695592027",
+      "collateral_value": "39014464427",
+      "basis": "38996266872",
+      "pnl": "18197555"
+    },
+    {
+      "address": "GCDD6CWKOYZCAOTMAFX25F4LPOSDUFWQVPJI6B6GNHQSVKVHSQLYOZ3B",
+      "collateral_shares": "38772413287",
+      "debt": "23500000000",
+      "hf": "1374958041191",
+      "collateral_value": "38013545845",
+      "basis": "37995815148",
+      "pnl": "17730697"
+    },
+    {
+      "address": "GDWME2GND6DQD6U22HCON2LIIQ2YVSRAD7QV5WHY562I7QKMZZQBWGRG",
+      "collateral_shares": "37751513288",
+      "debt": "6400000000",
+      "hf": "4915739558281",
+      "collateral_value": "37012627263",
+      "basis": "36995363426",
+      "pnl": "17263837"
+    },
+    {
+      "address": "GAVOZP6O5JEQMZJBX6HJKO2WKYQPE7LMJEWNSPEEZW3DIM3DKLAXGQBZ",
+      "collateral_shares": "36728753800",
+      "debt": "17000000000",
+      "hf": "1800494279294",
+      "collateral_value": "36009885587",
+      "basis": "35993089460",
+      "pnl": "16796127"
+    },
+    {
+      "address": "GCA6OR4KYZRLVILHFKUR2EVNULHWO5FFUAYIPDTPWOV5W7LMU2DGX7KV",
+      "collateral_shares": "70418453795",
+      "debt": "28700000000",
+      "hf": "2044744564041",
+      "collateral_value": "69040198810",
+      "basis": "69007996320",
+      "pnl": "32202490"
+    },
+    {
+      "address": "GAKN27ENQAAWFEFKGH7DMFJTHL7OOJQJRTEXSVUODCCAL7NNP2YLS5JW",
+      "collateral_shares": "35709713288",
+      "debt": "9800000000",
+      "hf": "3036650161530",
+      "collateral_value": "35010790098",
+      "basis": "34994459980",
+      "pnl": "16330118"
+    },
+    {
+      "address": "GD37QLNGNUW5FD3ZHBTTHWF547OTNU5AC5NFZFS5LWFUQ5FBRMKUFNGR",
+      "collateral_shares": "34688813288",
+      "debt": "19500000000",
+      "hf": "1482481578820",
+      "collateral_value": "34009871515",
+      "basis": "33994008257",
+      "pnl": "15863258"
+    },
+    {
+      "address": "GC5LDVWSJLDQGGYG25ZLAKY7LSN5QNNFZQ4PJA5CHFT3WFB7JIM7TRV5",
+      "collateral_shares": "33667913288",
+      "debt": "7600000000",
+      "hf": "3691790788421",
+      "collateral_value": "33008952932",
+      "basis": "32993556533",
+      "pnl": "15396399"
+    },
+    {
+      "address": "GB2OCRNSLJSRYRKHPVTHVSEGMIQVJWAQ26AHQBY7FBAUEGORU4OIJLRW",
+      "collateral_shares": "32647013289",
+      "debt": "18500000000",
+      "hf": "1470639416108",
+      "collateral_value": "32008034351",
+      "basis": "31993104811",
+      "pnl": "14929540"
+    },
+    {
+      "address": "GDO2453NFROCZQ775EVJVXWM7PBRHEZ3GVB3WBJZGYLOH5FHSNAVIPEK",
+      "collateral_shares": "32136563289",
+      "debt": "4300000000",
+      "hf": "6228241581395",
+      "collateral_value": "31507575059",
+      "basis": "31492878950",
+      "pnl": "14696109"
+    },
+    {
+      "address": "GCPQBMEJNMO3RSRYGRJTHOYI5MVX3PSSIP5WAUW7PK2PZ3H5XVQUFYHO",
+      "collateral_shares": "408280115351",
+      "debt": "212500000000",
+      "hf": "1601156447769",
+      "collateral_value": "400289111943",
+      "basis": "400102404691",
+      "pnl": "186707252"
+    },
+    {
+      "address": "GAOCDY3KWGINWVJH5DAFGUFMPK7VU6PRTW4NJYQ5Z4EPOAMAC5XVKTVB",
+      "collateral_shares": "183682115383",
+      "debt": "54700000000",
+      "hf": "2798427243528",
+      "collateral_value": "180087023790",
+      "basis": "180003025619",
+      "pnl": "83998171"
+    },
+    {
+      "address": "GDW4JYIQQDG6OBSK3WBKLR6GJ5AFW7CJAL64OX5WIPRH2F7DXFYV4UDC",
+      "collateral_shares": "137741615390",
+      "debt": "83200000000",
+      "hf": "1379673490877",
+      "collateral_value": "135045687578",
+      "basis": "134982698082",
+      "pnl": "62989496"
+    },
+    {
+      "address": "GB7DYIOAOGR6T2DSV2KWMXCQDHO6TQGMTXWBAYIF4AFUYRO7HCJLJHQ3",
+      "collateral_shares": "112300787393",
+      "debt": "19100000000",
+      "hf": "4899862671465",
+      "collateral_value": "110102796501",
+      "basis": "110051441143",
+      "pnl": "51355358"
+    },
+    {
+      "address": "GB6DQCWOGW4TFZJX4BHYQN34WAIV3XU2XSTB2TVFCIHW4KJ6RM7NACMU",
+      "collateral_shares": "160201415386",
+      "debt": "89000000000",
+      "hf": "1500067549808",
+      "collateral_value": "157065896392",
+      "basis": "156992635989",
+      "pnl": "73260403"
     }
-  ],
-  "txs": [
-    {
-      "action": "borrow",
-      "who": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
-      "hash": "c45eb92bc5420bf7e1c7056b6e38f1e5f6047c5997f0098c57cd152c61e3ed6c"
-    },
-    {
-      "action": "supply_collateral",
-      "who": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
-      "hash": "894338cca6b7e05742932486427d7ede14599655d72113c718e3721023e5ec76"
-    },
-    {
-      "action": "wrap",
-      "who": "GB7XND6M7PLZEO5JSKXYFUOTA4TW6DIKJYFV42VRETWTZHFAI3JOKLKZ",
-      "hash": "419a916391a1c9758fc06d8bf8b084335f1bd90a505c700758e1822d714d0989"
-    },
-    {
-      "action": "borrow",
-      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "hash": "4948cea71ed20d560ae8bac050e8308ec585e29ebd59bb87750a02fe68609990"
-    },
-    {
-      "action": "nav_tick",
-      "who": "oracle",
-      "hash": "74fa50f84dfaa7924028aa49d0c892283f62da023066cae818fa4a78443c5e0e"
-    },
-    {
-      "action": "repay",
-      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "hash": "f9653767146dd9273ef0d728dbe6aa5ed818249dbe25ceaaf6c8abc44195f7e2"
-    },
-    {
-      "action": "nav_tick",
-      "who": "oracle",
-      "hash": "4882503ef91708cdd3c8a819ab342a772290846d21b5fe499d8688f1bbeeb17a"
-    },
-    {
-      "action": "borrow",
-      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "hash": "f6f0e8ae649d34600d80a12034fdcf1dd5833bbb0d348351d4ad4dc78a2f24a7"
-    },
-    {
-      "action": "supply_collateral",
-      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "hash": "a3cc24b782c9cdb6deabf952dc20d6f01e1ac7fed72ad1726a49b7aea44eaed4"
-    },
-    {
-      "action": "wrap",
-      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "hash": "ea457df762672f8b4e831347deb7b278740ae33fa5c598b55e9958d7f4de14c7"
-    },
-    {
-      "action": "repay",
-      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "hash": "9f825d05948999bd073364077212fee9816f82a5e7901ab7020d2a1629eac5b1"
-    },
-    {
-      "action": "supply_collateral",
-      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "hash": "a28fab15acfecdfd69fe4775665124ee5c4bd865995ff51e1f58d95e8644e2b7"
-    },
-    {
-      "action": "wrap",
-      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "hash": "4a1b223b0e1afb202c6dc3a1dfba53fbe414ace0311b0c4780ee259836172d8a"
-    },
-    {
-      "action": "borrow",
-      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "hash": "0911cf04491856e43f058c66adc36275d37e30590c19e2ed6421555591f4f11e"
-    },
-    {
-      "action": "supply_collateral",
-      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "hash": "57fc693fb96802a45567bd6b2207aa3ffef8e57edf096749d39648fcb2b3df22"
-    },
-    {
-      "action": "wrap",
-      "who": "GCD5FOZUGNHEG7WHBMZTKD6FFG3LB5A3O3UVN7LLN5S5AV5OZVX6YPUB",
-      "hash": "213d31dcf9566ed094b381930a12438ee1c9a7be447ccbaca6ea89c069f8355d"
-    },
-    {
-      "action": "wrap",
-      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "hash": "d949809da5f50dcdded62c5e1931036d0d34ea18f6cad1a3bcf7266a0d57aacd"
-    },
-    {
-      "action": "supply_collateral",
-      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "hash": "46173ce0f16444a70f4e4cd77fcfda4db8a7e8ccdfab68302330e9dd6ff6d577"
-    },
-    {
-      "action": "borrow",
-      "who": "GCCDH7TXDEXCQZOCP7WTNV2MHSQOUSU736J6IRGZ5MPLJCNISGNMVYZD",
-      "hash": "bc213ad650277731583a5fa5b468520f1dd28be627fff0fb6e9c3ef35caecf2c"
-    },
-    {
-      "action": "supply_collateral",
-      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "hash": "f1eac5d3810a20076a5cd46a0c0b3f6ee2d77e3c2ed52a042c69512660dc2ccb"
-    },
-    {
-      "action": "borrow",
-      "who": "GA4PG5M3WIIYYXKOQFTAZ6IINT7TKSNHHAD62AL32F4S3Q4IRBCL5XMB",
-      "hash": "a0d567f0b0e9cdb7a9739ea35dd650a32e7db39ae227df846c61159ed59477cb"
-    },
-    {
-      "action": "nav_tick",
-      "who": "oracle",
-      "hash": "c11c26fbff1b8c34a1f560d39a6d04319f7b4b1f4643edc69ad650153b2d04eb"
-    }
-  ],
-  "nav": 1000856865443,
-  "nav_ts": 1785646200
+  ]
 }
 </script>
 

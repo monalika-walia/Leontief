@@ -2,7 +2,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
 
-const GITHUB = "https://github.com/monalika-walia/Leontief";
+const GITHUB = "https://github.com/monalika-walia/leontief";
 
 const config: Config = {
   title: "Leontief",
@@ -14,8 +14,8 @@ const config: Config = {
 
   organizationName: "monalika-walia",
   projectName: "Leontief",
-  onBrokenLinks: "warn",
-  onBrokenMarkdownLinks: "warn",
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "throw",
 
   markdown: { mermaid: true },
   themes: ["@docusaurus/theme-mermaid"],
@@ -81,7 +81,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Leontief · a 29Projects Lab protocol · Docs CC-BY-4.0.`,
+      copyright: `Leontief · a Lemma Labs protocol (lemmalabs.space) · Docs CC-BY-4.0.`,
     },
     prism: {
       theme: prismThemes.github,

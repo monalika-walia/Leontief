@@ -48,11 +48,23 @@ const POOL: Record<number, string> = {
   13: "The pool does not have enough liquidity for that borrow.",
 };
 
+// Built-in Stellar Asset Contract errors (soroban stellar-asset-contract enum).
+// Beat 1 sends to a fresh random address (no trustline → 13) or an onboarded but
+// un-authorized holder (11) — both ARE the SEP-8 restriction working as designed.
+const SAC: Record<number, string> = {
+  4: "Not authorized to move this balance.",
+  8: "Amount must be positive.",
+  9: "Allowance is insufficient for that transfer.",
+  10: "Insufficient LEOD balance — fund this wallet first (see the faucet).",
+  11: "Transfer blocked by SEP-8: the destination holds a trustline, but the issuer has not authorized it.",
+  13: "Transfer blocked by SEP-8: the destination has no LEOD trustline — a restricted asset cannot even be received without issuer onboarding. Restriction enforced ✓",
+};
+
 const TABLES: Record<ContractKind, Record<number, string>> = {
   vault: VAULT,
   adapter: ADAPTER,
   pool: POOL,
-  sac: {},
+  sac: SAC,
 };
 
 export function humanError(kind: ContractKind, e: unknown): string {

@@ -1,0 +1,22 @@
+---
+import { SITE } from "../data/site";
+
+interface Props {
+  /** Overrides the default lede when a post wants its own closing line. */
+  lede?: string;
+}
+
+const {
+  lede = "Leontief is live on Stellar testnet. Wrap a restricted asset, watch the share price accrue, borrow against it — with test funds, on a test network, at no cost.",
+} = Astro.props;
+---
+
+<section class="cta" aria-labelledby="cta-heading">
+  <p class="kicker" id="cta-heading">See it for yourself</p>
+  <p class="cta__lede">{lede}</p>
+  <div class="cta__links">
+    <a class="cta__link cta__link--primary" href={SITE.app}>Open the testnet app</a>
+    <a class="cta__link" href={SITE.litepaper}>Read the litepaper</a>
+    <a class="cta__link" href={SITE.docs}>Protocol docs</a>
+  </div>
+</section>

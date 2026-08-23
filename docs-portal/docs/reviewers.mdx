@@ -1,0 +1,29 @@
+---
+id: reviewers
+title: For Reviewers — start here
+description: The ten-minute path through Leontief for a delegate — live app, live metrics, code, thesis, plan.
+---
+
+# For Reviewers — start here
+
+*Updated August 2026.* Four links, one line each — walkable in under ten minutes by someone who has
+never seen the project.
+
+1. **[Live app](https://app.leontief.tech)** — wrap a restricted asset, borrow against the share,
+   watch yield accrue while pledged; wallet-connected, or take the no-wallet
+   [guided demo](https://app.leontief.tech/demo) (the five beats, each an on-chain transaction).
+2. **[Live metrics](https://leontief.tech/performance)** — testnet positions read straight from the
+   chain; every figure labeled, counting rules in
+   [Metrics Methodology](/metrics-methodology).
+3. **[Code](https://github.com/monalika-walia/leontief)** — 7 Soroban contracts, 100 unit tests +
+   property/fuzz suites, CI enforcing fmt · clippy `-D warnings` · tests · ≥90% coverage on the
+   core; status ledger in `docs/STATUS.md`.
+4. **[Litepaper](https://leontief.tech/litepaper)** — the thesis: wrap restricted RWAs into
+   composable, yield-passing shares; permissioned liquidation makes them lawful collateral.
+
+**Contract addresses** (Soroban testnet, verify on stellar.expert): [Addresses](/addresses).
+
+**What is real today, in one sentence:** the full restricted-asset loop — SEP-8 transfer blocked →
+wrap → borrow → yield-while-pledged → permissioned liquidation (unauthorized caller rejected) —
+runs live on Stellar testnet against a real Reflector SEP-40 oracle feed; everything beyond that is
+labeled Tranche scope, not shipped work.

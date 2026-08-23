@@ -1,3 +1,6 @@
+# Kept out of the deployment source. `public/` used to be listed here from before
+# this directory was an Astro project — it is now the landing itself, and
+# excluding it would ship an empty site.
 README.md
-public/
-.gitignore
+dist
+node_modules

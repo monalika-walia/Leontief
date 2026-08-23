@@ -1,0 +1,54 @@
+---
+id: telegram
+title: Telegram Access Layer
+description: Read-only alerts and deep-links into the dApp — the bot never touches keys, CI-verified.
+---
+
+# Telegram Access Layer
+
+*Updated August 2026 · Tranche 2 scope — design; the handle is published here only when live.*
+
+A Telegram surface for position awareness, not custody. It has exactly two capabilities: **tell you
+about your position** and **deep-link you into the dApp** where you sign in your own wallet.
+
+## The hard rule
+
+> **The bot never receives, stores, or requests keys — CI-verified.** The bot service contains zero
+> signing code; a CI grep over the bot package fails the build if any signing primitive or
+> secret-key type is imported. Blast radius of a full bot compromise is notifications only.
+
+## Linking flow (signed challenge)
+
+1. In the dApp, the user requests a link code for their Telegram account.
+2. The dApp presents a challenge; the user signs it **in their own wallet** (Freighter/passkey).
+3. The bot verifies the signature against the wallet address and binds `chat_id ↔ address` —
+   read-only. Unlinking is one command; the binding stores no secrets.
+
+## Commands
+
+| Command | Does |
+|---|---|
+| `/start` | Anti-phishing notice + link instructions |
+| `/link` / `/unlink` | Bind / unbind a wallet address (signed challenge; read-only) |
+| `/position` | Collateral, debt, health factor for the linked address |
+| `/alerts` | View or set alert thresholds |
+
+## Alert semantics + thresholds
+
+- **Health-factor alerts** at user-set thresholds (default warn `HF < 2.0`, urgent `HF < 1.5`),
+  re-armed on recovery so a flapping position does not spam.
+- **Oracle events**: staleness or deviation halt on an asset the user holds.
+- **Position events**: liquidation executed against the linked address.
+- Alerts carry a **deep-link** into the dApp page for the action (e.g. repay) — prefill-only,
+  schema-validated, never auto-submitted; the user signs in their own wallet.
+
+## Anti-phishing policy
+
+- One published handle, stated **only** on this page and the site footer once live; verify from
+  the site, never from a message.
+- The bot **never DMs first**, never asks for keys, seed phrases, or funds, and never links
+  anywhere but `leontief.tech` / `app.leontief.tech`.
+- `/start` repeats this policy verbatim so every user sees it before linking.
+
+Threat rows for this surface (impersonation, token compromise, deep-link tampering) are in
+[Security](/security#delegated-surface).

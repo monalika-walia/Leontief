@@ -1,5 +1,7 @@
-# Leontief — Unified Documentation Hub (GitBook seed)
-This file seeds the public GitBook required by SCF Open Track ("a unified source containing all project development documentation"). Each `##` becomes a GitBook page. Pair with `leontief-prototype-spec.md` (frozen build spec) and `leontief-litepaper.md`.
+# Leontief — Unified Documentation Hub (seed)
+*Updated August 2026.* **The live public hub is [docs.leontief.tech](https://docs.leontief.tech)** (Docusaurus; decision recorded in `DECISIONS.md` — the GitBook plan's mdBook fallback was exercised, then superseded by the Docusaurus portal the site nav links). This file remains the section seed/index. Pair with `leontief-prototype-spec.md` (frozen; status in `docs/STATUS.md`), `leontief-litepaper.md` (v1.1, thesis truth), and `leontief-build-application.md` (tranche/budget truth).
+
+Leontief is a Lemma Labs protocol (lemmalabs.space) — a Stellar-focused studio; Estonian OÜ registration in progress.
 
 ---
 
@@ -10,6 +12,8 @@ Overview (litepaper) · Architecture · Protocol Spec v1 (mainnet delta) · Secu
 ## 01 · Architecture
 
 ### Component diagram
+
+*The diagram below is the mainnet-era target topology. The current live-vs-planned diagram (solid = live on testnet, dashed = Tranche scope, Reflector marked LIVE) is at [docs.leontief.tech/architecture](https://docs.leontief.tech/architecture).*
 ```mermaid
 flowchart LR
   subgraph Issuers["RWA issuers (SEP-8 / SEP-57)"]
@@ -113,7 +117,7 @@ sequenceDiagram
 | Issuer freeze/clawback | SEP-8 `auth_revocable` action | per-vault isolation; circuit breaker pauses vault only; exits (withdraw/repay) never paused |
 | Admin key compromise | multisig member loss | 2-of-3, hardware keys, timelock at T3, published runbook |
 | Governance rug perception | fee/param abuse | hard-coded fee cap, timelock, event log, tokenless (no vote capture) |
-| Frontend phishing | clone sites | leontief.app HSTS domain policy; contract addresses pinned in docs; wallet-warning integrations |
+| Frontend phishing | clone sites | leontief.tech HSTS domain policy; contract addresses pinned in docs; wallet-warning integrations |
 
 **Invariants (enforced in tests, restated for auditors):** share_price non-decreasing absent accepted NAV decrease · Σ user claims ≤ vault holdings + dust · deposit→withdraw round-trip ≤ deposited · pledged shares accrue identically to idle shares · pool never under-compensated by rounding.
 
@@ -133,7 +137,7 @@ Unit per contract → property (`proptest`: round-trips, rounding direction, hf 
 
 ## 06 · Open-Source & Licensing
 
-Public repo from first commit under the team's org. Contracts: Apache-2.0 (at mainnet latest). SDK/indexer: MIT. Docs: CC-BY-4.0. Landing/brand assets: proprietary to 29Projects Lab. Third-party code inventoried in `NOTICE`.
+Public repo from first commit under the team's org. Contracts: Apache-2.0 (at mainnet latest). SDK/indexer: MIT. Docs: CC-BY-4.0. Landing/brand assets: proprietary to Lemma Labs. Third-party code inventoried in `NOTICE`.
 
 ## 07 · DECISIONS.md convention
 
@@ -141,14 +145,20 @@ Append-only. Entry = date · author (human) · decision · alternatives · spec 
 
 ## 08 · Roadmap & tranche map
 
-Mirror of the SCF submission §4 (single source of truth: the submission; this page links, never restates numbers).
+Single source of truth: `leontief-build-application.md` (tranches/budget) and litepaper §9 (phase statuses, updated August 2026 — Phase 0 Complete · Phase 1 Live on testnet · Phase 2 In progress · 3–6 unchanged). This page links, never restates numbers. The Reflector SEP-40 feed is **live on testnet now** (not future scope); see `docs/STATUS.md`.
+
+## 10 · Telegram Access Layer · 11 · Autopilot · 12 · Agent Treasury · 13 · Metrics Methodology · 14 · Team & Organization · 15 · For Reviewers
+
+Published as hub pages on [docs.leontief.tech](https://docs.leontief.tech): [Telegram](https://docs.leontief.tech/telegram) · [Autopilot](https://docs.leontief.tech/autopilot) (Tranche 2 scope) · [Agent Treasury](https://docs.leontief.tech/agent-treasury) · [Metrics Methodology](https://docs.leontief.tech/metrics-methodology) · [Team](https://docs.leontief.tech/team) · [For Reviewers — start here](https://docs.leontief.tech/reviewers).
 
 ## 09 · UI/UX
 
-Cinematic landing (dormant→awake concept) · dApp (markets, deposit/mint, borrow, positions, health) · liquidator console · issuer panel — live links + Claude Design system reference for new assets.
+Cinematic landing (dormant→awake concept) · dApp (markets, deposit/mint, borrow, positions, health) · liquidator console · issuer panel — live links + Claude Design system reference for new assets. The design tokens every surface inherits are inventoried in `docs/DESIGN-TOKENS.md`; the blog at `leontief.tech/blog` is the reading room of the same system (typography-first, ~68ch measure, zero client JS).
 
 **Live (testnet):**
 - dApp — https://leontief-app.vercel.app (guided 5-beat demo at `/demo`)
 - Landing — https://leontief-landing.vercel.app
+- Blog — https://leontief.tech/blog (Astro, in-repo; SEO foundation in `docs/SEO.md`,
+  tokens in `docs/DESIGN-TOKENS.md`)
 - Litepaper — https://leontief-landing.vercel.app/Litepaper.dc.html
 - Testnet contract registry — `deployments/testnet.json`; deploy how-to in `docs/DEPLOY.md`, app details in `docs/APP.md`.

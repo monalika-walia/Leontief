@@ -50,6 +50,21 @@ flowchart LR
 
 The full matrix lives in `SECURITY-TESTING.md` in the repo.
 
+## Delegated surface (Telegram + Autopilot — Tranche 2 scope) {#delegated-surface}
+
+The access layer and Autopilot add a new surface. Threats and mitigations, stated before any of it
+ships (*updated August 2026*):
+
+| Threat | Mitigations |
+|---|---|
+| Delegated-signer compromise / abuse | On-chain constraint set bounds anything the key can do: contract **allow-list**, per-action + daily **caps**, **HF floor 1.6**, **expiry ≤ 30 days**; **one-tap revoke** kills the delegation at the ledger; engine is **flag-gated** and **excluded from production bundles — verified in CI** |
+| Bot impersonation / phishing | **Single published handle**, verified from the site footer only; **never-DM-first** policy; the bot never asks for keys or funds; anti-phishing copy repeated verbatim in `/start` |
+| Deep-link parameter tampering | **Schema validation** on every parameter; links are **prefill-only** and **never auto-submit** — the user signs in their own wallet, seeing the real values |
+| Bot token compromise | Webhook secret; rotation owner named in the secrets matrix (`docs/SECRETS.md`); blast radius = **notifications only** — the bot package contains **zero signing code, CI-grepped** |
+
+Runbook procedures for this surface — **Autopilot pause/revoke**, **bot-token rotation**, and the
+**engine kill-switch** — live in the ops runbook (`docs/MONITORING.md`).
+
 ## Golden vectors {#golden-vectors}
 
 The generator (`tests/fixtures/golden_gen.py`) computes every expected value in
@@ -64,6 +79,6 @@ three surfaces — spec, contract, SDK — agree to the integer.
   ~95.8%). Red CI never merges.
 - **Toolchain pinned:** `soroban-sdk 27.0.0`, `rustc 1.97.1`, `wasm32v1-none`;
   never bumped unasked.
-- **Disclosure:** coordinated, 90-day, `security@leontief.app`. A loss-of-funds
+- **Disclosure:** coordinated, 90-day, `security@leontief.tech`. A loss-of-funds
   report goes straight to the pause playbook — deposits can be halted within the
   hour, and **exits are never paused**.

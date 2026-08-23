@@ -1,0 +1,43 @@
+---
+id: metrics-methodology
+title: Traction & Metrics Methodology
+description: How every published figure is counted, labeled, and made audit-proof — testnet, demo-asset, dated.
+---
+
+# Traction & Metrics Methodology
+
+*Updated August 2026.* This page is what makes the numbers audit-proof: every figure the project
+publishes follows these rules, and anyone can recompute them from the chain.
+
+## Labeling policy (the honesty rails)
+
+1. Every figure carries a **"testnet"** label inline and a **date**.
+2. The demo asset (**LEOD** — a purpose-built SEP-8 `auth_required|auth_revocable` asset) is named
+   wherever a figure depends on it.
+3. **Testnet figures are demonstration figures.** All activity is on the LEOD demo asset on
+   testnet, where tokens carry no monetary value; the figures demonstrate protocol correctness
+   under the full wrap → pledge → borrow path and are **not** AUM, customer funds, or a claim of
+   adoption — and are never presented as any of those.
+4. Forward scope is never stated as done — Autopilot, consoles, and the Blend production path are
+   "Tranche scope," full stop.
+
+## How each metric is computed
+
+| Metric | Definition | Recompute it |
+|---|---|---|
+| Wrapped value ("AUM") | `vault.total_shares × vault.share_price` at the live Reflector NAV, in 7-dec USDC terms | `vault.share_price` / `total_shares` via `simulateTransaction` on [`CB64EH…LHUS`](https://stellar.expert/explorer/testnet/contract/CB64EHOFGTWH2USSZP3PL2B66XJ4KD6A6C3SFXKPNTEO3NCIZFZWLHUS) |
+| Active wallets | Unique addresses with a **non-zero pool position** (`collateral_shares > 0` or `debt > 0`) — not funded addresses, not trustlines | `mini_pool.position(addr)` per tracked address |
+| Utility ratio | Share of minted ld-shares currently pledged as pool collateral | Σ`position.collateral_shares` ÷ `vault.total_shares` |
+| Health factors | Per-position `health_factor` from the pool, SCALE-scaled | `mini_pool.health_factor(addr)` |
+| NAV | The live Reflector SEP-40 price (LEOD → USDC par-NAV proxy), fail-closed on staleness | `oracle_adapter.get_nav(LEOD)` |
+| Liquidations | Count of executed liquidation events | Pool events on stellar.expert |
+
+The [/performance](https://leontief.tech/performance) page computes all of the above **server-side
+via `simulateTransaction`** against public RPC — no indexer, no database, nothing to trust but the
+chain. The page's baked fallback snapshot is dated and regenerated from the same reads.
+
+## What we will never do
+
+Present seeded figures as organic; publish an undated figure; count a wallet without an on-chain
+position; or claim a forward deliverable as shipped. Discrepancies between any published figure and
+this methodology are drift — file them in `docs/DRIFT.md`.

@@ -3,6 +3,7 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 const sidebars: SidebarsConfig = {
   docs: [
     "overview",
+    "reviewers",
     "architecture",
     {
       type: "category",
@@ -15,7 +16,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Build",
       collapsed: false,
-      items: ["sdk", "api"],
+      items: ["sdk", "api", "agent-treasury"],
     },
     {
       type: "category",
@@ -23,8 +24,16 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ["integrations/reflector", "integrations/blend", "integrations/aquarius"],
     },
+    {
+      type: "category",
+      label: "Access & automation",
+      collapsed: false,
+      items: ["telegram", "autopilot"],
+    },
+    "metrics-methodology",
     "addresses",
     "demo",
+    "team",
   ],
 };
 

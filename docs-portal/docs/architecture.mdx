@@ -6,12 +6,17 @@ description: The Leontief contract graph and its four core flows — wrap, borro
 
 # Architecture
 
+*Updated August 2026.*
+
 Leontief is five small Soroban contracts with sharp responsibilities. Nothing
 trusts a caller-supplied amount; every transfer-in is measured by balance
 difference; every price is checked before use and the system **fails closed**
 when it can't be.
 
-## Contract graph
+## Contract graph — live vs planned
+
+One diagram, current at a glance: **solid nodes are live on testnet today**;
+**dashed nodes are Tranche scope** (designed and documented, not shipped).
 
 ```mermaid
 flowchart TD
@@ -20,7 +25,7 @@ flowchart TD
   end
 
   subgraph oracle["Pricing"]
-    REF["Reflector / mock feed\n(SEP-40)"]
+    REF["Reflector SEP-40 — LIVE\n(reflector-feed shim; mock kept for drills)"]
     OA["oracle-adapter\nfail-closed: staleness + deviation"]
     REF --> OA
   end
@@ -28,21 +33,42 @@ flowchart TD
   subgraph core["Leontief core"]
     VF["vault-factory\ndeploys + registers vaults"]
     V["vault\nERC-4626-style · mints ld-shares"]
-    MP["mini-pool\nisolated borrow · permissioned liq."]
+    MP["mini-pool\ndemo / liquidation-drill vehicle"]
     VF -->|deploys| V
     V -->|share_price uses NAV| OA
     MP -->|values collateral via| V
     MP -->|reads NAV| OA
   end
 
-  USER(["User"])
-  USER -->|deposit LEOD| V
-  V -->|mint ldLEOD| USER
-  USER -->|pledge ldLEOD, borrow USDC| MP
-  LEOD -.->|held by| V
+  subgraph venues["Venues (Tranche scope)"]
+    BL["Blend pool\nproduction credit path — Tranche 1–2"]
+    AQ["Aquarius LP\nTranche scope"]
+  end
 
-  classDef box fill:#eceae2,stroke:#16150f,color:#16150f;
-  class LEOD,REF,OA,VF,V,MP box;
+  subgraph access["Access & automation (Tranche 2 scope)"]
+    TG["Telegram bot\nalerts + deep-links · zero signing code"]
+    AP["Autopilot engine\npolicy-bounded, revocable"]
+    DS["Delegated signer\nallow-list · caps · HF floor 1.6 · expiry ≤30d"]
+    AP --> DS
+  end
+
+  USER(["User"])
+  APP["dApp — app.leontief.tech"]
+  USER --> APP
+  APP -->|deposit LEOD| V
+  V -->|mint ldLEOD| APP
+  APP -->|pledge ldLEOD, borrow USDC| MP
+  LEOD -.->|held by| V
+  V -.->|ld-shares as collateral| BL
+  V -.->|ld-shares as liquidity| AQ
+  TG -.->|deep-link, prefill only| APP
+  MP -.->|position + HF| TG
+  DS -.->|bounded maintenance calls| MP
+
+  classDef live fill:#eceae2,stroke:#16150f,color:#16150f;
+  classDef planned fill:#f6f5f0,stroke:#8a8778,color:#57544a,stroke-dasharray: 5 4;
+  class LEOD,REF,OA,VF,V,MP,APP live;
+  class BL,AQ,TG,AP,DS planned;
 ```
 
 | Contract | Storage it owns | Responsibility |

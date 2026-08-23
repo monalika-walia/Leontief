@@ -1,0 +1,51 @@
+name: Docs hub
+
+# The public hub (docs.leontief.tech, Docusaurus) — build with broken links as
+# errors, plus the truth-pass consistency greps (docs/DRIFT.md acceptance).
+on:
+  push:
+    branches: [main]
+    paths: ["docs-portal/**", "docs/**", "*.md", ".github/workflows/docs-hub.yml"]
+  pull_request:
+    paths: ["docs-portal/**", "docs/**", "*.md", ".github/workflows/docs-hub.yml"]
+  workflow_dispatch:
+
+jobs:
+  consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No leontief.finance anywhere in docs
+        run: |
+          ! grep -rn "leontief\.finance" --include="*.md" --include="*.mdx" --include="*.ts" \
+            --include="*.astro" --include="*.html" . \
+            --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=build --exclude-dir=.git \
+            --exclude-dir=target --exclude=DRIFT.md
+      - name: No "incubated by 29Projects Lab"
+        run: |
+          ! grep -rn "incubated by 29Projects Lab" --include="*.md" --include="*.mdx" \
+            --include="*.ts" --include="*.astro" --include="*.html" . \
+            --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=build --exclude-dir=.git \
+            --exclude-dir=target --exclude=DRIFT.md
+      - name: No unfilled [INSERT] on published pages
+        run: |
+          ! grep -rn "\[INSERT" docs-portal/docs docs-site/src docs landing/public landing/src \
+            leontief-litepaper.md leontief-docs-hub.md 2>/dev/null
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Build hub (onBrokenLinks = throw is the link checker)
+        working-directory: docs-portal
+        run: |
+          npm ci
+          npm run build
+      - name: External link check (best-effort, non-blocking)
+        uses: lycheeverse/lychee-action@v2
+        continue-on-error: true
+        with:
+          args: --no-progress --include-fragments --max-concurrency 4 "docs-portal/build/**/*.html"
+          fail: false

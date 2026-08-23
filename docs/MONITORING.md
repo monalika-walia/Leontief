@@ -57,3 +57,22 @@ Trigger criteria → oracle halt > 6 h, issuer action, or an invariant alarm fro
 this monitor. Response: multisig `pause(vault)` (at mainnet) → status page +
 Discord notice ≤ 1 h → post-mortem in `DECISIONS.md` ≤ 72 h. **Exits are never
 paused.** On-call rotation of 3 (Monalika / Aditya / Vyom).
+
+## Delegated-surface runbook (Telegram + Autopilot — Tranche 2 scope)
+
+*Updated August 2026. These procedures ship with the surface; written before it does.*
+
+- **Autopilot pause / revoke.** User-side: one-tap revoke in the dApp kills the delegation at the
+  ledger — the acceptance test is that the engine's next action attempt fails on-chain. Ops-side:
+  the engine runs behind a feature flag; flipping it stops all engine action immediately for
+  everyone (see kill-switch below). Either path is safe at any time: the engine only *maintains*
+  positions, so stopping it never traps funds — users keep full manual control, and **exits are
+  never pausable**.
+- **Bot-token rotation.** Rotate the Telegram bot token via BotFather → update the deployment
+  secret (`TELEGRAM_BOT_TOKEN`, rotation owner in `docs/SECRETS.md`) → webhook re-registered with a
+  fresh webhook secret. Blast radius of a leaked token is notifications only (the bot holds no
+  keys, CI-grepped), but rotate on any suspicion and post a notice, since a hijacked bot could
+  phish.
+- **Engine kill-switch.** Single flag (env/config), owner: on-call. Off = the engine signs nothing,
+  regardless of live delegations; delegations then simply expire (≤ 30 days) or are revoked
+  user-side. Production bundles exclude the engine module entirely — verified in CI.

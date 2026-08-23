@@ -17,7 +17,7 @@ oracle and **permissioned liquidation** designed for regulated assets.
 | Litepaper | <https://leontief-landing.vercel.app/Litepaper.dc.html> |
 | Public metrics (the utility-ratio KPI) | <https://leontief-app.vercel.app/stats> |
 | Backend API | <https://leontief-api.onrender.com/health> |
-| Source | <https://github.com/monalika-walia/Leontief> |
+| Source | <https://github.com/monalika-walia/leontief> |
 
 Contract addresses: [Addresses (testnet)](addresses.md) — generated from the
 committed deployment registry and verified in CI.
@@ -38,7 +38,7 @@ in [/demo](https://leontief-app.vercel.app/demo)):
 5. **Permissioned liquidation** — a whitelisted liquidator repays and seizes at
    a 5% bonus (5a); an un-whitelisted caller is refused (5b).
 
-*Demo video: recorded per [`scripts/record_demo.md`](https://github.com/monalika-walia/Leontief/blob/main/scripts/record_demo.md) — link lands here with the SCF submission.*
+*Demo video: recorded per [`scripts/record_demo.md`](https://github.com/monalika-walia/leontief/blob/main/scripts/record_demo.md) — link lands here with the SCF submission.*
 
 ## Verification posture
 
